@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang='en'>
+	
+	<head>
+		<title>Puzlet</title>
+    <link rel='icon' href='//puzlet.org/puzlet/images/favicon.ico'>
+		<link rel='stylesheet' href='style.css?v=4'>
+    
+    <style>
+    #predefined-code-heading {
+      font-size: 10pt;
+      color: #aaa;
+      cursor: pointer;
+    }
+    
+    #computation-buttons {
+      margin-bottom: 5px;
+    }
+    
+    button {
+      cursor: pointer;
+      margin-right: 5px;
+    }
+    
+    div[data-file="layout.coffee"] {
+      /*border: 3px solid #aaf;*/
+      width: 880px;
+      margin: 0 auto;
+      /*max-height: 250px;*/
+    }
+    
+    .init-editor {
+      display: none;
+      /*max-height: 100px;*/
+    }
+    </style>
+    
+	</head>
+	
+  <body>
+    
+    <div id='container'>
+      
+      <div id="main-markdown"></div>
+      <div id="markdown-editor">
+        <div data-file="blab.md" class="init-editor"></div>
+      </div>
+      
+      <div id="widgets"></div>
+      
+      <div class="clear"></div>
+      
+      <div id="computation-code-wrapper">
+        <!--p class='code-heading' id="computation-code-heading">Computation code</p-->
+        
+        <div id="computation-code-section">
+          <div id="computation-buttons"></div>
+          <div class="left">
+            <div data-file="compute.coffee"></div>
+          </div>
+          <div class="right">
+            <div data-eval="compute.coffee"></div>
+          </div>
+          <br>
+          <div class="clear"></div>
+        
+          <span id="predefined-code-heading"></span><br>
+          <div class="left">
+            <div class="predefined-code">
+              <div data-file="predefine.coffee" class="init-editor"></div>
+              <br>
+            </div>
+          </div>
+          <div class="right">
+            <div class="predefined-code">
+              <div data-eval="predefine.coffee" class="init-editor"></div>
+            </div>
+          </div>
+        
+        </div>
+      </div>
+    
+      <!--p class='code-heading' id="layout-code-heading">Layout code</p-->
+    
+      <div id="layout-code-section">
+        <div data-file="layout.coffee" class="init-editor"></div>
+        <div class="clear"></div>
+      </div>
+      
+      <div class="clear"></div>
+      
+      <div id="github-source-link"></div>
+    
+      <div class="github-save"></div>
+    
+    </div> <!--container-->
+    
+    <script src="//puzlet.org/puzlet.js" data-puzlet data-resources="resources.coffee"></script>
+    <!--script src="../../puzlet/puzlet.github.io/puzlet.js" data-puzlet data-resources="resources.coffee"></script-->
+    
+  </body>
+
+</html>
