@@ -5,6 +5,7 @@ resources
     "/puzlet/puzlet/js/render.js"
     "/puzlet/widgets/app.coffee"
     "/puzlet/widgets/widgets.coffee"
+    "/puzlet/widgets/bar2.coffee"
     "/puzlet/widgets/style.css"
     "layout.coffee"
   ]
