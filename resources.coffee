@@ -8,5 +8,6 @@ resources
     "/puzlet/widgets/bar2.coffee"
     "/puzlet/widgets/style.css"
     "layout.coffee"
+    "defs.coffee"
   ]
 
