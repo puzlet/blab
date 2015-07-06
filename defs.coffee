@@ -4,4 +4,4 @@ defs
   lib2: use "gist:45daa69168bef190ae06"
   derived: ->
     console.log "----lib", @lib
-    @myfun = (x) => x*x + @lib.foo.bar(x) + @lib2.xyz
+    @myfun = (x) => x*x + @lib.foo.bar(x) + @lib.foo2 + @lib2.xyz
