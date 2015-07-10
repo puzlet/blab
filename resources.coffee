@@ -7,6 +7,6 @@ resources
     "/puzlet/widgets/widgets.coffee"
     "/puzlet/widgets/style.css"
     "defs.coffee"
-    "layout.coffee"
+    #"layout.coffee"
   ]
 
