@@ -1,0 +1,75 @@
+/* Element styles */
+
+body { 
+  background-image: url(//spacemath.github.io/resources/images/earth.jpg);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: 0px 0px;
+}
+
+h3 {
+  padding-bottom: 0px;
+  margin-bottom: 10px;
+}
+
+p {
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+
+a {
+  color: #15c;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+hr {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Main container */
+
+#container {
+  width: 906px;  /* Based on mars-map.png width */
+  margin: 0 auto;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  font-family: Verdana, 'DejaVu Sans', sans-serif;
+  font-size: 12pt;
+  line-height: 150%;
+}
+
+/* Page divs */
+
+.highlight {
+  margin-bottom: 20px;
+  padding: 5px 50px 20px 50px;
+  background: rgba(255, 255, 255, 0.88);
+  color: black;
+}
+
+.gist {
+  overflow: hidden;
+  width: 100%;
+}
+
+.gist img {
+  float: left;
+  width: 160px;
+  height: 150px;
+}
+
+.gist p {
+  float: right;
+  width: 630px;
+}
+
+.footnote {
+  font-size: 9pt;
+  line-height: 120%;
+}
+
