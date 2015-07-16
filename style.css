@@ -95,15 +95,110 @@ body {
   margin-bottom: 5px;
 }
 
+button {
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+div[data-file="blab.md"] {
+  /*border: 3px solid #aaf;*/
+  width: 880px;
+  margin: 0 auto;
+  /*max-height: 250px;*/
+}
+
+div[data-file="layout.coffee"] {
+  /*border: 3px solid #aaf;*/
+  width: 880px;
+  margin: 0 auto;
+  /*max-height: 250px;*/
+}
+
+.init-editor {
+  display: none;
+  /*max-height: 100px;*/
+}
+
+/* same as layout-code-section */
+#markdown-editor {
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	background: #FFEBD6;
+  padding: 10px;
+  border-top: 1px solid #555;
+	z-index: 10;
+  box-shadow: 0px -5px 30px -5px rgba(0,0,0,0.4);
+}
+
+#layout-code-section {
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	background: #FFEBD6;
+  padding: 10px;
+  border-top: 1px solid #555;
+	z-index: 10;
+  box-shadow: 0px -5px 30px -5px rgba(0,0,0,0.4);
+	/*display: none;*/
+}
+
+.layout-box {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  border: 2px solid transparent;  /* should be background */
+  min-height: 30px;
+}
+
+.layout-highlight {
+  background: #FFEBD6;
+  border: 2px solid #FFCC66;
+  border-radius: 7px;
+  min-height: 30px;
+}
+
+.layout-box-number {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;  /* vertically-center */
+  background: #669966;
+  color: #FFEBD6;
+  text-align: center;
+  margin-top: 3px;
+  margin-left: 443px;  /* should be function of container width */
+  border-radius: 5px;
+  font-size: 10pt;
+	cursor: default;
+}
+
+.widget-highlight {
+  background: #aaf;
+}
+
 .code-heading {
   cursor: pointer;
   color: blue;
 }
 
+#computation-buttons {
+  margin-bottom: 5px;
+}
+
+#predefined-code-heading {
+  font-size: 10pt;
+  color: #aaa;
+  cursor: pointer;
+}
+
 /*
-#table-orbit-phobos td:nth-child(2),
-th:nth-child(2){
-  color: red;
-  font-style: italic;
+div[data-file="layout.coffee"] {
+	border: 3px solid #aaf;
+	width: 880px;
+	margin: 0 auto;
+	max-height: 250px;
 }
 */
