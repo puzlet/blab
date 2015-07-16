@@ -404,7 +404,7 @@ class ComputationButtons
     
     run = $ "<div>",
       css: {display: "inline-block", color: "#aaa", fontSize: "10pt"}
-      text: "Click shift-enter to run"
+      text: "Press shift-enter to run"
     @container.append run
   
   create: (txt) ->
@@ -1066,6 +1066,8 @@ class App
       
   init: ->
     
+    @homePage()
+    
     codeSections()
     
     # ZZZ should be method in Widgets?
@@ -1161,10 +1163,20 @@ class App
       setTimeout (=> @clickedOnComponent = false), 300
       widgetEditor.setViewPort "layout"
       markdownEditor.setViewPort null
+      
+  homePage: ->
+    
+    gistSource = @resources.getSource?
+    #if gistSource
+    #  $(".container").css marginBottom: (if gistSource then 300 else )
+    #else
+      
+    #$("")
+    
+
 
 new App
 
 # Export
 $blab.Widget = Widget
 $blab.Widgets = Widgets 
-

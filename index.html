@@ -5,6 +5,7 @@
     <title>Blabr</title>
     <link rel='icon' href='//puzlet.org/puzlet/images/favicon.ico'>
     <link rel='stylesheet' href='style.css?v=4'>
+    <script src="style.js"></script>
   </head>
   
   <body>
@@ -36,26 +37,34 @@
         
           <!--span id="predefined-code-heading"></span><br-->
           <div data-file="defs.coffee"></div>
-        <!--/div-->
-      </div>
+        </div>
     
       <!--p class='code-heading' id="layout-code-heading">Layout code</p-->
     
-      <div id="layout-code-section">
-        <div data-file="layout.coffee" class="init-editor"></div>
+        <div id="layout-code-section">
+          <div data-file="layout.coffee" class="init-editor"></div>
+          <div class="clear"></div>
+        </div>
+      
         <div class="clear"></div>
-      </div>
       
-      <div class="clear"></div>
+        <div id="github-source-link"></div>
+        <!--div id="github-save-as-new-button"></div-->
       
-      <div id="github-source-link"></div>
-      <div id="github-save-as-new-button"></div>
+        <div>
+          <p>Powered by <a href="//blabr.org">Blabr</a> &mdash; Scientific computation in the browser.</p>
+        </div>
       
-      <div><a href="gallery">Blab Gallery</a></div>
+        <div class="github-save"></div>
+        
+      </div> <!--#computation-code-wrapper-->
     
-      <div class="github-save"></div>
+    </div> <!--#container-->
     
-    </div> <!--container-->
+    <div class="home-page">
+    </div>
+    
+    <div class="footer"></div>
     
     <script src="//puzlet.org/puzlet.js" data-puzlet data-resources="resources.coffee"></script>
     <!--script src="../../puzlet/puzlet.github.io/puzlet.js" data-puzlet data-resources="resources.coffee"></script-->

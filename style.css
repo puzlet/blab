@@ -13,9 +13,13 @@ body {
 	width: 960px;
 	margin: 0 auto;
 	margin-top: 40px;
-	margin-bottom: 300px;
+	/*margin-bottom: 300px;*/
 	font-size: 12pt;
 	line-height: 150%;
+}
+
+.footer {
+	margin-bottom: 300px;
 }
 
 .left {
@@ -202,3 +206,8 @@ div[data-file="layout.coffee"] {
 	max-height: 250px;
 }
 */
+
+/* Home page */
+
+.home-page {
+}
