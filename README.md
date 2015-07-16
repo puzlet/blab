@@ -1,4 +1,3 @@
 blab
 ====
-
-Puzlet Web Lab
+Web Lab
