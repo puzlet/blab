@@ -384,7 +384,7 @@ class ComputationEditor
     
     handles = (Widget.handle for WidgetName, Widget of Widgets.Registry)
     handlesStr = handles.join "|"
-    console.log handlesStr
+    #console.log handlesStr
     
     widgetRegex = new RegExp("(#{handlesStr}) \"([^\"]*)\"","g");
     
@@ -1060,17 +1060,17 @@ class App
     
   load: ->
     layout = @resources.add url: "layout.coffee"
+    demo = @resources.add(url: "demo.coffee") unless @resources.getSource?
     @resources.loadUnloaded =>
       new Definitions (cb) =>
         @init()
         layout.compile()
+        demo?.compile()
         @resources.postLoadFromSpecFile()
         cb()
       
   init: ->
     
-    @demo()
-        
     @homePage()
     
     codeSections()
@@ -1093,11 +1093,11 @@ class App
     new ComputationButtons
     
     #textEditor = new TextEditor  # ZZZ to deprecate
-    markdownEditor = new MarkdownEditor
+    @markdownEditor = new MarkdownEditor
     
     $pz.renderHtml = ->
       #textEditor?.process()
-      markdownEditor.process()
+      @markdownEditor.process()
     
     @clickedOnComponent = false
     #@clickedLayout = false
@@ -1116,7 +1116,7 @@ class App
       highlight widget?.mainContainer
       @widgetEditor.currentId = null
       @widgetEditor.setViewPort data.match
-      markdownEditor.setViewPort null
+      @markdownEditor.setViewPort null
     
     $(document).on "clickWidget", (evt, data) =>
       @clickedOnComponent = true
@@ -1124,14 +1124,14 @@ class App
       #$("#"+data.id).css background: "yellow"
       @widgetEditor.currentId = data.id
       @widgetEditor.setViewPort data.type + " " + "\"#{data.id}\""
-      markdownEditor.setViewPort null
+      @markdownEditor.setViewPort null
       setTimeout (=> @clickedOnComponent = false), 300
     
-    markdownEditor.on "clickText", (data) =>
+    @markdownEditor.on "clickText", (data) =>
       @clickedOnComponent = true
       highlight null
       @widgetEditor.setViewPort null
-      markdownEditor.setViewPort data.start
+      @markdownEditor.setViewPort data.start
     
     $(document.body).click (evt, data) =>
       #console.log "click", $(evt.target).attr("class")
@@ -1139,26 +1139,26 @@ class App
         unless @clickedOnComponent or $(evt.target).attr("class") # Hack for Ace editor click
           highlight null
           @widgetEditor.setViewPort null
-          markdownEditor.setViewPort null
+          @markdownEditor.setViewPort null
         @clickedOnComponent = false
       ), 100
     
     @widgetEditor.on "clickDelete", => @clickedOnComponent = true
     
     highlightLayout = =>
-      Layout.highlight(@widgetEditor.viewPortDisplayed or markdownEditor.viewPortDisplayed)
+      Layout.highlight(@widgetEditor.viewPortDisplayed or @markdownEditor.viewPortDisplayed)
     
     @widgetEditor.on "setViewPort", => highlightLayout()
-    markdownEditor.on "setViewPort", => highlightLayout()
+    @markdownEditor.on "setViewPort", => highlightLayout()
     
     Layout.on "renderedWidgets", =>
       console.log "App::renderedWidgets"
       #textEditor.setWidgetsRendered()
-      markdownEditor.setWidgetsRendered()
+      @markdownEditor.setWidgetsRendered()
       
     $(document).on "aceFilesLoaded", =>
       #textEditor.process()
-      markdownEditor.process()
+      @markdownEditor.process()
       
     Layout.on "clickBox", =>
       return if @clickedOnComponent  # Order of observer registration matters here
@@ -1167,141 +1167,7 @@ class App
       @clickedOnComponent = true
       setTimeout (=> @clickedOnComponent = false), 300
       @widgetEditor.setViewPort "layout"
-      markdownEditor.setViewPort null
-      
-  demo: ->
-    
-    return if @resources.getSource?
-    
-    $(document).on "codeNodeChanged", =>
-      $("#demo").hide()
-    
-    $("#demo").show()
-    
-    $("#demo").click =>
-      console.log "click"
-      $("#demo").hide()
-      e = @computationEditor.editor
-      a = @computationEditor.aceEditor
-      a.focus()
-      a.navigateFileEnd()
-      #t = (c, next) ->
-      #  setTimeout (->
-      #    a.insert c
-      #    next()
-      #  ), 200
-      #t "1", -> t "2", -> t "3", -> e.run()
-      
-      
-      commands = [
-        "k = slider \"k\""
-        "x = [1..5]"
-        "y = k*x*x"
-        "table \"xy\", x, y"
-        "plot \"plot\", x, y"
-      ]
-      
-      line = 0
-      i = 0
-      #console.log "command", command, command.slice(0, 1)
-      
-      char = (cb) ->
-        command = commands[line]
-        c = command.slice(i, i+1)
-        #console.log "c", c
-        a.insert c
-        if i < command.length
-          i++
-          setTimeout (-> char(cb)), 150 #150
-        else
-          e.run()
-          cb()
-      
-      doCommand = (cb) ->
-        i = 0
-        if line>0
-          a.insert "\n"
-        char ->
-          line++
-          if line < commands.length
-            setTimeout (-> doCommand(cb)), 1000 #1000
-          else
-            cb()
-            
-          #if line
-          
-          #console.log "DONE"
-        
-        
-      sliderVals = [1..9]
-      sliderValIdx = 0
-      
-      setSlider = (v) ->
-        $("#k").slider 'option', 'value', v
-        Widgets.widgets.k.setVal(v)
-        Widgets.compute()
-        
-      setSliderR = (cb) ->
-        #cb()
-        #return # TEMP
-        setSlider sliderVals[sliderValIdx]
-        sliderValIdx++
-        if sliderValIdx < sliderVals.length
-          setTimeout (-> setSliderR(cb)), 200
-        else
-          cb()
-      
-      interact = (cb) =>
-        le = @widgetEditor.editor
-        la = @widgetEditor.aceEditor
-        la.focus()
-        la.gotoLine 18
-        for z in [1..8]
-          la.navigateWordRight()
-        la.removeWordLeft()
-        la.insert "300"
-        
-        la.gotoLine 25
-        for z in [1..4]
-          la.navigateWordRight()
-        la.removeWordLeft()
-        la.insert "2"
-        
-        le.run()
-        setTimeout (-> cb()), 1000
-      
-      interact2 = (cb) =>
-        console.log "INTERACT"
-        le = @widgetEditor.editor
-        la = @widgetEditor.aceEditor
-        la.focus()
-        la.gotoLine 7
-        for z in [1..8]
-          la.navigateWordRight()
-        la.removeWordLeft()
-        la.insert "20"
-        le.run()
-        cb()
-        #setSliderR()
-        #return
-        #$("#k").slider 'option', 'value', 2
-        #Widgets.widgets.k.setVal(2)
-        #$("#k").trigger "slide"
-        #setTimeout (-> Widgets.compute()), 200
-        #console.log "widgets", Widgets.widgets.k
-        #$slider = $('#k');
-        #$slider.slider('option', 'change').call($slider)
-        
-      start = ->  
-        doCommand ->
-          console.log "done"
-          setTimeout (-> interact -> setSliderR ->), 1000
-      #char()
-      #setTimeout (-> start()), 10
-      start()
-      
-      #a.insert "k = slider \"k\""
-      #Computation.compute()
+      @markdownEditor.setViewPort null
       
   homePage: ->
     
@@ -1314,7 +1180,7 @@ class App
     
 
 
-new App
+$blab.blabrApp = new App
 
 # Export
 $blab.Widget = Widget
