@@ -1170,6 +1170,11 @@ class App
       markdownEditor.setViewPort null
       
   demo: ->
+    
+    return if @resources.getSource?
+    
+    $("#demo").show()
+    
     $("#demo").click =>
       console.log "click"
       $("#demo").hide()
