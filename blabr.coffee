@@ -1251,6 +1251,13 @@ class App
           la.navigateWordRight()
         la.removeWordLeft()
         la.insert "300"
+        
+        la.gotoLine 25
+        for z in [1..4]
+          la.navigateWordRight()
+        la.removeWordLeft()
+        la.insert "2"
+        
         le.run()
         setTimeout (-> cb()), 1000
       
