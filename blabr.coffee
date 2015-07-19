@@ -1173,6 +1173,9 @@ class App
     
     return if @resources.getSource?
     
+    $(document).on "codeNodeChanged", =>
+      $("#demo").hide()
+    
     $("#demo").show()
     
     $("#demo").click =>
