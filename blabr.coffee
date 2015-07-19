@@ -1172,6 +1172,7 @@ class App
   demo: ->
     $("#demo").click =>
       console.log "click"
+      $("#demo").hide()
       e = @computationEditor.editor
       a = @computationEditor.aceEditor
       a.focus()
