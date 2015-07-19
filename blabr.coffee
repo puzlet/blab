@@ -346,8 +346,7 @@ class ComputationEditor
       @setLine()
       
     $(document).on "allBlabDefinitionsLoaded", -> # unused
-    
-      
+  
   init: (@resource) ->
     
     return if @editor  # Return if already defined
@@ -372,6 +371,10 @@ class ComputationEditor
     if cursor?.row isnt @currentLine
       @currentLine = cursor?.row
       @inspectLineForWidget()
+      
+  insertCode: (code) ->
+    @aceEditor.focus()
+    @aceEditor.insert code
   
   inspectLineForWidget: ->
     return unless @editor
@@ -1066,6 +1069,8 @@ class App
       
   init: ->
     
+    @demo()
+        
     @homePage()
     
     codeSections()
@@ -1082,7 +1087,7 @@ class App
     
     widgetEditor = Widgets.widgetEditor
     
-    computationEditor = new ComputationEditor
+    @computationEditor = new ComputationEditor
     
     # ZZZ not used
     new ComputationButtons
@@ -1104,7 +1109,7 @@ class App
       @currentComponent = component
       @currentComponent?.addClass "widget-highlight"
     
-    computationEditor.on "cursorOnWidget", (data) =>
+    @computationEditor.on "cursorOnWidget", (data) =>
       @clickedOnComponent = true
       widget = if data.id then Widgets.widgets[data.id] else null
       #console.log "cursorOnWidget", data, widget
@@ -1163,6 +1168,67 @@ class App
       setTimeout (=> @clickedOnComponent = false), 300
       widgetEditor.setViewPort "layout"
       markdownEditor.setViewPort null
+      
+  demo: ->
+    $("#demo").click =>
+      console.log "click"
+      e = @computationEditor.editor
+      a = @computationEditor.aceEditor
+      a.focus()
+      a.navigateFileEnd()
+      #t = (c, next) ->
+      #  setTimeout (->
+      #    a.insert c
+      #    next()
+      #  ), 200
+      #t "1", -> t "2", -> t "3", -> e.run()
+      
+      
+      commands = [
+        "k = slider \"k\""
+        "x = [1..5]"
+        "y = k*x*x"
+        "table \"xy\", x, y"
+        "plot \"plot\", x, y"
+      ]
+      
+      line = 0
+      i = 0
+      #console.log "command", command, command.slice(0, 1)
+      
+      char = (cb) ->
+        command = commands[line]
+        c = command.slice(i, i+1)
+        #console.log "c", c
+        a.insert c
+        if i < command.length
+          i++
+          setTimeout (-> char(cb)), 150
+        else
+          e.run()
+          cb()
+      
+      doCommand = ->
+        i = 0
+        if line>0
+          a.insert "\n"
+        char ->
+          line++
+          if line < commands.length
+            setTimeout (-> doCommand()), 1000
+            
+          #if line
+          
+          #console.log "DONE"
+        
+        
+        
+      doCommand() 
+      #char()
+      
+      
+      #a.insert "k = slider \"k\""
+      #Computation.compute()
       
   homePage: ->
     
