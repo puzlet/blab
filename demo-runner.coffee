@@ -115,14 +115,16 @@ class Markdown extends Editor
   constructor: (@guide) ->
     super markdownEditor, @guide
   
-  explain: (html) ->
+  explain: (html, cb) ->
     @guide.show()
-    c = @editor.container
-    pos = c.position()
-    @guide.css
-      top: pos.top + c.height() + 30
-      left: pos.left
+    c = @editor.outer
+    pos = c.offset()
+    @guide.animate {
+      top: pos.top + 10
+      left: pos.left + 500
+    }, 400, cb
     @guide.html html
+
 
 class Computation extends Editor
   
@@ -154,7 +156,7 @@ class Layout extends Editor
     pos = c.offset()
     @guide.animate {
       top: pos.top + 30
-      left: pos.left + 400
+      left: pos.left + 500
     }, 400, cb
     @guide.html html
 
@@ -252,7 +254,8 @@ class Demo
         else if spec.close
           markdownEditor.setViewPort null
           cb()
-      setTimeout (-> edit()), 1000
+      @markdown.explain(spec.guide) if spec.guide
+      setTimeout (-> edit()), 500
   
   compute: (statement, html="") ->
     @script.step (cb) =>

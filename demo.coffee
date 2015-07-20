@@ -2,15 +2,14 @@ $blab.demoScript = (spec) ->
   
   {md, compute, widget, slider} = spec
   
-  compute "k = slider \"k\"", "Create a slider in the canvas above."
-  
+  compute "k = slider \"k\"", "Create a slider in the canvas above.<br>Specify an id (\"k\") so you can refer to it elsewhere."
   compute "x = [1..5]", "Define a vector."
   compute "y = k*x*x", "Vector equation based on slider value and x.<br>The result is shown in the box on the right."
   compute "table \"xy\", x, y", "Display the data in a table.<br>Table parameters are shown below."
   
   widget
     line: 13, word: 2, replace: ": [\"$x$\", \"$kx^2$\"]"
-    guide: "Add column headings to table.  Supports MathJax."
+    guide: "Add column headings to table.<br>Supports MathJax."
     
   widget
     line: 14, word: 3, replace: "100, 100"
@@ -36,9 +35,11 @@ $blab.demoScript = (spec) ->
     
   md
     line: 1, word: 1, replace: "Quadratic"
+    guide: "Change page title."
     
   md
-    append: "Write markdown here.  Supports MathJax: $y = k x^2$."
+    append: "This blab (short for we**_b lab_**)\nshows the quadratic function:\n\n> $f(x) = k x^2$\n\n* * *"
+    guide: "Add markdown (Github-flavored).  Supports MathJax."
     
   md
     close: true
