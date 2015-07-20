@@ -1181,6 +1181,7 @@ class App
 
 
 $blab.blabrApp = new App
+$blab.Layout = Layout
 
 # Export
 $blab.Widget = Widget

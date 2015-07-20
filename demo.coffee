@@ -1,11 +1,38 @@
-demoButton = $ "#demo"
+class DemoButton
+  
+  width: 250
+  text: "Click here to run demo"
+  
+  constructor: ->
+    
+    @container = $ "#widgets"
+    
+    @firstLayout = true
+    $blab.Layout.on "renderedWidgets", =>
+      return unless @firstLayout
+      @create()
+      @firstLayout = false
+  
+    $(document).on "codeNodeChanged", => @button.fadeOut(1000)
+    
+  create: ->
+    @clicked = false
+    @button = $ "<div>",
+      id: "demo-button"
+      html: @text
+      css:
+        width: @width
+        left: (@container.width() - @width)/2
+      click: =>
+        return if @clicked
+        @clicked = true
+        @button.fadeOut(1000, -> new Demo)
+    @container.append @button
+    
+    
+new DemoButton
+
 guide = $ "#demo-guide"
-
-demoButton.show()
-
-$(document).on "codeNodeChanged", -> demoButton.hide()
-
-demoButton.click -> new Demo
 
 app = $blab.blabrApp
 markdownEditor = app.markdownEditor
@@ -102,9 +129,6 @@ class Layout
     @guide.animate
       top: pos.top + 100
       left: pos.left + 400
-    # @guide.css
-    #   top: pos.top + 100
-    #   left: pos.left + 400
     @guide.html html
 
 
@@ -113,8 +137,6 @@ class Slider
   constructor: (@guide) ->
     
   animate: (cb) ->
-    
-    console.log "==========SLIDER"
     
     sliderVals = [1..9]
     sliderValIdx = 0
@@ -178,7 +200,7 @@ class Demo
   constructor: ->
     
     console.log "DEMO"
-    demoButton.hide()
+    #demoButton.hide()
   
     @script = new Script
     @computation = new Computation guide
@@ -193,7 +215,7 @@ class Demo
       @slider.animate(cb)
       
     @script.step (cb) =>
-      @guide.hide()
+      guide.hide()
       cb()
       
     @script.run()
@@ -209,7 +231,7 @@ class Demo
     @script.step (cb) =>
       @layout.explain spec.guide
       @layout.replace spec.line, spec.word, spec.replace, cb
-    
+
 
 demoScript = (spec) ->
   

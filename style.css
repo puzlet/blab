@@ -18,6 +18,10 @@ body {
 	line-height: 150%;
 }
 
+#widgets {
+  position: relative;
+}
+
 .footer {
 	margin-bottom: 300px;
 }
@@ -213,6 +217,21 @@ div[data-file="layout.coffee"] {
 }
 
 /* Demo */
+#demo-button {
+  position: absolute;
+  width: 200px;
+  height: 50px;
+  top: 10px;
+  left: 0;
+  text-align: center;
+  background: #6f6;
+  border: 2px solid green;
+  border-radius: 10px;
+  line-height: 50px;  /* same as height */
+  cursor: pointer;
+  user-select: none;
+}
+
 #demo-guide {
   position: fixed;
   top: 0;
@@ -228,4 +247,5 @@ div[data-file="layout.coffee"] {
   opacity: 0.95;
   display: none;
 }
+
 
