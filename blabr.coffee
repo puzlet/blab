@@ -823,7 +823,8 @@ class Layout
     container.append element
     
   @getContainer: (pos, order) ->
-    if Number.isInteger(pos)
+    if $.isNumeric(pos)
+#    if Number.isInteger(pos)
       position = "#widget-box-#{pos}"
     else
       position = pos
