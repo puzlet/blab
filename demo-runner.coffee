@@ -1,6 +1,5 @@
 class DemoButton
   
-  width: 250
   text: "Click here to run demo"
   
   constructor: ->
@@ -13,21 +12,27 @@ class DemoButton
       @create()
       @firstLayout = false
   
-    $(document).on "codeNodeChanged", => @button.fadeOut(1000)
+    @firstChange = true
+    $(document).on "codeNodeChanged", =>
+      return unless @firstChange
+      @button.fadeOut(1000)
+      @firstChange = true
     
   create: ->
     @clicked = false
     @button = $ "<div>",
       id: "demo-button"
       html: @text
-      css:
-        width: @width
-        left: (@container.width() - @width)/2
+      #css:
+        #width: @width
+      #  left: (@container.width() - @width)/2
       click: =>
         return if @clicked
         @clicked = true
         @button.fadeOut(1000, -> new Demo)
     @container.append @button
+    @button.css left: (@container.width() - @button.width())/2
+    
 
 new DemoButton
 

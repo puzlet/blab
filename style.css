@@ -219,13 +219,15 @@ div[data-file="layout.coffee"] {
 /* Demo */
 #demo-button {
   position: absolute;
-  width: 200px;
+  width: 300px;
   height: 50px;
   top: 10px;
   left: 0;
   text-align: center;
-  background: #6f6;
-  border: 2px solid green;
+  color: white;
+  font-size: 16pt;
+  /*background: #6f6;*/
+  /*border: 2px solid green;*/
   border-radius: 10px;
   line-height: 50px;  /* same as height */
   cursor: pointer;
@@ -235,6 +237,17 @@ div[data-file="layout.coffee"] {
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#bfd255+0,8eb92a+50,72aa00+51,9ecb2d+100;Green+Gloss */
+  background: #bfd255; /* Old browsers */
+  background: -moz-linear-gradient(top,  #bfd255 0%, #8eb92a 50%, #72aa00 51%, #9ecb2d 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#bfd255), color-stop(50%,#8eb92a), color-stop(51%,#72aa00), color-stop(100%,#9ecb2d)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  #bfd255 0%,#8eb92a 50%,#72aa00 51%,#9ecb2d 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  #bfd255 0%,#8eb92a 50%,#72aa00 51%,#9ecb2d 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  #bfd255 0%,#8eb92a 50%,#72aa00 51%,#9ecb2d 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  #bfd255 0%,#8eb92a 50%,#72aa00 51%,#9ecb2d 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bfd255', endColorstr='#9ecb2d',GradientType=0 ); /* IE6-9 */
+
 }
 
 #demo-guide {
