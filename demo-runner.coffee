@@ -143,7 +143,6 @@ class Computation extends Editor
 
 class Layout extends Editor
   
-  #delay: 500
   runOnStatement: true
   
   constructor: (@guide) ->
@@ -160,39 +159,32 @@ class Layout extends Editor
     @guide.html html
 
 
-class Slider
+class Sliders
+  
+  delay: 200
   
   constructor: (@guide) ->
     
-  animate: (cb) ->
-    
-    sliderVals = [1..9]
-    sliderValIdx = 0
-  
-    setSlider = (v) ->
-      $("#k").slider 'option', 'value', v
-      Widgets.widgets.k.setVal(v)
+  animate: (id, vals, cb) ->
+    idx = 0
+    setSlider = (cb) =>
+      v = vals[idx]
+      $("#"+id).slider 'option', 'value', v
+      Widgets.widgets[id].setVal v
       Widgets.compute()
-    
-    setSliderR = (cb) ->
-      #cb()
-      #return # TEMP
-      setSlider sliderVals[sliderValIdx]
-      sliderValIdx++
-      if sliderValIdx < sliderVals.length
-        setTimeout (-> setSliderR(cb)), 200
+      idx++
+      if idx < vals.length
+        setTimeout (-> setSlider(cb)), @delay
       else
         cb()
-    
-    @explain "Adjust the slider and see the computation updated on-the-fly.", -> setSliderR(cb)
+        
+    setSlider(cb)
     
   explain: (html, cb) ->
     @guide.show()
-    #c = @editor.outer
-    #pos = c.offset()
     @guide.animate {
       top: 20
-      left: 400 #pos.left + 400
+      left: 400
     }, 400, cb
     @guide.html html
 
@@ -234,35 +226,33 @@ class Demo
     @markdown = new Markdown guide
     @computation = new Computation guide
     @layout = new Layout guide
-    @slider = new Slider guide
-    
-    # ZZZ TEMP
-    #@script.run()
-    #return
+    @sliders = new Sliders guide
     
     $blab.demoScript
       compute: (p...) => @compute(p...)
       widget: (p...) => @widget(p...)
-      
-    @script.step (cb) =>
-      @slider.animate(cb)
+      slider: (p...) => @slider(p...)
+      md: (p...) => @md(p...)
       
     @script.step (cb) =>
       guide.hide()
       cb()
-      
-    @script.step (cb) =>
-      markdownEditor.trigger "clickText", {start: 0}
-      test = =>
-        @markdown.replace 1, 1, "Quadratic", =>
-          @markdown.statement "Write markdown here.  Supports MathJax: $y = k x^2$.", =>
-            setTimeout (->
-              markdownEditor.setViewPort null
-              cb()
-            ), 2000
-      setTimeout (-> test()), 1000
     
     @script.run()
+  
+  md: (spec) ->
+    @script.step (cb) =>
+      display = markdownEditor.editor.outer.css "display"
+      markdownEditor.trigger "clickText", {start: 0} if display is "none"
+      edit = =>
+        if spec.replace
+          @markdown.replace spec.line, spec.word, spec.replace, cb
+        else if spec.append
+          @markdown.statement spec.append, cb
+        else if spec.close
+          markdownEditor.setViewPort null
+          cb()
+      setTimeout (-> edit()), 1000
   
   compute: (statement, html="") ->
     @script.step (cb) =>
@@ -275,4 +265,9 @@ class Demo
     @script.step (cb) =>
       @layout.explain spec.guide, =>
         @layout.replace spec.line, spec.word, spec.replace, cb
-
+        
+  slider: (spec) ->
+    @script.step (cb) =>
+      @sliders.explain spec.guide, =>
+        @sliders.animate(spec.id, spec.vals, cb)
+  
