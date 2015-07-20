@@ -556,6 +556,7 @@ class MarkdownEditor
     @resource = @resources.find(@filename)
     @editor = @resource?.containers?.fileNodes?[0].editor
     return unless @editor
+    @aceEditor = @editor.editor
     @editor.container.removeClass "init-editor"
     @editor.onChange => @render()
     @editor.show false

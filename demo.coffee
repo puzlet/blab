@@ -28,8 +28,7 @@ class DemoButton
         @clicked = true
         @button.fadeOut(1000, -> new Demo)
     @container.append @button
-    
-    
+
 new DemoButton
 
 guide = $ "#demo-guide"
@@ -40,13 +39,17 @@ computationEditor = app.computationEditor
 widgetEditor = app.widgetEditor
 Widgets = $blab.Widgets
 
-class Computation
+# TODO: superclass for Markdown etc.  Editor.
+
+class Editor
   
-  charDelay: 150 # 150
+  delay: 500
+  charDelay: 150
+  runOnStatement: false
   
-  constructor: (@guide) ->
-    @editor = computationEditor.editor
-    @ace = computationEditor.aceEditor
+  constructor: (@appEditor, @guide) ->
+    @editor = @appEditor.editor
+    @ace = @appEditor.aceEditor
     
   statement: (@statementStr, cb) ->
     @statementCharIdx = 0
@@ -64,33 +67,17 @@ class Computation
       @statementCharIdx++
       setTimeout (=> @char(cb)), @charDelay
     else
-      @editor.run()
+      @editor.run() if @runOnStatement
       cb()
-  
-  explain: (html) ->
-    @guide.show()
-    c = @editor.container
-    pos = c.position()
-    @guide.css
-      top: pos.top + c.height() + 30
-      left: pos.left
-    @guide.html html
-
-
-class Layout
-  
-  delay: 500
-  
-  constructor: (@guide) ->
-    @editor = widgetEditor.editor
-    @ace = widgetEditor.aceEditor
-  
+      
   replace: (line, numWords, word, cb) ->
     @ace.focus()
     @gotoLine line, =>
       @navigateRight numWords, =>
         @replaceWordRight word, =>
-          @step (=> @editor.run()), -> cb?()
+          @step (=>
+            @editor.run() if @runOnStatement
+          ), -> cb?()
   
   gotoLine: (line, cb) ->
     @ace.gotoLine line
@@ -111,24 +98,67 @@ class Layout
     
   replaceWordRight: (word, cb) ->
     @step (=> @ace.selection.selectWordRight()), =>
-      @step (=> @ace.removeWordRight()), =>
-        @step (=>
-          @ace.insert(word)
-          @ace.navigateWordLeft()
-          @ace.selection.selectWordRight()
-        ), => cb()
+      @step (=>
+        @ace.removeWordRight()
+        @ace.insert(word)
+        @ace.navigateWordLeft()
+        @ace.selection.selectWordRight()
+      ), => cb()
   
   step: (step, cb) ->
     step()
     setTimeout (-> cb()), @delay
+
+
+class Markdown extends Editor
+  
+  charDelay: 50
+  
+  constructor: (@guide) ->
+    super markdownEditor, @guide
   
   explain: (html) ->
     @guide.show()
+    c = @editor.container
+    pos = c.position()
+    @guide.css
+      top: pos.top + c.height() + 30
+      left: pos.left
+    @guide.html html
+
+class Computation extends Editor
+  
+  runOnStatement: true
+  
+  constructor: (@guide) ->
+    super computationEditor, @guide
+  
+  explain: (html) ->
+    @guide.show()
+    c = @editor.container
+    pos = c.position()
+    @guide.css
+      top: pos.top + c.height() + 30
+      left: pos.left
+    @guide.html html
+
+
+class Layout extends Editor
+  
+  #delay: 500
+  runOnStatement: true
+  
+  constructor: (@guide) ->
+    super widgetEditor, @guide
+  
+  explain: (html, cb) ->
+    @guide.show()
     c = @editor.outer
     pos = c.offset()
-    @guide.animate
+    @guide.animate {
       top: pos.top + 100
       left: pos.left + 400
+    }, 400, cb
     @guide.html html
 
 
@@ -156,16 +186,16 @@ class Slider
       else
         cb()
     
-    @explain "Move slider"
-    setSliderR(cb)
+    @explain "Move slider", -> setSliderR(cb)
     
-  explain: (html) ->
+  explain: (html, cb) ->
     @guide.show()
     #c = @editor.outer
     #pos = c.offset()
-    @guide.animate
+    @guide.animate {
       top: 20
       left: 400 #pos.left + 400
+    }, 400, cb
     @guide.html html
 
 
@@ -203,9 +233,14 @@ class Demo
     #demoButton.hide()
   
     @script = new Script
+    @markdown = new Markdown guide
     @computation = new Computation guide
     @layout = new Layout guide
     @slider = new Slider guide
+    
+    # ZZZ TEMP
+    #@script.run()
+    #return
     
     demoScript
       compute: (p...) => @compute(p...)
@@ -218,6 +253,15 @@ class Demo
       guide.hide()
       cb()
       
+    @script.step (cb) =>
+      markdownEditor.trigger "clickText", {start: 0}
+      test = =>
+        @markdown.replace 1, 1, "Quadratic", =>
+          @markdown.statement "Write markdown here.  Supports MathJax: $y = k x^2$.", =>
+            markdownEditor.setViewPort null
+            setTimeout (-> cb()), 1000
+      setTimeout (-> test()), 1000
+    
     @script.run()
   
   compute: (statement, html="") ->
@@ -229,8 +273,8 @@ class Demo
       
   widget: (spec) ->
     @script.step (cb) =>
-      @layout.explain spec.guide
-      @layout.replace spec.line, spec.word, spec.replace, cb
+      @layout.explain spec.guide, =>
+        @layout.replace spec.line, spec.word, spec.replace, cb
 
 
 demoScript = (spec) ->
