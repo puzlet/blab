@@ -1061,11 +1061,14 @@ class App
     
   load: ->
     layout = @resources.add url: "layout.coffee"
-    demo = @resources.add(url: "demo.coffee") unless @resources.getSource?
+    if not @resources.getSource? or @resources.getSource("demo.coffee")
+      demoRunner = @resources.add(url: "demo-runner.coffee")
+      demo = @resources.add(url: "demo.coffee")
     @resources.loadUnloaded =>
       new Definitions (cb) =>
         @init()
         layout.compile()
+        demoRunner?.compile()
         demo?.compile()
         @resources.postLoadFromSpecFile()
         cb()
