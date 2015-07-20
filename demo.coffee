@@ -289,8 +289,8 @@ demoScript = (spec) ->
   compute "table \"xy\", x, y", "Display the data in a table.<br>Table parameters are shown below."
   
   widget
-    line: 13, word: 2, replace: ": [\"x\", \"kx\"]"
-    guide: "Add column headings to table."
+    line: 13, word: 2, replace: ": [\"$x$\", \"$kx$\"]"
+    guide: "Add column headings to table.  Supports MathJax."
     
   widget
     line: 14, word: 3, replace: "100, 100"
