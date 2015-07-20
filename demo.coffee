@@ -2,20 +2,7 @@ $blab.demoScript = (spec) ->
   
   {md, compute, widget, slider} = spec
   
-  md
-    line: 1, word: 1, replace: "Quadratic"
-    
-  md
-    append: "Write markdown here.  Supports MathJax: $y = k x^2$."
-    
-  md
-    close: true
-  
   compute "k = slider \"k\"", "Create a slider in the canvas above."
-  
-  slider
-    id: "k", vals: [1..9]
-    guide: "Adjust the slider and see the computation updated on-the-fly."
   
   compute "x = [1..5]", "Define a vector."
   compute "y = k*x*x", "Vector equation based on slider value and x.<br>The result is shown in the box on the right."
@@ -46,5 +33,14 @@ $blab.demoScript = (spec) ->
   slider
     id: "k", vals: [1..9]
     guide: "Adjust the slider and see the computation updated on-the-fly."
+    
+  md
+    line: 1, word: 1, replace: "Quadratic"
+    
+  md
+    append: "Write markdown here.  Supports MathJax: $y = k x^2$."
+    
+  md
+    close: true
   
     
