@@ -156,7 +156,7 @@ class Layout extends Editor
     c = @editor.outer
     pos = c.offset()
     @guide.animate {
-      top: pos.top + 100
+      top: pos.top + 30
       left: pos.left + 400
     }, 400, cb
     @guide.html html
@@ -186,7 +186,7 @@ class Slider
       else
         cb()
     
-    @explain "Move slider", -> setSliderR(cb)
+    @explain "Adjust the slider and see the computation updated on-the-fly.", -> setSliderR(cb)
     
   explain: (html, cb) ->
     @guide.show()
@@ -258,8 +258,10 @@ class Demo
       test = =>
         @markdown.replace 1, 1, "Quadratic", =>
           @markdown.statement "Write markdown here.  Supports MathJax: $y = k x^2$.", =>
-            markdownEditor.setViewPort null
-            setTimeout (-> cb()), 1000
+            setTimeout (->
+              markdownEditor.setViewPort null
+              cb()
+            ), 2000
       setTimeout (-> test()), 1000
     
     @script.run()
@@ -281,17 +283,35 @@ demoScript = (spec) ->
   
   {compute, widget} = spec
   
-  compute "k = slider \"k\"", "Invoke a slider"
-  compute "x = [1..5]", "Vector"
-  compute "y = k*x*x", "Vector equation"
-  compute "table \"xy\", x, y", "Create a table"
-  compute "plot \"plot\", x, y", "Plot data"
+  compute "k = slider \"k\"", "Create a slider in the canvas above."
+  compute "x = [1..5]", "Define a vector."
+  compute "y = k*x*x", "Vector equation based on slider value and x.<br>The result is shown in the box on the right."
+  compute "table \"xy\", x, y", "Display the data in a table.<br>Table parameters are shown below."
   
   widget
-    line: 18, word: 7, replace: "300"
-    guide: "Change size of plot"
+    line: 13, word: 2, replace: ": [\"x\", \"kx\"]"
+    guide: "Add column headings to table."
     
   widget
+    line: 14, word: 3, replace: "100, 100"
+    guide: "Set column widths."
+  
+  compute "plot \"plot\", x, y", "Plot the data."
+  
+  #widget
+  #  line: 18, word: 7, replace: "300"
+  #  guide: "Change size of plot"
+  
+  widget
+    line: 21, word: 1, replace: ""
+    guide: "Change the plot's y-axis limit."
+    
+  widget
+    line: 21, word: 9, replace: "100"
+    guide: "Change the plot's y-axis limit."
+  
+  widget
     line: 25, word: 3, replace: "2"
-    guide: "Change position of plot"
+    guide: "Change the plot position."
+  
 
