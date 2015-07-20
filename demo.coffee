@@ -99,9 +99,12 @@ class Layout
     @guide.show()
     c = @editor.outer
     pos = c.offset()
-    @guide.css
+    @guide.animate
       top: pos.top + 100
       left: pos.left + 400
+    # @guide.css
+    #   top: pos.top + 100
+    #   left: pos.left + 400
     @guide.html html
 
 
@@ -138,7 +141,7 @@ class Slider
     @guide.show()
     #c = @editor.outer
     #pos = c.offset()
-    @guide.css
+    @guide.animate
       top: 20
       left: 400 #pos.left + 400
     @guide.html html
@@ -188,6 +191,10 @@ class Demo
       
     @script.step (cb) =>
       @slider.animate(cb)
+      
+    @script.step (cb) =>
+      @guide.hide()
+      cb()
       
     @script.run()
   
