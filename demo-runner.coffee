@@ -264,7 +264,7 @@ class Demo
   
   compute: (statement, html="") ->
     @script.step (cb) =>
-      @computation.explain html
+      @computation.explain html if html.length
       @computation.statement statement, =>
         guide.hide()
         cb()
