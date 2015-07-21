@@ -1,6 +1,6 @@
 $blab.demoScript = (spec) ->
   
-  {md, compute, widget, slider, delays} = spec
+  {md, compute, defs, widget, slider, delays} = spec
   
   delays
     step: 500
@@ -8,10 +8,15 @@ $blab.demoScript = (spec) ->
     codeChar: 150
     mdChar: 50
     slider: 200
-  
+    
   compute "k = slider \"k\"", "Create a slider in the canvas above.<br>Specify an id (\"k\") so you can refer to it elsewhere."
-  compute "x = [1..5]", "Define a vector."
-  compute "y = k*x*x", "Vector equation based on slider value and x.<br>The result is shown in the box on the right."
+  
+  defs "nPoints = 5", "Define a value"
+  defs "quadratic = (x, k) -> k*x*x", "Define a function"
+  defs "defs {nPoints, quadratic}", "Use these definitions in computation above"
+  
+  compute "x = [1..nPoints]", "Define a vector."
+  compute "y = quadratic(x, k)", "Vector equation based on slider value and x.<br>The result is shown in the box on the right."
   compute "table \"xy\", x, y", "Display the data in a table.<br>Table parameters are shown below."
   
   widget

@@ -41,6 +41,7 @@ guide = $ "#demo-guide"
 app = $blab.blabrApp
 markdownEditor = app.markdownEditor
 computationEditor = app.computationEditor
+defsEditor = app.definitions
 widgetEditor = app.widgetEditor
 Widgets = $blab.Widgets
 
@@ -161,6 +162,27 @@ class Computation extends Editor
     @guide.html html
 
 
+class Definitions extends Editor
+  
+  runOnStatement: true
+  
+  constructor: (@guide) ->
+    super defsEditor, @guide
+    @ace.focus()
+    @ace.selection.selectAll()
+    @ace.insert ""
+    #@replace {find: "defs {}", replace: ""}, ->
+  
+  explain: (html) ->
+    @guide.show()
+    c = @editor.container
+    pos = c.position()
+    @guide.css
+      top: pos.top + c.height() + 30
+      left: pos.left
+    @guide.html html
+
+
 class Layout extends Editor
   
   runOnStatement: true
@@ -234,7 +256,8 @@ class Script
           console.log "Demo done"
     runStep()
     
-    
+
+
 class Demo
   
   constructor: ->
@@ -245,11 +268,13 @@ class Demo
     @script = new Script
     @markdown = new Markdown guide
     @computation = new Computation guide
+    @definitions = new Definitions guide
     @layout = new Layout guide
     @sliders = new Sliders guide
     
     $blab.demoScript
       compute: (p...) => @compute(p...)
+      defs: (p...) => @defs(p...)
       widget: (p...) => @widget(p...)
       slider: (p...) => @slider(p...)
       md: (p...) => @md(p...)
@@ -280,6 +305,13 @@ class Demo
     @script.step (cb) =>
       @computation.explain html if html.length
       @computation.statement statement, =>
+        guide.hide()
+        cb()
+        
+  defs: (statement, html="") ->
+    @script.step (cb) =>
+      @definitions.explain html if html.length
+      @definitions.statement statement, =>
         guide.hide()
         cb()
       

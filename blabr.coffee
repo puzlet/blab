@@ -955,6 +955,12 @@ class Definitions
       d.push name unless name is "loaded" or name is "derived"
     list = d.join ", "
     "{#{list}} = $blab.defs"
+    
+  initEditor: ->
+    console.log "defs containers", @coffee.containers
+    @editor = @coffee.containers?.fileNodes?[0].editor
+    #return unless @editor
+    @aceEditor = @editor.editor
   
   loadCoffee: (url, callback) ->
     
@@ -1066,7 +1072,7 @@ class App
       demoRunner = @resources.add(url: "demo-runner.coffee")
       demo = @resources.add(url: "demo.coffee")
     @resources.loadUnloaded =>
-      new Definitions (cb) =>
+      @definitions = new Definitions (cb) =>
         @init()
         layout.compile()
         demoRunner?.compile()
@@ -1164,6 +1170,7 @@ class App
     $(document).on "aceFilesLoaded", =>
       #textEditor.process()
       @markdownEditor.process()
+      @definitions.initEditor()
       
     Layout.on "clickBox", =>
       return if @clickedOnComponent  # Order of observer registration matters here
