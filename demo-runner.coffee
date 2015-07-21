@@ -53,10 +53,12 @@ class Editor
   constructor: (@appEditor, @guide) ->
     @editor = @appEditor.editor
     @ace = @appEditor.aceEditor
+    @firstAppend = true
     
   statement: (@statementStr, cb) ->
     @statementCharIdx = 0
-    @statementStr = "\n" + @statementStr
+    @statementStr = "\n" + @statementStr unless @firstAppend
+    @firstAppend = false
     @statementLength = @statementStr.length
     @ace.focus()
     @ace.navigateFileEnd()

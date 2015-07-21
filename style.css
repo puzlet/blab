@@ -7,6 +7,10 @@ body {
 	font-family: Verdana, 'DejaVu Sans', sans-serif;
 }
 
+h1 {
+  line-height: 120%;
+}
+
 /* Main container */
 
 #container {
@@ -214,6 +218,11 @@ div[data-file="layout.coffee"] {
 /* Home page */
 
 .home-page {
+}
+
+#blabr-tagline {
+  font-size: 10pt;
+  color: #aaa;
 }
 
 /* Demo */
