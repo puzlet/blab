@@ -75,7 +75,9 @@ class Editor
       
   replace: (spec, cb) ->
     {vline, line, word, replace} = spec
-    line = (@editor.spec.startLine - 1) + vline if vline and not line?
+    vline ?= 1
+    line ?= (@editor.spec.startLine - 1) + vline
+    console.log "line", line
     @ace.focus()
     @gotoLine line, =>
       if spec.find

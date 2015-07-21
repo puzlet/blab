@@ -15,17 +15,17 @@ $blab.demoScript = (spec) ->
   compute "table \"xy\", x, y", "Display the data in a table.<br>Table parameters are shown below."
   
   widget
-    vline: 2, find: "[]", replace: "[\"$x$\", \"$kx^2$\"]"
+    find: "[]", replace: "[\"$x$\", \"$kx^2$\"]"
     guide: "Add column headings to table.<br>Supports MathJax."
     
   widget
-    vline: 3, find: "100", replace: "100, 100"
+    find: "widths: [100]", replace: "widths: [100, 100]"
     guide: "Set column widths."
   
   compute "plot \"plot\", x, y", "Plot the data."
   
   widget
-    vline: 5, find: "# ", replace: ""
+    find: "# yaxis", replace: "yaxis"
     guide: "Change the plot's y-axis limit."
     
   widget
@@ -33,7 +33,7 @@ $blab.demoScript = (spec) ->
     guide: "Change the plot's y-axis limit."
   
   widget
-    vline: 9, find: "pos: 1", replace: "pos: 2"
+    find: "pos: 1", replace: "pos: 2"
     guide: "Change the plot position."
     
   slider
@@ -41,7 +41,7 @@ $blab.demoScript = (spec) ->
     guide: "Adjust the slider and see the computation updated on-the-fly."
     
   md
-    line: 1, find: "Untitled", replace: "Quadratic"
+    find: "Untitled", replace: "Quadratic"
     guide: "Change page title."
     
   md
