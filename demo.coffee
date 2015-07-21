@@ -1,6 +1,13 @@
 $blab.demoScript = (spec) ->
   
-  {md, compute, widget, slider} = spec
+  {md, compute, widget, slider, delays} = spec
+  
+  delays
+    step: 500
+    changeCode: 500
+    codeChar: 150
+    mdChar: 50
+    slider: 200
   
   compute "k = slider \"k\"", "Create a slider in the canvas above.<br>Specify an id (\"k\") so you can refer to it elsewhere."
   compute "x = [1..5]", "Define a vector."

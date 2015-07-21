@@ -47,7 +47,7 @@ Widgets = $blab.Widgets
 class Editor
   
   delay: 500
-  charDelay: 20  # 150
+  charDelay: 150
   runOnStatement: false
   
   constructor: (@appEditor, @guide) ->
@@ -249,6 +249,7 @@ class Demo
       widget: (p...) => @widget(p...)
       slider: (p...) => @slider(p...)
       md: (p...) => @md(p...)
+      delays: (p...) => @delays(p...)
       
     @script.step (cb) =>
       guide.hide()
@@ -287,4 +288,16 @@ class Demo
     @script.step (cb) =>
       @sliders.explain spec.guide, =>
         @sliders.animate(spec.id, spec.vals, cb)
-  
+        
+  delays: (spec) ->
+    @script.stepDelay = spec.step
+    
+    @markdown.delay = spec.changeCode
+    @computation.delay = spec.changeCode
+    @layout.delay = spec.changeCode
+    
+    @markdown.charDelay = spec.mdChar
+    @computation.charDelay = spec.codeChar
+    
+    @sliders.delay = spec.slider
+
