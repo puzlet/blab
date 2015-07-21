@@ -8,25 +8,25 @@ $blab.demoScript = (spec) ->
   compute "table \"xy\", x, y", "Display the data in a table.<br>Table parameters are shown below."
   
   widget
-    line: 13, word: 2, replace: ": [\"$x$\", \"$kx^2$\"]"
+    vline: 2, find: "[]", replace: "[\"$x$\", \"$kx^2$\"]"
     guide: "Add column headings to table.<br>Supports MathJax."
     
   widget
-    line: 14, word: 3, replace: "100, 100"
+    vline: 3, find: "100", replace: "100, 100"
     guide: "Set column widths."
   
   compute "plot \"plot\", x, y", "Plot the data."
   
   widget
-    line: 21, word: 1, replace: ""
+    vline: 5, find: "# ", replace: ""
     guide: "Change the plot's y-axis limit."
     
   widget
-    line: 21, word: 9, replace: "100"
+    vline: 5, find: "max: 1", replace: "max: 100"
     guide: "Change the plot's y-axis limit."
   
   widget
-    line: 25, word: 3, replace: "2"
+    vline: 9, find: "pos: 1", replace: "pos: 2"
     guide: "Change the plot position."
     
   slider
@@ -34,7 +34,7 @@ $blab.demoScript = (spec) ->
     guide: "Adjust the slider and see the computation updated on-the-fly."
     
   md
-    line: 1, word: 1, replace: "Quadratic"
+    line: 1, find: "Untitled", replace: "Quadratic"
     guide: "Change page title."
     
   md

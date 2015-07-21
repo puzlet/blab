@@ -47,7 +47,7 @@ Widgets = $blab.Widgets
 class Editor
   
   delay: 500
-  charDelay: 150
+  charDelay: 20  # 150
   runOnStatement: false
   
   constructor: (@appEditor, @guide) ->
@@ -73,14 +73,23 @@ class Editor
       @editor.run() if @runOnStatement
       cb()
       
-  replace: (line, numWords, word, cb) ->
+  replace: (spec, cb) ->
+    {vline, line, word, replace} = spec
+    line = (@editor.spec.startLine - 1) + vline if vline and not line?
     @ace.focus()
     @gotoLine line, =>
-      @navigateRight numWords, =>
-        @replaceWordRight word, =>
-          @step (=>
-            @editor.run() if @runOnStatement
-          ), -> cb?()
+      if spec.find
+        @step (=> @ace.find spec.find), =>
+          @step (=> @ace.insert replace), =>
+            @step (=>
+              @editor.run() if @runOnStatement
+            ), -> cb?()
+      else
+        @navigateRight word, =>
+          @replaceWordRight replace, =>
+            @step (=>
+              @editor.run() if @runOnStatement
+            ), -> cb?()
   
   gotoLine: (line, cb) ->
     @ace.gotoLine line
@@ -253,7 +262,7 @@ class Demo
       markdownEditor.trigger "clickText", {start: 0} if display is "none"
       edit = =>
         if spec.replace
-          @markdown.replace spec.line, spec.word, spec.replace, cb
+          @markdown.replace spec, cb
         else if spec.append
           @markdown.statement spec.append, cb
         else if spec.close
@@ -272,7 +281,7 @@ class Demo
   widget: (spec) ->
     @script.step (cb) =>
       @layout.explain spec.guide, =>
-        @layout.replace spec.line, spec.word, spec.replace, cb
+        @layout.replace spec, cb
         
   slider: (spec) ->
     @script.step (cb) =>
