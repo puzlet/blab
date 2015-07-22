@@ -133,7 +133,7 @@ class Widgets
     $blab.precompile(precompile)
 
 
-class WidgetEditor
+class WidgetEditor #extends PopupEditor
   
   # TODO:
   # button to show whole layout file
@@ -173,17 +173,14 @@ class WidgetEditor
       container.parent().show()
       @editor.show true
       if txt
-        @vp(txt, true)
-#        setTimeout (=> @vp(txt, true)), 100
-        @firstDisplay = false
+        @vp(txt, true)  # Does this ever happen?
       else
         setTimeout (=> container.parent().hide()), 1000
+      @firstDisplay = false
     else
       @vp txt
   
   vp: (txt, first=false) ->
-    
-    #console.log "********** VIEWPORT", txt, first
     
     @editor.container.css
       maxHeight: ""
@@ -205,19 +202,8 @@ class WidgetEditor
     
     if @start is null
       @editor.spec.viewPort = false
-      #@editor.container.parent().slideDown(2000, =>
-        #@editor.setHeight()
-        #@editor.show false
-      #)
       @editor.container.parent().slideUp 400
-        #@editor.setHeight()
       return
-      #@start = 1
-      #@end = 1
-      
-#    @editor.container.css
-#      maxHeight: ""
-#      border: "3px solid #aaf"
     
     @editor.container.parent().css
       maxHeight: "10px"
@@ -532,7 +518,7 @@ class TextEditor
     @editorShown = not @editorShown
 
 
-class MarkdownEditor
+class MarkdownEditor #extends PopupEditor
   
   containerId: "#main-markdown"
   filename: "blab.md"
@@ -644,12 +630,12 @@ class MarkdownEditor
       container.css maxHeight: "10px"
       container.parent().show()
       @editor.show true
-      setTimeout (=> @vp start), 500
+      setTimeout (=> @vp start, true), 500
       @firstDisplay = false
     else
       @vp start
   
-  vp: (startChar) ->
+  vp: (startChar, first=false) ->
     
     @editor.container.css
       maxHeight: ""
@@ -662,14 +648,20 @@ class MarkdownEditor
       spec.startLine = 1
       spec.endLine = @editorHeight
       @editor.setViewPort()
-      @editor.show false
-      @editor.container.parent().hide()
+      if first
+        @editor.show false
+        @editor.container.parent().hide()
+      else
+        @editor.container.parent().slideUp 400
       return
       
     @start = (if startChar is 0 then 0 else @getStartLine startChar)
     @end = @start + @editorHeight - 1
     
-    @editor.container.parent().show()
+    if first
+      @editor.container.parent().show()
+    else
+      @editor.container.parent().slideDown 400
     @editor.show true
     spec.startLine = @start + 1
     spec.endLine = @end + 1
