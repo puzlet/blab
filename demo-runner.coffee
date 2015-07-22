@@ -286,8 +286,8 @@ class DemoControl
   constructor: ->
     @control = $ "#demo-control"
     @control.show()
-    @pauseImg = $ "<img>", src: "img/UI_78.png"
-    @playImg = $ "<img>", src: "img/UI_76.png"
+    @pauseImg = $ "<img>", src: "img/UI_78.png", class: "demo-button-img"
+    @playImg = $ "<img>", src: "img/UI_76.png", class: "demo-button-img"
     @control.click =>
       return unless @enabled
       @trigger "click"
