@@ -209,7 +209,7 @@ class WidgetEditor
         #@editor.setHeight()
         #@editor.show false
       #)
-      @editor.container.parent().slideUp 300
+      @editor.container.parent().slideUp 400
         #@editor.setHeight()
       return
       #@start = 1
@@ -235,7 +235,7 @@ class WidgetEditor
     @editor.container.parent().css
       maxHeight: ""
     
-    @editor.container.parent().slideDown 300, =>
+    @editor.container.parent().slideDown 400, =>
     
     
   deleteButton: ->
