@@ -58,11 +58,12 @@ class Editor
     
   statement: (@statementStr, cb) ->
     @statementCharIdx = 0
-    @statementStr = "\n" + @statementStr unless @firstAppend
-    @firstAppend = false
     @statementLength = @statementStr.length
     @ace.focus()
+    @ace.insert "\n" unless @firstAppend
+    @firstAppend = false
     @ace.navigateFileEnd()
+    @ace.removeToLineStart() if @ace.getCursorPosition().column>0  # Remove any indentation
     @char cb
     
   char: (cb) ->
@@ -334,6 +335,7 @@ class Demo
     
     @markdown.charDelay = spec.mdChar
     @computation.charDelay = spec.codeChar
+    @definitions.charDelay = spec.codeChar
     
     @sliders.delay = spec.slider
 

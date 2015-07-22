@@ -11,9 +11,9 @@ $blab.demoScript = (spec) ->
     
   compute "k = slider \"k\"", "Create a slider in the canvas above.<br>Specify an id (\"k\") so you can refer to it elsewhere."
   
-  defs "nPoints = 5", "Define a value"
-  defs "quadratic = (x, k) -> k*x*x", "Define a function"
-  defs "defs {nPoints, quadratic}", "Use these definitions in computation above"
+  defs "nPoints = 5", "Define a value."
+  defs "quadratic = (x, k) -> k*x*x", "Define a function."
+  defs "defs {nPoints, quadratic}", "Use these definitions in computation above."
   
   compute "x = [1..nPoints]", "Define a vector."
   compute "y = quadratic(x, k)", "Vector equation based on slider value and x.<br>The result is shown in the box on the right."
