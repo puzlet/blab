@@ -4,7 +4,10 @@ class DemoButton
   
   constructor: ->
     
-    @container = $ "#widgets"
+    @container = $ "#demo-start-button-area"
+    @container.css
+      #background: "yellow"
+      height: 80
     
     @firstLayout = true
     $blab.Layout.on "renderedWidgets", =>
@@ -15,7 +18,7 @@ class DemoButton
     @firstChange = true
     $(document).on "codeNodeChanged", =>
       return unless @firstChange
-      @div.fadeOut(1000)
+      @div.fadeOut(500, => @container.slideUp 500)
       @firstChange = true
     
   create: ->
@@ -32,7 +35,7 @@ class DemoButton
       click: =>
         return if @clicked
         @clicked = true
-        @div.fadeOut(1000, -> new Demo)
+        @div.fadeOut(500, => @container.slideUp 500, -> setTimeout (-> new Demo), 500)
     @div.append "<div style='color: #aaa; margin-bottom: 4px;'>Click to run demo</div>"
     @div.append @button
     @playImg = $ "<img>", src: "img/UI_76.png"

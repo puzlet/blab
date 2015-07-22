@@ -254,11 +254,15 @@ div[data-file="layout.coffee"] {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bfd255', endColorstr='#9ecb2d',GradientType=0 ); /* IE6-9 */
 }
 
+#demo-start-button-area {
+  position: relative;
+}
+
 #demo-button {
   position: absolute;
   width: 180px;
   height: 70px;
-  top: -10px;
+  top: 0px;
   left: 0;
   padding-top: 5px;
   text-align: center;
@@ -288,7 +292,7 @@ div[data-file="layout.coffee"] {
 #demo-control {
   position: fixed;
   display: none;
-  top: 110px;
+  top: 100px;
   right: 45px;
   width: 50px;
 }
