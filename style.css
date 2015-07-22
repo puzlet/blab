@@ -170,6 +170,10 @@ div[data-file="layout.coffee"] {
   border: 2px solid #FFCC66;
   border-radius: 7px;
   min-height: 30px;
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  transition: all 1s ease;
 }
 
 .layout-box-number {
@@ -296,5 +300,4 @@ div[data-file="layout.coffee"] {
   right: 45px;
   width: 50px;
 }
-
 

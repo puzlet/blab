@@ -172,12 +172,18 @@ class WidgetEditor
       container.css maxHeight: "10px"
       container.parent().show()
       @editor.show true
-      setTimeout (=> @vp txt), 500
-      @firstDisplay = false
+      if txt
+        @vp(txt, true)
+#        setTimeout (=> @vp(txt, true)), 100
+        @firstDisplay = false
+      else
+        setTimeout (=> container.parent().hide()), 1000
     else
       @vp txt
   
-  vp: (txt) ->
+  vp: (txt, first=false) ->
+    
+    #console.log "********** VIEWPORT", txt, first
     
     @editor.container.css
       maxHeight: ""
@@ -199,13 +205,22 @@ class WidgetEditor
     
     if @start is null
       @editor.spec.viewPort = false
-      @editor.setHeight()
-      @editor.show false
-      @editor.container.parent().hide()
+      #@editor.container.parent().slideDown(2000, =>
+        #@editor.setHeight()
+        #@editor.show false
+      #)
+      @editor.container.parent().slideUp 300
+        #@editor.setHeight()
       return
-      @start = 1
-      @end = 1
+      #@start = 1
+      #@end = 1
+      
+#    @editor.container.css
+#      maxHeight: ""
+#      border: "3px solid #aaf"
     
+    @editor.container.parent().css
+      maxHeight: "10px"
     @editor.container.parent().show()
     @deleteButton()
     
@@ -215,6 +230,13 @@ class WidgetEditor
     spec.endLine = @end+1
     @editor.setViewPort()
     @editor.editorContainer[0].onwheel = -> false
+    
+    @editor.container.parent().hide()
+    @editor.container.parent().css
+      maxHeight: ""
+    
+    @editor.container.parent().slideDown 300, =>
+    
     
   deleteButton: ->
     
@@ -809,8 +831,8 @@ class Layout
     
   @highlight: (highlight=true) ->
     if highlight
-      $(".layout-box").addClass "layout-highlight"
-      $(".layout-box-number").show()
+        $(".layout-box").addClass "layout-highlight"
+        $(".layout-box-number").show()
     else
       $(".layout-box").removeClass "layout-highlight"
       $(".layout-box-number").hide()

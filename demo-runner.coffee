@@ -321,9 +321,11 @@ class Demo
   
   constructor: ->
     
-    console.log "DEMO"
-    #demoButton.hide()
-  
+    #demo = $blab.resources.find "demo.coffee"
+    #demo.content = "# Demo"
+    
+    console.log "DEMO", demo 
+    
     @script = new Script
     @markdown = new Markdown guide
     @computation = new Computation guide
