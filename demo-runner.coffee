@@ -324,7 +324,7 @@ class Demo
     #demo = $blab.resources.find "demo.coffee"
     #demo.content = "# Demo"
     
-    console.log "DEMO", demo 
+    console.log "DEMO"#, demo 
     
     @script = new Script
     @markdown = new Markdown guide
