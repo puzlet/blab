@@ -226,19 +226,14 @@ div[data-file="layout.coffee"] {
 }
 
 /* Demo */
-#demo-button {
-  position: absolute;
-  width: 300px;
+
+.demo-button {
   height: 50px;
-  top: 10px;
-  left: 0;
+  line-height: 50px;  /* same as height */  
   text-align: center;
   color: white;
   font-size: 16pt;
-  /*background: #6f6;*/
-  /*border: 2px solid green;*/
   border-radius: 10px;
-  line-height: 50px;  /* same as height */
   cursor: pointer;
   user-select: none;
   -webkit-touch-callout: none;
@@ -256,7 +251,13 @@ div[data-file="layout.coffee"] {
   background: -ms-linear-gradient(top,  #bfd255 0%,#8eb92a 50%,#72aa00 51%,#9ecb2d 100%); /* IE10+ */
   background: linear-gradient(to bottom,  #bfd255 0%,#8eb92a 50%,#72aa00 51%,#9ecb2d 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bfd255', endColorstr='#9ecb2d',GradientType=0 ); /* IE6-9 */
+}
 
+#demo-button {
+  position: absolute;
+  width: 300px;
+  top: 10px;
+  left: 0;
 }
 
 #demo-guide {
@@ -273,6 +274,14 @@ div[data-file="layout.coffee"] {
   background: yellow;
   opacity: 0.95;
   display: none;
+}
+
+#demo-control {
+  position: fixed;
+  display: none;
+  top: 100px;
+  right: 25px;
+  width: 100px;
 }
 
 

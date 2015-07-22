@@ -22,6 +22,7 @@ class DemoButton
     @clicked = false
     @button = $ "<div>",
       id: "demo-button"
+      class: "demo-button"
       html: @text
       #css:
         #width: @width
@@ -273,6 +274,34 @@ class Script
     
 
 
+class DemoControl
+  
+  constructor: ->
+    @control = $ "#demo-control"
+    @control.show()
+    @text "Pause"
+    @control.click =>
+      return unless @enabled
+      @trigger "click"
+    
+    @show(false)
+    
+    @observers =
+      click: []
+  
+  text: (text) -> @control.html text
+  
+  show: (show=true) ->
+    @enabled = show
+    @control.css
+      opacity: (if show then 1 else 0.2)
+      cursor: (if show then "pointer" else "default")
+  
+  on: (evt, observer) -> @observers[evt].push observer
+  
+  trigger: (evt, data) -> observer(data) for observer in @observers[evt]
+  
+
 class Demo
   
   dwellDelay: 1000
@@ -288,6 +317,19 @@ class Demo
     @definitions = new Definitions guide
     @layout = new Layout guide
     @sliders = new Sliders guide
+    
+    @control = new DemoControl
+    @tId = null
+    @nextStep = null
+    
+    @control.on "click", =>
+      if @tId
+        @control.text "Run"
+        clearTimeout(@tId)
+        @tId = null
+      else
+        @nextStep?()
+        @nextStep = null
     
     $blab.demoScript
       compute: (p...) => @compute(p...)
@@ -322,10 +364,10 @@ class Demo
     @script.step (cb) =>
       @computation.explain html if html.length
       @computation.statement statement, =>
-        @dwell dwell, -> 
+        done = ->
           guide.hide()
           cb()
-        
+        @dwell dwell, -> done()
         
   defs: (statement, html="", dwell=@dwellDelay) ->
     @script.step (cb) =>
@@ -363,5 +405,16 @@ class Demo
     
     @dwellDelay = spec.dwell if spec.dwell
     
-  dwell: (t, cb) -> setTimeout (-> cb()), t 
+  dwell: (t, cb) ->
+    # ZZZ show control here?
+    @nextStep = =>
+      @control.show(false)
+      @control.text "Pause"
+      cb()
+    @tId = setTimeout (=>
+      @nextStep()
+      @nextStep = null
+    ), t
+    @control.text "Pause"
+    @control.show()
 
