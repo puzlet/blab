@@ -11,28 +11,35 @@ class DemoButton
       return unless @firstLayout
       @create()
       @firstLayout = false
-  
+      
     @firstChange = true
     $(document).on "codeNodeChanged", =>
       return unless @firstChange
-      @button.fadeOut(1000)
+      @div.fadeOut(1000)
       @firstChange = true
     
   create: ->
     @clicked = false
-    @button = $ "<div>",
+    @div = $ "<div>",
       id: "demo-button"
+    @button = $ "<div>",
+      #id: "demo-button"
       class: "demo-button"
-      html: @text
+      #html: @text
       #css:
         #width: @width
       #  left: (@container.width() - @width)/2
       click: =>
         return if @clicked
         @clicked = true
-        @button.fadeOut(1000, -> new Demo)
-    @container.append @button
-    @button.css left: (@container.width() - @button.width())/2
+        @div.fadeOut(1000, -> new Demo)
+    @div.append "<span style='color: #aaa; font-size: 10pt}'>Click to run demo</span>"
+    @div.append @button
+    @playImg = $ "<img>", src: "img/UI_76.png"
+    @button.append @playImg
+    @container.append @div
+    @div.css left: (@container.width() - @div.width())/2
+    @button.css marginLeft: (@div.width() - @button.width())/2 
     
 
 new DemoButton
@@ -279,7 +286,8 @@ class DemoControl
   constructor: ->
     @control = $ "#demo-control"
     @control.show()
-    @text "Pause"
+    @pauseImg = $ "<img>", src: "img/UI_78.png"
+    @playImg = $ "<img>", src: "img/UI_76.png"
     @control.click =>
       return unless @enabled
       @trigger "click"
@@ -291,11 +299,13 @@ class DemoControl
   
   text: (text) -> @control.html text
   
-  show: (show=true) ->
+  show: (show=true, play=false) ->
     @enabled = show
     @control.css
       opacity: (if show then 1 else 0.2)
       cursor: (if show then "pointer" else "default")
+    @control.empty()
+    @control.append (if play then @playImg else @pauseImg)
   
   on: (evt, observer) -> @observers[evt].push observer
   
@@ -324,7 +334,7 @@ class Demo
     
     @control.on "click", =>
       if @tId
-        @control.text "Run"
+        @control.show true, true
         clearTimeout(@tId)
         @tId = null
       else
@@ -410,12 +420,10 @@ class Demo
     # ZZZ show control here?
     @nextStep = =>
       @control.show(false)
-      @control.text "Pause"
       cb()
     @tId = setTimeout (=>
       @nextStep()
       @nextStep = null
     ), t
-    @control.text "Pause"
     @control.show()
 
