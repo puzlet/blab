@@ -50,6 +50,7 @@ class Editor
   delay: 500
   charDelay: 150
   runOnStatement: false
+  clearFirst: false
   
   constructor: (@appEditor, @guide) ->
     @editor = @appEditor.editor
@@ -60,11 +61,20 @@ class Editor
     @statementCharIdx = 0
     @statementLength = @statementStr.length
     @ace.focus()
-    @ace.insert "\n" unless @firstAppend
-    @firstAppend = false
-    @ace.navigateFileEnd()
-    @ace.removeToLineStart() if @ace.getCursorPosition().column>0  # Remove any indentation
-    @char cb
+    
+    doStatement = =>
+      @ace.insert "\n" unless @firstAppend
+      @firstAppend = false
+      @ace.navigateFileEnd()
+      @ace.removeToLineStart() if @ace.getCursorPosition().column>0  # Remove any indentation
+      @char cb
+    
+    if @firstAppend and @clearFirst
+      @step (=> @ace.selection.selectAll()), =>
+        @ace.insert ""
+        doStatement()
+    else
+      doStatement()
     
   char: (cb) ->
     i = @statementCharIdx
@@ -154,6 +164,7 @@ class Markdown extends Editor
 
 class Computation extends Editor
   
+  clearFirst: true
   runOnStatement: true
   
   constructor: (@guide) ->
@@ -171,15 +182,12 @@ class Computation extends Editor
 
 class Definitions extends Editor
   
+  clearFirst: true
   runOnStatement: true
   
   constructor: (@guide) ->
     super defsEditor, @guide
-    @ace.focus()
-    @ace.selection.selectAll()
-    @ace.insert ""
-    #@replace {find: "defs {}", replace: ""}, ->
-  
+    
   explain: (html) ->
     @guide.show()
     c = @editor.container
@@ -267,6 +275,8 @@ class Script
 
 class Demo
   
+  dwellDelay: 1000
+  
   constructor: ->
     
     console.log "DEMO"
@@ -308,24 +318,28 @@ class Demo
       @markdown.explain(spec.guide) if spec.guide
       setTimeout (-> edit()), 500
   
-  compute: (statement, html="") ->
+  compute: (statement, html="", dwell=@dwellDelay) ->
     @script.step (cb) =>
       @computation.explain html if html.length
       @computation.statement statement, =>
-        guide.hide()
-        cb()
+        @dwell dwell, -> 
+          guide.hide()
+          cb()
         
-  defs: (statement, html="") ->
+        
+  defs: (statement, html="", dwell=@dwellDelay) ->
     @script.step (cb) =>
       @definitions.explain html if html.length
       @definitions.statement statement, =>
-        guide.hide()
-        cb()
+        @dwell dwell, -> 
+          guide.hide()
+          cb()
       
   widget: (spec) ->
     @script.step (cb) =>
       @layout.explain spec.guide, =>
-        @layout.replace spec, cb
+        @layout.replace spec, =>
+          @dwell (spec.dwell ? @dwellDelay), cb
         
   slider: (spec) ->
     @script.step (cb) =>
@@ -333,15 +347,21 @@ class Demo
         @sliders.animate(spec.id, spec.vals, cb)
         
   delays: (spec) ->
-    @script.stepDelay = spec.step
+    @script.stepDelay = spec.step if spec.step
     
-    @markdown.delay = spec.changeCode
-    @computation.delay = spec.changeCode
-    @layout.delay = spec.changeCode
+    if spec.changeCode
+      @markdown.delay = spec.changeCode
+      @computation.delay = spec.changeCode
+      @layout.delay = spec.changeCode
     
-    @markdown.charDelay = spec.mdChar
-    @computation.charDelay = spec.codeChar
-    @definitions.charDelay = spec.codeChar
+    @markdown.charDelay = spec.mdChar if spec.mdChar
+    if spec.codeChar
+      @computation.charDelay = spec.codeChar
+      @definitions.charDelay = spec.codeChar
     
-    @sliders.delay = spec.slider
+    @sliders.delay = spec.slider if spec.slider
+    
+    @dwellDelay = spec.dwell if spec.dwell
+    
+  dwell: (t, cb) -> setTimeout (-> cb()), t 
 
