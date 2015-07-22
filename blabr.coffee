@@ -832,10 +832,10 @@ class Layout
   @highlight: (highlight=true) ->
     if highlight
         $(".layout-box").addClass "layout-highlight"
-        $(".layout-box-number").show()
+        $(".layout-box-number").fadeIn(1000)
     else
-      $(".layout-box").removeClass "layout-highlight"
       $(".layout-box-number").hide()
+      $(".layout-box").removeClass "layout-highlight"
         
   @append: (element, widget) ->
     if widget?.spec.pos?

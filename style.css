@@ -188,7 +188,7 @@ div[data-file="layout.coffee"] {
   margin-left: 443px;  /* should be function of container width */
   border-radius: 5px;
   font-size: 10pt;
-	cursor: default;
+  cursor: default;
 }
 
 .widget-highlight {
