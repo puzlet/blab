@@ -257,13 +257,15 @@ div[data-file="layout.coffee"] {
 #demo-button {
   position: absolute;
   width: 180px;
-  height: 100px;
-  top: -30px;
+  height: 70px;
+  top: -10px;
   left: 0;
-  padding-top: 10px;
+  padding-top: 5px;
   text-align: center;
-  background: #eee;
+  /*background: #eee;*/
   border-radius: 10px;
+  font-size: 10pt;
+  line-height: 100%;
   /*margin: 0 auto;*/
 }
 
@@ -286,7 +288,7 @@ div[data-file="layout.coffee"] {
 #demo-control {
   position: fixed;
   display: none;
-  top: 100px;
+  top: 110px;
   right: 45px;
   width: 50px;
 }

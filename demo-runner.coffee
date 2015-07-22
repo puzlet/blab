@@ -33,7 +33,7 @@ class DemoButton
         return if @clicked
         @clicked = true
         @div.fadeOut(1000, -> new Demo)
-    @div.append "<span style='color: #aaa; font-size: 10pt}'>Click to run demo</span>"
+    @div.append "<div style='color: #aaa; margin-bottom: 4px;'>Click to run demo</div>"
     @div.append @button
     @playImg = $ "<img>", src: "img/UI_76.png"
     @button.append @playImg
