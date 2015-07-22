@@ -340,6 +340,7 @@ class Demo
       delays: (p...) => @delays(p...)
       
     @script.step (cb) =>
+      @control.control.hide()
       guide.hide()
       cb()
     
