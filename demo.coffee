@@ -5,7 +5,7 @@ $blab.demoScript = (spec) ->
   delays
     step: 500
     changeCode: 500
-    codeChar: 150
+    codeChar: 10  # 150
     mdChar: 50
     slider: 200
     
@@ -20,7 +20,7 @@ $blab.demoScript = (spec) ->
   compute "table \"xy\", x, y", "Display the data in a table.<br>Table parameters are shown below."
   
   widget
-    find: "[]", replace: "[\"$x$\", \"$kx^2$\"]"
+    find: "[]", replace: "[\"$x$\", \"$kx^2$\"]", slow: true
     guide: "Add column headings to table.<br>Supports MathJax."
     
   widget

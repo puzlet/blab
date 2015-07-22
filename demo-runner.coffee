@@ -86,10 +86,16 @@ class Editor
     @gotoLine line, =>
       if spec.find
         @step (=> @ace.find spec.find), =>
-          @step (=> @ace.insert replace), =>
-            @step (=>
-              @editor.run() if @runOnStatement
-            ), -> cb?()
+          if spec.slow
+            @statementStr = replace
+            @statementCharIdx = 0
+            @statementLength = @statementStr.length
+            @char cb
+          else
+            @step (=> @ace.insert replace), =>
+             @step (=>
+               @editor.run() if @runOnStatement
+             ), -> cb?()
       else
         @navigateRight word, =>
           @replaceWordRight replace, =>
