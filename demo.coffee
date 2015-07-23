@@ -12,9 +12,8 @@ $blab.demoScript = (spec) ->
   
   text """
   <b>Blabr</b> is a tool for creating a <b>blab</b> (short for we<b><i>b lab</i></b>).<br><br>
-  A blab is a web page for interactive computation:<br>math, sliders, tables, plots, etc.<br><br>
-  For scientific computing, a blab is an alternative to an online spreadsheet.
-  """, 8000
+  A blab is a web page for interactive computation:<br>math, sliders, tables, plots, etc.
+  """, 4000
   
   compute "k = slider \"k\"", "Create a slider in the canvas above.<br>Specify an id (\"k\") so you can refer to it elsewhere.", 3000
   
@@ -23,7 +22,13 @@ $blab.demoScript = (spec) ->
   #defs "defs {nPoints, quadratic}", "Use these definitions in computation above."
   
   compute "x = [1..5]", "Define a vector."
-  compute "y = k*x*x", "Vector equation based on slider value and x.<br>The result is shown in the box on the right.", 3000
+  
+  compute "y = k*x*x", """
+    Vector equation based on slider value and x.<br>The result is shown in the box on the right.
+    """, 5000
+
+#    The code is <a href="//coffeescript.org" target="_blank">CoffeeScript</a>, customized for math and scientific computing. 
+  
   compute "table \"xy\", x, y", "Display the data in a table.<br>Table parameters are shown below.", 4000
   
   widget
@@ -77,6 +82,10 @@ $blab.demoScript = (spec) ->
   <a href="//blabr.io/?4bd90a0b619bff7707b3" target="_blank" style="margin-left: 10">blabr.io?4bd90a0b619bff7707b3</a>.<br><br>
   (The Blab's Gist id is in the link.)
   """, 7000
+  
+  #text """
+  #For scientific computing, a blab is an alternative to an online spreadsheet.
+  #""", 3000
   
   text """
   <b>Learn more about blabr</b><br>
