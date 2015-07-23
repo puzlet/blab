@@ -63,6 +63,11 @@ $blab.demoScript = (spec) ->
     guide: "Add markdown (Github-flavored).  Supports MathJax."
     
   md
+    append: ""
+    guide: "<a href='?58ef3095767efcdf1977'>Click here</a> to see more blabr demos."
+    dwell: 10000
+    
+  md
     close: true
   
     
