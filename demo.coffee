@@ -32,12 +32,12 @@ $blab.demoScript = (spec) ->
   compute "plot \"plot\", x, y", "Plot the data.", 3000
   
   widget
-    find: "# yaxis", replace: "yaxis"
+    vline: 5, find: "max: 1", replace: "max: 100"
     guide: "Change the plot's y-axis limit."
     dwell: 0
     
   widget
-    vline: 5, find: "max: 1", replace: "max: 100"
+    find: "# yaxis", replace: "yaxis"
     guide: "Change the plot's y-axis limit."
   
   widget
