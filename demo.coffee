@@ -6,8 +6,8 @@ $blab.demoScript = (spec) ->
     step: 500
     dwell: 1000
     changeCode: 500
-    codeChar: 10 #100
-    mdChar: 10 #50
+    codeChar: 100
+    mdChar: 50
     slider: 200
   
   compute "k = slider \"k\"", "Create a slider in the canvas above.<br>Specify an id (\"k\") so you can refer to it elsewhere.", 3000
@@ -68,5 +68,5 @@ $blab.demoScript = (spec) ->
   text """
   <b>Learn more about blabr</b><br>
   #{$blab.demoListHtml(highlight: "58ef3095767efcdf1977")}
-  """, 10000
+  """, 10000, "#ff9"
 

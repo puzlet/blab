@@ -159,7 +159,7 @@ class Text
   
   constructor: (@guide) ->
   
-  explain: (html, cb) ->
+  explain: (html, background, cb) ->
     @guide.show()
     c = $("#blabr-tagline")
     pos = c.offset()
@@ -169,6 +169,7 @@ class Text
     @guide.css
       top: top
       left: ($("body").width() - 500)/2
+      background: background ? "yellow"
       width: 500
       #left: 500
     #@guide.animate {
@@ -387,13 +388,15 @@ class Demo
     
     @script.run()
     
-  text: (html, dwell=@dwellDelay) ->
+  text: (html, dwell=@dwellDelay, background="yellow") ->
     @script.step (cb) =>
       done = ->
-        guide.css width: ""
+        guide.css
+          width: ""
+          background: "yellow"
         guide.hide()
         cb()
-      @textGuide.explain html, =>
+      @textGuide.explain html, background, =>
         @dwell dwell, -> done()
   
   md: (spec, dwell=@dwellDelay) ->

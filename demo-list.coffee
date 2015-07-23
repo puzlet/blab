@@ -17,11 +17,11 @@ demoLinks = (items) ->
     list.append(link).append("<br>")
     
 $blab.demoListHtml = (spec) ->
-  html = ""
+  html = "<ul>\n"
   for item in demoList
     c = if item.id is spec.highlight then "demo-list-item-highlight" else ""
-    html += "<a class='#{c}' href='?#{item.id}' target='_blank'>#{item.text}</a><br>\n"
-  html
+    html += "<li><a class='#{c}' href='?#{item.id}' target='_blank'>#{item.text}</a></li>\n"
+  html += "</ul>\n"
 
 demoList = [
   {text: "Basic Math", id: "58ef3095767efcdf1977"}
