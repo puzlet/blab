@@ -301,3 +301,11 @@ div[data-file="layout.coffee"] {
   width: 50px;
 }
 
+#demo-list {
+  display: none;
+  width: 440px;
+  padding: 15px;
+  border-radius: 10px;
+  background: #eee;
+}
+
