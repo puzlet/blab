@@ -13,7 +13,7 @@ $blab.demoScript = (spec) ->
   text """
   <b>Blabr</b> is a tool for creating a <b>blab</b> (short for we<b><i>b lab</i></b>).<br><br>
   A blab is a web page for interactive computation:<br>math, sliders, tables, plots, etc.
-  """, 4000
+  """, 6000
   
   compute "k = slider \"k\"", "Create a slider in the canvas above.<br>Specify an id (\"k\") so you can refer to it elsewhere.", 3000
   
@@ -77,22 +77,24 @@ $blab.demoScript = (spec) ->
     close: true
   
   text """
-  You can save a blab to a <a href="//gist.github.com" target="_blank">GitHub Gist</a>.<br><br>
+  You can save a blab as a <a href="//gist.github.com" target="_blank">GitHub Gist</a>.<br>
+  Just click the Save button at the top right.<br><br>
   You'll get a blab link like this one:<br>
   <a href="//blabr.io/?4bd90a0b619bff7707b3" target="_blank" style="margin-left: 10">blabr.io?4bd90a0b619bff7707b3</a>.<br><br>
-  (The Blab's Gist id is in the link.)
-  """, 7000
+  Share your blab's link with anyone.
+  """, 10000
   
   #text """
   #For scientific computing, a blab is an alternative to an online spreadsheet.
   #""", 3000
   
   text """
-  <b>Learn more about blabr</b><br>
+  For scientific computing, Blabr is an alternative<br>to online spreadsheets.<br><br>
+  <b>Learn more about Blabr:</b><br>
   #{$blab.demoListHtml(highlight: "58ef3095767efcdf1977")}
   See blab examples <a href="//blabr.org">here</a>.<br>
   <br>
   <a href="//blabr.io">Run this demo again</a>
-  """, 10000
+  """, 30000
 
 
