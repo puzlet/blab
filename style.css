@@ -301,14 +301,57 @@ div[data-file="layout.coffee"] {
   width: 50px;
 }
 
+#demo-list-button {
+  margin-left: 10px;
+}
+
 #demo-list {
   display: none;
-  width: 440px;
-  padding: 15px;
+  position: relative;
+  width: 960px;
+  padding: 10px 0px;
+  /*padding: 15px;*/
   border-radius: 10px;
   background: #eee;
   font-size: 10pt;
   line-height: 140%;
+}
+
+.guide-col {
+	display: inline-block;
+	vertical-align: top; 
+  margin-left: 10px;
+  width: 226px;
+}
+
+.guide-col ul {
+  list-style-position: inside;
+  margin: 0;
+  padding: 0;
+}
+
+.guide-col img {
+  width: 30px;
+}
+
+.gist {
+  overflow: hidden;
+  width: 100%;
+  margin: 5px 0;
+}
+
+.gist img {
+  float: left;
+  width: 30px;
+  height: 30px;
+}
+
+.gist p {
+  float: right;
+  width: 185px;
+  margin: 0;
+  font-size: 9pt;
+  line-height: 110%;
 }
 
 .demo-list-item-highlight {
