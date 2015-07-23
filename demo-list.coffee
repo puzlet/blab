@@ -29,8 +29,9 @@ demoList = [
   {text: "Text", id: "277bf74a4b1e7364df29"}
   {text: "Tables", id: "e31dcf9a402f12fbf4f5"}
   {text: "Sliders", id: "9b6fbf80ed838d1e1cef"}
-  {text: "Layout", id: "c7837da7dd136710e2ba"}
-  {text: "Importing", id: "d1889126b58315ba2239"}
+  {text: "Layout of components", id: "c7837da7dd136710e2ba"}
+  {text: "Function definitions", id: "e8457f2a62b292e1d0a2"}
+  {text: "Importing definitions", id: "d1889126b58315ba2239"}
 ]
 
 demoLinks demoList

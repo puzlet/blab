@@ -163,13 +163,13 @@ class Text
     @guide.show()
     c = $("#blabr-tagline")
     pos = c.offset()
-    top = pos.top + 60
+    #top = pos.top + 60
     h = $(window).height()
-    top = h/2 if top > h - 200
+    top = h/3 #if top > h - 200
     @guide.css
       top: top
       left: ($("body").width() - 500)/2
-      background: background ? "yellow"
+      background: background ? "#ff9"
       width: 500
       #left: 500
     #@guide.animate {
@@ -388,12 +388,12 @@ class Demo
     
     @script.run()
     
-  text: (html, dwell=@dwellDelay, background="yellow") ->
+  text: (html, dwell=@dwellDelay, background="#ff9") ->
     @script.step (cb) =>
       done = ->
         guide.css
           width: ""
-          background: "yellow"
+          background: "#ff9"
         guide.hide()
         cb()
       @textGuide.explain html, background, =>
@@ -414,7 +414,7 @@ class Demo
           markdownEditor.setViewPort null
           d()
       # TODO: This should be triggered after md editor visible.
-      setTimeout (=> @markdown.explain(spec.guide)), 400 if spec.guide
+      setTimeout (=> @markdown.explain(spec.guide)), 500 if spec.guide
       setTimeout (-> edit()), 900
   
   compute: (statement, html="", dwell=@dwellDelay) ->

@@ -9,19 +9,21 @@ $blab.demoScript = (spec) ->
     codeChar: 100
     mdChar: 50
     slider: 200
-    
+  
   text """
-  Blabr is a tool for creating a <b>blab</b> (short for we<b><i>b lab</i></b>) &mdash; interactive computation in the browser.<br>
-  """, 5000, "#ff9"
+  <b>Blabr</b> is a tool for creating a <b>blab</b> (short for we<b><i>b lab</i></b>).<br><br>
+  A blab is a web page for interactive computation:<br>math, sliders, tables, plots, etc.<br><br>
+  For scientific computing, a blab is an alternative to an online spreadsheet.
+  """, 8000
   
   compute "k = slider \"k\"", "Create a slider in the canvas above.<br>Specify an id (\"k\") so you can refer to it elsewhere.", 3000
   
-  defs "nPoints = 5", "Define a value."
-  defs "quadratic = (x, k) -> k*x*x", "Define a function."
-  defs "defs {nPoints, quadratic}", "Use these definitions in computation above."
+  #defs "nPoints = 5", "Define a value."
+  #defs "quadratic = (x, k) -> k*x*x", "Define a function."
+  #defs "defs {nPoints, quadratic}", "Use these definitions in computation above."
   
-  compute "x = [1..nPoints]", "Define a vector."
-  compute "y = quadratic(x, k)", "Vector equation based on slider value and x.<br>The result is shown in the box on the right.", 3000
+  compute "x = [1..5]", "Define a vector."
+  compute "y = k*x*x", "Vector equation based on slider value and x.<br>The result is shown in the box on the right.", 3000
   compute "table \"xy\", x, y", "Display the data in a table.<br>Table parameters are shown below.", 4000
   
   widget
@@ -55,29 +57,33 @@ $blab.demoScript = (spec) ->
     
   md
     find: "Untitled", replace: "Quadratic"
-    guide: "Change page title."
+    guide: """
+      When you click on the page title, this editor appears.<br>
+      Change the page title here.<br><br>
+      (Similarly, when you click a slider/table/plot, an editor appears so you can change its settings.)<br>
+    """
+    dwell: 5000
     
   md
     append: "This blab (short for we**_b lab_**)\nshows the quadratic function:\n\n> $f(x) = k x^2$\n\n* * *"
     guide: "Add markdown (Github-flavored).  Supports MathJax."
     
-  #md
-  #  append: " "
-  #  guide: "<b>Learn more about blabr</b><br><a href='?58ef3095767efcdf1977'>Click here</a> to see more blabr demos."
-  #  dwell: 10000
-    
   md
     close: true
   
   text """
-  You can save a blab to a <a href="//gist.github.com" target="_blank">GitHub Gist</a>.<br>
-  For example, here's a <a href="//blabr.io/?4bd90a0b619bff7707b3" target="_blank">saved blab</a>.
-  """, 5000, "#ff9"
+  You can save a blab to a <a href="//gist.github.com" target="_blank">GitHub Gist</a>.<br><br>
+  You'll get a blab link like this one:<br>
+  <a href="//blabr.io/?4bd90a0b619bff7707b3" target="_blank" style="margin-left: 10">blabr.io?4bd90a0b619bff7707b3</a>.<br><br>
+  (The Blab's Gist id is in the link.)
+  """, 7000
   
   text """
   <b>Learn more about blabr</b><br>
   #{$blab.demoListHtml(highlight: "58ef3095767efcdf1977")}
-  See blab examples <a href="//blabr.org">here</a>.
-  """, 10000, "#ff9"
+  See blab examples <a href="//blabr.org">here</a>.<br>
+  <br>
+  <a href="//blabr.io">Run this demo again</a>
+  """, 10000
 
 
