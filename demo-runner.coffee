@@ -102,7 +102,7 @@ class Editor
     {vline, line, word, replace} = spec
     vline ?= 1
     line ?= (@editor.spec.startLine - 1) + vline
-    console.log "line", line
+    #console.log "line", line
     @ace.focus()
     @gotoLine line, =>
       if spec.find
@@ -153,6 +153,30 @@ class Editor
   step: (step, cb) ->
     step()
     setTimeout (-> cb()), @delay
+
+
+class Text
+  
+  constructor: (@guide) ->
+  
+  explain: (html, cb) ->
+    @guide.show()
+    c = $("#blabr-tagline")
+    pos = c.offset()
+    top = pos.top + 40
+    h = $(window).height()
+    top = h/2 if top > h - 200
+    @guide.css
+      top: top
+      left: ($("body").width() - 500)/2
+      width: 500
+      #left: 500
+    #@guide.animate {
+    #  top: pos.top + 10
+    #  left: pos.left + 500
+    #}, 400, cb
+    @guide.html html
+    cb()
 
 
 class Markdown extends Editor
@@ -327,6 +351,7 @@ class Demo
     console.log "DEMO"#, demo 
     
     @script = new Script
+    @textGuide = new Text guide
     @markdown = new Markdown guide
     @computation = new Computation guide
     @definitions = new Definitions guide
@@ -347,6 +372,7 @@ class Demo
         @nextStep = null
     
     $blab.demoScript
+      text: (p...) => @text(p...)
       compute: (p...) => @compute(p...)
       defs: (p...) => @defs(p...)
       widget: (p...) => @widget(p...)
@@ -360,6 +386,15 @@ class Demo
       cb()
     
     @script.run()
+    
+  text: (html, dwell=@dwellDelay) ->
+    @script.step (cb) =>
+      done = ->
+        guide.css width: ""
+        guide.hide()
+        cb()
+      @textGuide.explain html, =>
+        @dwell dwell, -> done()
   
   md: (spec, dwell=@dwellDelay) ->
     dwell = spec.dwell if spec.dwell

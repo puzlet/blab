@@ -309,3 +309,7 @@ div[data-file="layout.coffee"] {
   background: #eee;
 }
 
+.demo-list-item-highlight {
+  font-weight: bold;
+}
+

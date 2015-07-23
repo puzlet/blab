@@ -1,15 +1,15 @@
 $blab.demoScript = (spec) ->
   
-  {md, compute, defs, widget, slider, delays} = spec
+  {text, md, compute, defs, widget, slider, delays} = spec
   
   delays
     step: 500
     dwell: 1000
     changeCode: 500
-    codeChar: 100
-    mdChar: 50
+    codeChar: 10 #100
+    mdChar: 10 #50
     slider: 200
-    
+  
   compute "k = slider \"k\"", "Create a slider in the canvas above.<br>Specify an id (\"k\") so you can refer to it elsewhere.", 3000
   
   defs "nPoints = 5", "Define a value."
@@ -57,12 +57,16 @@ $blab.demoScript = (spec) ->
     append: "This blab (short for we**_b lab_**)\nshows the quadratic function:\n\n> $f(x) = k x^2$\n\n* * *"
     guide: "Add markdown (Github-flavored).  Supports MathJax."
     
-  md
-    append: ""
-    guide: "<b>Learn more about blabr</b><br><a href='?58ef3095767efcdf1977'>Click here</a> to see more blabr demos."
-    dwell: 10000
+  #md
+  #  append: " "
+  #  guide: "<b>Learn more about blabr</b><br><a href='?58ef3095767efcdf1977'>Click here</a> to see more blabr demos."
+  #  dwell: 10000
     
   md
     close: true
   
-    
+  text """
+  <b>Learn more about blabr</b><br>
+  #{$blab.demoListHtml(highlight: "58ef3095767efcdf1977")}
+  """, 10000
+
