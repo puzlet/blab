@@ -95,7 +95,7 @@ $blab.refListHtml = (spec) ->
   html += "</ul>\n"
 
 demoList = [
-  {text: "Introduction", id: ""}
+  # {text: "Introduction", id: ""}
   {text: "Basic math", id: "58ef3095767efcdf1977"}
   {text: "Basic plot", id: "ee2036a3e55336c6d010"}
   {text: "Text", id: "277bf74a4b1e7364df29"}

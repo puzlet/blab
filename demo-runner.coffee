@@ -381,19 +381,12 @@ class Demo
       md: (p...) => @md(p...)
       delays: (p...) => @delays(p...)
     
-    @text """
-    <b>Learn more about Blabr</b><br>
-    Click button "Blabr Guide" for demos, examples, and documentation.<br><br>
-    <a href="//blabr.io">Run this demo again</a>
-    """, 5000
+    @learnMore()
     
-    @script.step (cb) =>
-      $("#demo-list").slideDown(cb)
-    
-    @script.step (cb) =>
-      @control.control.hide()
-      guide.hide()
-      cb()
+    #@script.step (cb) =>
+    #  @control.control.hide()
+    #  guide.hide()
+    #  cb()
     
     @script.run()
     
@@ -481,4 +474,25 @@ class Demo
       @nextStep = null
     ), t
     @control.show()
+    
+  learnMore: ->
+    @script.step (cb) =>
+      html = """
+        <b>Learn more about Blabr</b><br><br>
+        The button <button>Blabr Guide</button> (bottom of page)<br>
+        shows demos, examples, and documentation.<br><br>
+        <a href="#{window.location}">Run this demo again</a>
+      """
+      dwell = 10000
+      bg = "#ff9"
+      done = =>
+        @control.control.hide()
+        guide.css
+          width: ""
+          background: bg
+        guide.hide()
+        cb()
+      setTimeout (-> $("#demo-list").slideDown()), 1000
+      @textGuide.explain html, bg, =>
+        @dwell dwell, -> done()
 
