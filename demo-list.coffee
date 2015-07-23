@@ -4,7 +4,7 @@ list = $ "#demo-list"
 list.hide()
 
 button = $ "#demo-list-button"
-button.click -> list.toggle()
+button.click -> list.slideToggle()
 
 list.append "<b>Demos</b><br>"
 
