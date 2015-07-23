@@ -81,20 +81,21 @@ $blab.demoScript = (spec) ->
   Just click the Save button at the top right.<br><br>
   You'll get a blab link like this one:<br>
   <a href="//blabr.io/?4bd90a0b619bff7707b3" target="_blank" style="margin-left: 10">blabr.io?4bd90a0b619bff7707b3</a>.<br><br>
-  Share your blab's link with anyone.
+  Share your blab's link with anyone.<br><br>
+  For scientific computing, a blab is an alternative to an online spreadsheet.
   """, 10000
   
   #text """
   #For scientific computing, a blab is an alternative to an online spreadsheet.
   #""", 3000
   
-  text """
-  For scientific computing, Blabr is an alternative<br>to online spreadsheets.<br><br>
-  <b>Learn more about Blabr:</b><br>
-  #{$blab.demoListHtml(highlight: "58ef3095767efcdf1977")}
-  See blab examples <a href="//blabr.org">here</a>.<br>
-  <br>
-  <a href="//blabr.io">Run this demo again</a>
-  """, 30000
+  #text """
+  #For scientific computing, Blabr is an alternative<br>to online spreadsheets.<br><br>
+  #<b>Learn more about Blabr:</b><br>
+  ##{$blab.demoListHtml(highlight: "58ef3095767efcdf1977")}
+  #See blab examples <a href="//blabr.org">here</a>.<br>
+  #<br>
+  #<a href="//blabr.io">Run this demo again</a>
+  #""", 30000
 
 

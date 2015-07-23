@@ -349,7 +349,7 @@ class Demo
     #demo = $blab.resources.find "demo.coffee"
     #demo.content = "# Demo"
     
-    console.log "DEMO"#, demo 
+    console.log "DEMO"#, demo
     
     @script = new Script
     @textGuide = new Text guide
@@ -380,7 +380,16 @@ class Demo
       slider: (p...) => @slider(p...)
       md: (p...) => @md(p...)
       delays: (p...) => @delays(p...)
-      
+    
+    @text """
+    <b>Learn more about Blabr</b><br>
+    Click button "Blabr Guide" for demos, examples, and documentation.<br><br>
+    <a href="//blabr.io">Run this demo again</a>
+    """, 5000
+    
+    @script.step (cb) =>
+      $("#demo-list").slideDown(cb)
+    
     @script.step (cb) =>
       @control.control.hide()
       guide.hide()
