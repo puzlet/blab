@@ -8,6 +8,13 @@ button.click -> list.slideToggle()
 
 demoLinks = (items) ->
   list.empty()
+  list.append """
+  <b>Quick Syntax Tips</b><br>
+  <code>k = slider "k"</code><br>
+  <code>table "my-table", x, y</code><br>
+  <code>plot "my-plot", x, y</code><br>
+  <br>
+  """
   list.append "<b>Demos</b><br>"
   for item in items
     link = $ "<a>",
@@ -15,6 +22,15 @@ demoLinks = (items) ->
       text: item.text
       target: "_blank"
     list.append(link).append("<br>")
+    
+  list.append """
+  <br>
+  <b>Examples</b><br>
+  (Thumbnails/links to a few nice examples here.)
+  <br><br>
+  <b>Reference</b><br>
+  (Documentation blabs - CoffeeScript/Blabr language guide.)
+  """
     
 $blab.demoListHtml = (spec) ->
   html = "<ul>\n"

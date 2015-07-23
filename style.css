@@ -307,6 +307,8 @@ div[data-file="layout.coffee"] {
   padding: 15px;
   border-radius: 10px;
   background: #eee;
+  font-size: 10pt;
+  line-height: 140%;
 }
 
 .demo-list-item-highlight {
