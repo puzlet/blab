@@ -20,13 +20,14 @@ $blab.demoListHtml = (spec) ->
   html = "<ul>\n"
   for item in demoList
     c = if item.id is spec.highlight then "demo-list-item-highlight" else ""
-    html += "<li><a class='#{c}' href='?#{item.id}' target='_blank'>#{item.text}</a></li>\n"
+    html += "<li><a class='#{c}' href='?#{item.id}'>#{item.text}</a></li>\n"
   html += "</ul>\n"
 
 demoList = [
   {text: "Basic Math", id: "58ef3095767efcdf1977"}
   {text: "Basic Plot", id: "ee2036a3e55336c6d010"}
   {text: "Text", id: "277bf74a4b1e7364df29"}
+  {text: "Tables", id: "e31dcf9a402f12fbf4f5"}
   {text: "Layout", id: "c7837da7dd136710e2ba"}
   {text: "Importing", id: "d1889126b58315ba2239"}
 ]
