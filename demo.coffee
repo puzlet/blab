@@ -9,6 +9,10 @@ $blab.demoScript = (spec) ->
     codeChar: 100
     mdChar: 50
     slider: 200
+    
+  text """
+  Blabr is a tool for creating a <b>blab</b> (short for we<b><i>b lab</i></b>) &mdash; interactive computation in the browser.<br>
+  """, 5000, "#ff9"
   
   compute "k = slider \"k\"", "Create a slider in the canvas above.<br>Specify an id (\"k\") so you can refer to it elsewhere.", 3000
   
@@ -66,7 +70,14 @@ $blab.demoScript = (spec) ->
     close: true
   
   text """
+  You can save a blab to a <a href="//gist.github.com" target="_blank">GitHub Gist</a>.<br>
+  For example, here's a <a href="//blabr.io/?4bd90a0b619bff7707b3" target="_blank">saved blab</a>.
+  """, 5000, "#ff9"
+  
+  text """
   <b>Learn more about blabr</b><br>
   #{$blab.demoListHtml(highlight: "58ef3095767efcdf1977")}
+  See blab examples <a href="//blabr.org">here</a>.
   """, 10000, "#ff9"
+
 

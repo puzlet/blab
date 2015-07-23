@@ -28,6 +28,7 @@ demoList = [
   {text: "Basic Plot", id: "ee2036a3e55336c6d010"}
   {text: "Text", id: "277bf74a4b1e7364df29"}
   {text: "Tables", id: "e31dcf9a402f12fbf4f5"}
+  {text: "Sliders", id: "9b6fbf80ed838d1e1cef"}
   {text: "Layout", id: "c7837da7dd136710e2ba"}
   {text: "Importing", id: "d1889126b58315ba2239"}
 ]

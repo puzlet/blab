@@ -163,7 +163,7 @@ class Text
     @guide.show()
     c = $("#blabr-tagline")
     pos = c.offset()
-    top = pos.top + 40
+    top = pos.top + 60
     h = $(window).height()
     top = h/2 if top > h - 200
     @guide.css
