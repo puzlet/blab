@@ -12,7 +12,7 @@ demoLinks = (items) ->
   
   list.append """
   <div class="guide-col">
-  <b>Quick Syntax Tips</b><br><hr>
+  <h3>Quick Syntax Tips</h3>
   <code>k = slider "k"</code><br>
   <code>table "my-table", x, y</code><br>
   <code>plot "my-plot", x, y</code><br>
@@ -26,26 +26,15 @@ demoLinks = (items) ->
   
   list.append """
     <div class="guide-col">
-      <b>Demos</b><br><hr>
+      <h3>Demos</h3>
       #{$blab.demoListHtml(blank: true)}
     </div>
   """
-  
-  #for item in items
-  #  link = $ "<a>",
-  #    href: "?"+item.id
-  #    text: item.text
-  #    target: "_blank"
-  #  list.append(link).append("<br>")
-  
-  #list.append "</div>"
-
-  #list.append demos
     
   list.append """
     <div class="guide-col">
-
-    <b>Examples</b><br><hr>
+      
+    <h3>Examples</h3>
     
     <div class="gist">
     <a href='//blabr.io?4bd90a0b619bff7707b3' target="_blank">
@@ -77,8 +66,9 @@ demoLinks = (items) ->
     
     <a href="//blabr.org" target="_blank">More blabs<a>
     </div>
+    
     <div class="guide-col">
-    <b>Reference</b><br><hr>
+    <h3>Reference</h3>
     (Documentation blabs - Blabr language guide.)<br>
     <a href="//coffeescript.org" target="_blank">CoffeeScript language guide</a>
     </div>
