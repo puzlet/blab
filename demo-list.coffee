@@ -66,15 +66,17 @@ demoLinks = (items) ->
     
     <a href="//blabr.org" target="_blank">More blabs<a>
     </div>
+    """
     
+  list.append """
     <div class="guide-col">
-    <h3>Reference</h3>
-    (Documentation blabs - Blabr language guide.)<br>
-    <a href="//coffeescript.org" target="_blank">CoffeeScript language guide</a>
+      <h3>Reference</h3>
+      #{$blab.refListHtml(blank: true)}
+      <br>
+      <a href="//coffeescript.org" target="_blank">CoffeeScript language guide</a>
     </div>
   """
-  # Link to coffeescript.org
-    
+
 $blab.demoListHtml = (spec) ->
   html = "<ul>\n"
   for item in demoList
@@ -82,16 +84,33 @@ $blab.demoListHtml = (spec) ->
     t = if spec.blank then " target = '_blank'" else ""
     html += "<li><a class='#{c}' href='?#{item.id}'#{t}>#{item.text}</a></li>\n"
   html += "</ul>\n"
+  
+  
+$blab.refListHtml = (spec) ->
+  html = "<ul>\n"
+  for item in refList
+    t = if spec.blank then " target = '_blank'" else ""
+    html += "<li><a href='?#{item.id}'#{t}>#{item.text}</a></li>\n"
+  html += "</ul>\n"
 
 demoList = [
-  {text: "Basic Math", id: "58ef3095767efcdf1977"}
-  {text: "Basic Plot", id: "ee2036a3e55336c6d010"}
+  {text: "Basic math", id: "58ef3095767efcdf1977"}
+  {text: "Basic plot", id: "ee2036a3e55336c6d010"}
   {text: "Text", id: "277bf74a4b1e7364df29"}
   {text: "Tables", id: "e31dcf9a402f12fbf4f5"}
   {text: "Sliders", id: "9b6fbf80ed838d1e1cef"}
   {text: "Layout of components", id: "c7837da7dd136710e2ba"}
   {text: "Function definitions", id: "e8457f2a62b292e1d0a2"}
   {text: "Importing definitions", id: "d1889126b58315ba2239"}
+]
+
+refList = [
+  {text: "Language overview", id: "cac35c998a6640457c39"}
+  {text: "Math functions", id: "c19c10d7828efd13ddee"}
+  {text: "Vectors and matrices", id: "cb9ef53d61658dcedd45"}
+  {text: "Complex numbers", id: "cb9ef53d61658dcedd45"}
+  {text: "Linear algebra and numeric", id: "19516c877c92649672f4"}
+  {text: "Utilities", id: "ccd42df2e696df7e9317"}
 ]
 
 demoLinks demoList
