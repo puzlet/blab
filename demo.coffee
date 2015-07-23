@@ -10,6 +10,11 @@ $blab.demoScript = (spec) ->
     mdChar: 50
     slider: 200
     
+  #md
+  #  find: "Untitled", replace: "Quadratic"
+  #  dwell: 5000
+  #  guide: "Change page title."
+    
   compute "k = slider \"k\"", "Create a slider in the canvas above.<br>Specify an id (\"k\") so you can refer to it elsewhere.", 3000
   
   defs "nPoints = 5", "Define a value."

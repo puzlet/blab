@@ -361,20 +361,23 @@ class Demo
     
     @script.run()
   
-  md: (spec) ->
+  md: (spec, dwell=@dwellDelay) ->
+    dwell = spec.dwell if spec.dwell
     @script.step (cb) =>
       display = markdownEditor.editor.outer.css "display"
       markdownEditor.trigger "clickText", {start: 0} if display is "none"
       edit = =>
+        d = => @dwell dwell, -> cb()
         if spec.replace
-          @markdown.replace spec, cb
+          @markdown.replace spec, d
         else if spec.append
-          @markdown.statement spec.append, cb
+          @markdown.statement spec.append, d
         else if spec.close
           markdownEditor.setViewPort null
-          cb()
-      @markdown.explain(spec.guide) if spec.guide
-      setTimeout (-> edit()), 500
+          d()
+      # TODO: This should be triggered after md editor visible.
+      setTimeout (=> @markdown.explain(spec.guide)), 400 if spec.guide
+      setTimeout (-> edit()), 900
   
   compute: (statement, html="", dwell=@dwellDelay) ->
     @script.step (cb) =>
