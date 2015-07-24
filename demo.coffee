@@ -10,10 +10,10 @@ $blab.demoScript = (spec) ->
     mdChar: 50
     slider: 200
   
-  #text """
-  #<b>Blabr</b> is a tool for creating a <b>blab</b> (short for we<b><i>b lab</i></b>).<br><br>
-  #A blab is a web page for interactive computation:<br>math, sliders, tables, plots, etc.
-  #""", 6000
+  text """
+  <b>Blabr</b> is a tool for creating a <b>blab</b> (short for we<b><i>b lab</i></b>).<br><br>
+  A blab is a web page for interactive computation:<br>math, sliders, tables, plots, etc.
+  """, 6000
   
   compute "k = slider \"k\"", "Create a slider in the canvas above.<br>Specify an id (\"k\") so you can refer to it elsewhere.", 3000
   
