@@ -276,18 +276,21 @@ div[data-file="layout.coffee"] {
   /*background: #eee;*/
 }
 
-.demo-start-button-main-text h2 {
-  padding: 5px;
+.demo-start-button-main-text h1 {
+  font-size: 20pt;
+  color: black;
+  /*background: #bbb;*/
+  padding: 0px;
 }
 
 #demo-start-button-main-image {
   width: 780px;
-  opacity: 0.4;
+  opacity: 0.2;
 }
 
 #demo-button {
   position: absolute;
-  width: 500px; /*180px;*/
+  width: 600px; /*180px;*/
   height: 70px;
   top: 0px;
   left: 0;

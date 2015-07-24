@@ -1090,9 +1090,9 @@ class App
       @definitions = new Definitions (cb) =>
         @init()
         layout.compile()
+        demoList?.compile()
         demoRunner?.compile()
         demo?.compile()
-        demoList?.compile()
         @resources.postLoadFromSpecFile()
         cb()
       

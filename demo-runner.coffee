@@ -12,6 +12,10 @@ class DemoButton
       
     @container.addClass "demo-start-button-main" if @isMain
     
+    if @isMain
+      $("#main-markdown").hide()
+      $("#demo-list").slideDown()
+    
     @firstLayout = true
     $blab.Layout.on "renderedWidgets", =>
       return unless @firstLayout
@@ -21,7 +25,11 @@ class DemoButton
     @firstChange = true
     $(document).on "codeNodeChanged", =>
       return unless @firstChange
-      @div.fadeOut(500, => @container.slideUp 500)
+      @div.fadeOut 500, =>
+        @container.slideUp 500, =>
+          if @isMain
+            $("#main-markdown").slideDown()
+            $("#demo-list").slideUp()
       @firstChange = true
     
   create: ->
@@ -39,7 +47,12 @@ class DemoButton
       click: =>
         return if @clicked
         @clicked = true
-        @div.fadeOut(500, => @container.slideUp 500, -> setTimeout (-> new Demo), 500)
+        @div.fadeOut(500, => 
+          @container.slideUp 500, =>
+            if @isMain
+              $("#main-markdown").slideDown()
+              $("#demo-list").slideUp()
+            setTimeout (-> new Demo), 500)
     @intro() if @isMain  # TODO: only if main page
     @div.append "<div style='color: #aaa; margin-bottom: 4px;'>Click to run demo</div>" unless @isMain
     @div.append @button
@@ -55,7 +68,7 @@ class DemoButton
       <img id="demo-start-button-main-image" src="img/blab.png"/>
       </div>
     """
-    @div.append "<div class='demo-start-button-main-text'><h2>Scientific computing in the browser.</h2></div>"
+    @div.append "<div class='demo-start-button-main-text'><h1>Scientific computing in the browser.</h1></div>"
     #<p>Blabr</b> is a tool for creating a <b>blab</b> (short for we<b><i>b lab</i></b>) &mdash;<br>
     #a web page for interactive computation.</p>
     # math, sliders, tables, plots, etc.</p>
@@ -366,6 +379,8 @@ class Demo
     #demo.content = "# Demo"
     
     console.log "DEMO"#, demo
+    
+    @isMain = not $blab.resources.getSource?
     
     @script = new Script
     @textGuide = new Text guide
