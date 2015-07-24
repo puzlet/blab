@@ -52,7 +52,7 @@ class DemoButton
             if @isMain
               $("#main-markdown").slideDown()
               $("#demo-list").slideUp()
-            setTimeout (-> new Demo), 500)
+            setTimeout (-> new Demo), 1500)
     @intro() if @isMain  # TODO: only if main page
     @div.append "<div style='color: #aaa; margin-bottom: 4px;'>Click to run demo</div>" unless @isMain
     @div.append @button

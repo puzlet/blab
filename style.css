@@ -267,7 +267,7 @@ div[data-file="layout.coffee"] {
 .demo-start-button-main {
   /*padding: 10px;*/
   /*padding-top: 50px;*/
-  background: #aaa;
+  background: black; /* #aaa; */
   border-radius: 10px;
   text-align: center;
 }
@@ -278,14 +278,14 @@ div[data-file="layout.coffee"] {
 
 .demo-start-button-main-text h1 {
   font-size: 20pt;
-  color: black;
+  color: rgb(150, 200, 40); /* black; */
   /*background: #bbb;*/
   padding: 0px;
 }
 
 #demo-start-button-main-image {
   width: 780px;
-  opacity: 0.2;
+  opacity: 0.4;
 }
 
 #demo-button {
