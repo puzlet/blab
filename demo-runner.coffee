@@ -8,7 +8,7 @@ class DemoButton
     
     @container = $ "#demo-start-button-area"
     @container.css
-      height: (if @isMain then 120 else 80)
+      height: (if @isMain then 400 else 80)
       
     @container.addClass "demo-start-button-main" if @isMain
     
@@ -28,6 +28,7 @@ class DemoButton
     @clicked = false
     @div = $ "<div>",
       id: "demo-button"
+    @div.css top: 120 if @isMain
     @button = $ "<div>",
       #id: "demo-button"
       class: "demo-button"
@@ -40,7 +41,7 @@ class DemoButton
         @clicked = true
         @div.fadeOut(500, => @container.slideUp 500, -> setTimeout (-> new Demo), 500)
     @intro() if @isMain  # TODO: only if main page
-    @div.append "<div style='color: #aaa; margin-bottom: 4px;'>Click to run demo</div>"
+    @div.append "<div style='color: #aaa; margin-bottom: 4px;'>Click to run demo</div>" unless @isMain
     @div.append @button
     @playImg = $ "<img>", src: "img/UI_76.png"
     @button.append @playImg
@@ -49,12 +50,14 @@ class DemoButton
     @button.css marginLeft: (@div.width() - @button.width())/2
     
   intro: ->
-    @div.append """
+    @container.append """
       <div style='margin-bottom: 8px; font-size: 12pt; line-height: 150%;'>
-      <p>Blabr</b> is a tool for creating a <b>blab</b> (short for we<b><i>b lab</i></b>) &mdash;<br>
-      a web page for interactive computation.</p>
+      <img id="demo-start-button-main-image" src="img/blab.png"/>
       </div>
     """
+    @div.append "<div class='demo-start-button-main-text'><h2>Scientific computing in the browser.</h2></div>"
+    #<p>Blabr</b> is a tool for creating a <b>blab</b> (short for we<b><i>b lab</i></b>) &mdash;<br>
+    #a web page for interactive computation.</p>
     # math, sliders, tables, plots, etc.</p>
     
 
