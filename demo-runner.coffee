@@ -14,7 +14,7 @@ class DemoButton
     
     if @isMain
       $("#main-markdown").hide()
-      $("#demo-list").slideDown()
+      #$("#demo-list").slideDown()
     
     @firstLayout = true
     $blab.Layout.on "renderedWidgets", =>
@@ -28,8 +28,8 @@ class DemoButton
       @div.fadeOut 500, =>
         @container.slideUp 500, =>
           if @isMain
+            #$("#demo-list").slideUp 500, ->
             $("#main-markdown").slideDown()
-            $("#demo-list").slideUp()
       @firstChange = true
     
   create: ->
@@ -50,8 +50,8 @@ class DemoButton
         @div.fadeOut(500, => 
           @container.slideUp 500, =>
             if @isMain
+              #$("#demo-list").slideUp 500, ->
               $("#main-markdown").slideDown()
-              $("#demo-list").slideUp()
             setTimeout (-> new Demo), 1500)
     @intro() if @isMain  # TODO: only if main page
     @div.append "<div style='color: #aaa; margin-bottom: 4px;'>Click to run demo</div>" unless @isMain

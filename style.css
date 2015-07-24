@@ -278,7 +278,7 @@ div[data-file="layout.coffee"] {
 
 .demo-start-button-main-text h1 {
   font-size: 20pt;
-  color: rgb(150, 200, 40); /* black; */
+  color: #9d3; /*rgb(180, 200, 80); black; */
   /*background: #bbb;*/
   padding: 0px;
 }
