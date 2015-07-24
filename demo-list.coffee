@@ -81,7 +81,9 @@ demoLinks = (items) ->
   
   list.append """
   <div class="guide-footer">
-  Blabr is developed by Martin Clark and Gary Ballantyne (Haulashore Limited).<br>
+  <a href='//blabr.org' target='_blank'>Blabr</a> 
+  is developed by Martin Clark and Gary Ballantyne (Haulashore Limited) 
+  as part of the <a href='//github.com/puzlet' target='_blank'>Puzlet</a> project.<br>
   Thanks to:
     #{l "Ace", "ace.c9.io"},
     #{l "CoffeeScript", "coffeescript.org"},
