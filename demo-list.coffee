@@ -76,6 +76,24 @@ demoLinks = (items) ->
       <a href="//coffeescript.org" target="_blank">CoffeeScript language guide</a>
     </div>
   """
+  
+  l = (txt, url) -> "<a href='//#{url}' target='_blank'>#{txt}</a>"
+  
+  list.append """
+  <div class="guide-footer">
+  Blabr is developed by Martin Clark and Gary Ballantyne (Haulashore Limited).<br>
+  Thanks to:
+    #{l "Ace", "ace.c9.io"},
+    #{l "CoffeeScript", "coffeescript.org"},
+    #{l "MathJax", "mathjax.org"},
+    #{l "numericjs", "numericjs.com"},
+    #{l "Flot", "flotcharts.org"},
+    #{l "PaperScript", "paperjs.org/reference/paperscript"},
+    #{l "jQuery", "jquery.com"},
+    #{l "GitHub", "github.com"},
+    #{l "SpaceMath", "spacemath.gsfc.nasa.gov"}.
+  </div>
+  """
 
 $blab.demoListHtml = (spec) ->
   html = "<ul>\n"

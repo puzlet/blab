@@ -368,6 +368,18 @@ div[data-file="layout.coffee"] {
   width: 30px;
 }
 
+.guide-footer {
+  margin-top: 10px;
+  margin-left: 5px;
+  padding: 5px;
+  border-top: 1px #aaa solid;
+  color: #aaa;
+}
+
+.guide-footer a {
+  color: #aaa;
+}
+
 .gist {
   overflow: hidden;
   width: 100%;
