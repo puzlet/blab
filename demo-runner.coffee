@@ -8,7 +8,7 @@ class DemoButton
     
     @container = $ "#demo-start-button-area"
     @container.css
-      height: (if @isMain then 140 else 80)
+      height: (if @isMain then 120 else 80)
       
     @container.addClass "demo-start-button-main" if @isMain
     
@@ -51,8 +51,8 @@ class DemoButton
   intro: ->
     @div.append """
       <div style='margin-bottom: 8px; font-size: 12pt; line-height: 150%;'>
-      <p>Blabr</b> is a tool for creating a <b>blab</b> (short for we<b><i>b lab</i></b>).</p>
-      <p>A blab is a web page for interactive computation.</p>
+      <p>Blabr</b> is a tool for creating a <b>blab</b> (short for we<b><i>b lab</i></b>) &mdash;<br>
+      a web page for interactive computation.</p>
       </div>
     """
     # math, sliders, tables, plots, etc.</p>
