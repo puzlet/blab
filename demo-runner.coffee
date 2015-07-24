@@ -1,13 +1,16 @@
 class DemoButton
   
-  text: "Click here to run demo"
+  #text: "Click here to run demo"
   
   constructor: ->
     
+    @isMain = not $blab.resources.getSource?
+    
     @container = $ "#demo-start-button-area"
     @container.css
-      #background: "yellow"
-      height: 80
+      height: (if @isMain then 160 else 80)
+      
+    @container.addClass "demo-start-button-main" if @isMain
     
     @firstLayout = true
     $blab.Layout.on "renderedWidgets", =>
@@ -36,13 +39,22 @@ class DemoButton
         return if @clicked
         @clicked = true
         @div.fadeOut(500, => @container.slideUp 500, -> setTimeout (-> new Demo), 500)
+    @intro() if @isMain  # TODO: only if main page
     @div.append "<div style='color: #aaa; margin-bottom: 4px;'>Click to run demo</div>"
     @div.append @button
     @playImg = $ "<img>", src: "img/UI_76.png"
     @button.append @playImg
     @container.append @div
     @div.css left: (@container.width() - @div.width())/2
-    @button.css marginLeft: (@div.width() - @button.width())/2 
+    @button.css marginLeft: (@div.width() - @button.width())/2
+    
+  intro: ->
+    @div.append """
+      <div style='margin-bottom: 4px; font-size: 12pt; line-height: 150%;'>
+      <p>Blabr</b> is a tool for creating a <b>blab</b> (short for we<b><i>b lab</i></b>).</p>
+      <p>A blab is a web page for interactive computation:<br>math, sliders, tables, plots, etc.</p>
+      </div>
+    """
     
 
 new DemoButton

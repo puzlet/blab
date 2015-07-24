@@ -104,6 +104,7 @@ demoList = [
   {text: "Layout of components", id: "c7837da7dd136710e2ba"}
   {text: "Function definitions", id: "e8457f2a62b292e1d0a2"}
   {text: "Importing definitions", id: "d1889126b58315ba2239"}
+  {text: "Programming", id: "01df7d9c87dab79fccf0"}
 ]
 
 refList = [

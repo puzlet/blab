@@ -260,11 +260,20 @@ div[data-file="layout.coffee"] {
 
 #demo-start-button-area {
   position: relative;
+  width: 500px;
+  margin: 0 auto;
+}
+
+.demo-start-button-main {
+  /*padding: 10px;*/
+  padding-top: 50px;
+  background: #eee;
+  border-radius: 10px;
 }
 
 #demo-button {
   position: absolute;
-  width: 180px;
+  width: 500px; /*180px;*/
   height: 70px;
   top: 0px;
   left: 0;
