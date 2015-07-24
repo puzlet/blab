@@ -615,7 +615,7 @@ class MarkdownEditor #extends PopupEditor
   setTitle: ->
     headings = $ ":header"
     $blab.title = if headings.length then headings[0].innerHTML else "Puzlet"
-    document.title = $blab.title
+    document.title = $blab.title unless $blab.title is "Untitled"
       
   setViewPort: (start) ->
     
@@ -824,7 +824,7 @@ class Layout
   @highlight: (highlight=true) ->
     if highlight
         $(".layout-box").addClass "layout-highlight"
-        $(".layout-box-number").fadeIn(1000)
+        $(".layout-box-number").show() #fadeIn(1000)
     else
       $(".layout-box-number").hide()
       $(".layout-box").removeClass "layout-highlight"
