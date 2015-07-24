@@ -26,10 +26,10 @@ class DemoButton
     $(document).on "codeNodeChanged", =>
       return unless @firstChange
       @div.fadeOut 500, =>
-        @container.slideUp 500, =>
+        @container.slideUp 1000, =>
           if @isMain
             #$("#demo-list").slideUp 500, ->
-            $("#main-markdown").slideDown()
+            $("#main-markdown").slideDown(1000)
       @firstChange = true
     
   create: ->
@@ -48,10 +48,10 @@ class DemoButton
         return if @clicked
         @clicked = true
         @div.fadeOut(500, => 
-          @container.slideUp 500, =>
+          @container.slideUp 1000, =>
             if @isMain
               #$("#demo-list").slideUp 500, ->
-              $("#main-markdown").slideDown()
+              $("#main-markdown").slideDown(1000)
             setTimeout (-> new Demo), 1500)
     @intro() if @isMain  # TODO: only if main page
     @div.append "<div style='color: #aaa; margin-bottom: 4px;'>Click to run demo</div>" unless @isMain
