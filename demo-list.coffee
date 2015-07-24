@@ -105,6 +105,7 @@ demoList = [
   {text: "Function definitions", id: "e8457f2a62b292e1d0a2"}
   {text: "Importing definitions", id: "d1889126b58315ba2239"}
   {text: "Programming", id: "01df7d9c87dab79fccf0"}
+  {text: "Example: lunar crust", id: "2c7e4d04634ee1d2aa40"}
 ]
 
 refList = [
