@@ -67,20 +67,29 @@ demoLinks = (items) ->
     <a href="//blabr.org" target="_blank">More blabs<a>
     </div>
     """
-    
-  list.append """
-    <div class="guide-col">
+  
+  col4 = $ "<div>",
+    class: "guide-col"
+  list.append col4
+  
+  col4.append """
       <h3>Reference</h3>
       #{$blab.refListHtml(blank: true)}
       <br>
       <a href="//coffeescript.org" target="_blank">CoffeeScript language guide</a>
-    </div>
   """
+  creditsButton = $ "<button>",
+    text: "About Blabr"
+    click: -> credits.slideToggle(500)
+  col4.append("<br><br>").append(creditsButton)
   
   l = (txt, url) -> "<a href='//#{url}' target='_blank'>#{txt}</a>"
   
-  list.append """
-  <div class="guide-footer">
+  credits = $ "<div>", class: "guide-footer"
+  list.append credits
+  credits.hide()
+  
+  credits.append """
   <a href='//blabr.org' target='_blank'>Blabr</a> 
   is developed by Martin Clark and Gary Ballantyne (Haulashore Limited) 
   as part of the <a href='//github.com/puzlet' target='_blank'>Puzlet</a> project.<br>
@@ -94,7 +103,6 @@ demoLinks = (items) ->
     #{l "jQuery", "jquery.com"},
     #{l "GitHub", "github.com"},
     #{l "SpaceMath", "spacemath.gsfc.nasa.gov"}.
-  </div>
   """
 
 $blab.demoListHtml = (spec) ->

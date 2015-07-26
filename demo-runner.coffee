@@ -1,80 +1,90 @@
+class MainDemoStart
+  
+  constructor: (@runDemo) ->
+    @container = $ "#demo-start-button-area"
+    @container.addClass "demo-start-button-main"
+    $("#main-markdown").css opacity: 0
+  
+  clear: (callback) ->
+    @button.clear()
+    @container.slideUp 1000, =>
+      $("#main-markdown").animate {opacity: 1}, 1500, -> callback?()
+    
+  create: ->
+    
+    img = $ "<img>",
+      id: "demo-start-button-main-image"
+      src: "img/blab.png"
+    
+    @div = $ "<div>",
+      class: "demo-start-button-main-text"
+    
+    @div.append "<h1>Scientific computing in the browser.</h1>"
+    
+    @container.append(img).append(@div)
+    @container.click => @clear => @runDemo()
+    
+    @button = new PlayButton @div, (=>)
+
+
 class DemoButton
   
-  #text: "Click here to run demo"
+  constructor: (@runDemo) ->
+    @container = $ "#demo-start-button-area"
+    @container.css height: 80
+      
+  clear: (callback) ->
+    @button.clear()
+    @container.slideUp 1000, -> callback?()
+    
+  create: ->
+    @button = new PlayButton @container, (=> @clear => @runDemo())
+
+
+class PlayButton
+  
+  constructor: (@container, @callback) ->
+    
+    @button = $ "<img>", 
+      src: "img/play.png"
+      css:
+        height: 60
+        cursor: "pointer"
+      click: =>
+        return if @clicked
+        @clicked = true
+        @callback?()
+        
+    @container.append @button
+    
+  clear: (callback) ->
+    @button.fadeOut 500, -> callback?()
+
+
+class DemoRunner
   
   constructor: ->
     
     @isMain = not $blab.resources.getSource?
     
-    @container = $ "#demo-start-button-area"
-    @container.css
-      height: (if @isMain then 400 else 80)
-      
-    @container.addClass "demo-start-button-main" if @isMain
-    
-    if @isMain
-      $("#main-markdown").hide()
-      #$("#demo-list").slideDown()
+    @start = if @isMain then new MainDemoStart(=> @run()) else new DemoButton(=> @run())
     
     @firstLayout = true
     $blab.Layout.on "renderedWidgets", =>
       return unless @firstLayout
-      @create()
+      @start.create()
       @firstLayout = false
       
     @firstChange = true
     $(document).on "codeNodeChanged", =>
       return unless @firstChange
-      @div.fadeOut 500, =>
-        @container.slideUp 1000, =>
-          if @isMain
-            #$("#demo-list").slideUp 500, ->
-            $("#main-markdown").slideDown(1000)
-      @firstChange = true
+      @start.clear()
+      
+  run: =>
+    setTimeout (-> new Demo), 1500
     
-  create: ->
-    @clicked = false
-    @div = $ "<div>",
-      id: "demo-button"
-    @div.css top: 120 if @isMain
-    @button = $ "<div>",
-      #id: "demo-button"
-      class: "demo-button"
-      #html: @text
-      #css:
-        #width: @width
-      #  left: (@container.width() - @width)/2
-      click: =>
-        return if @clicked
-        @clicked = true
-        @div.fadeOut(500, => 
-          @container.slideUp 1000, =>
-            if @isMain
-              #$("#demo-list").slideUp 500, ->
-              $("#main-markdown").slideDown(1000)
-            setTimeout (-> new Demo), 1500)
-    @intro() if @isMain  # TODO: only if main page
-    @div.append "<div style='color: #aaa; margin-bottom: 4px;'>Click to run demo</div>" unless @isMain
-    @div.append @button
-    @playImg = $ "<img>", src: "img/UI_76.png"
-    @button.append @playImg
-    @container.append @div
-    @div.css left: (@container.width() - @div.width())/2
-    @button.css marginLeft: (@div.width() - @button.width())/2
     
-  intro: ->
-    @container.append """
-      <div style='margin-bottom: 8px; font-size: 12pt; line-height: 150%;'>
-      <img id="demo-start-button-main-image" src="img/blab.png"/>
-      </div>
-    """
-    @div.append "<div class='demo-start-button-main-text'><h1>Scientific computing in the browser.</h1></div>"
-    #<p>Blabr</b> is a tool for creating a <b>blab</b> (short for we<b><i>b lab</i></b>) &mdash;<br>
-    #a web page for interactive computation.</p>
-    # math, sliders, tables, plots, etc.</p>
-    
-
-new DemoButton
+new DemoRunner
 
 guide = $ "#demo-guide"
 
@@ -368,6 +378,7 @@ class DemoControl
   
   trigger: (evt, data) -> observer(data) for observer in @observers[evt]
   
+
 
 class Demo
   
