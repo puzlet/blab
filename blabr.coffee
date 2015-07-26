@@ -889,9 +889,35 @@ class Definitions
       @allLoaded = false
       
     @resources.loadUnloaded => @coffee.compile()
+    
+  temp: ->
+    gist = use "gist:086410976e371f5157da"
+    defs
+      derived: ->
+        console.log "Gist", gist
+        for name, property of gist
+          if not (name in ["loaded", "isImport"])
+            console.log "prop", name, property
+            this[name] = property 
+        console.log "DEFS", this
       
   main: (defs) ->
     # Main defs.coffee
+    
+    # if typeof defs is "string"
+    #   console.log "=========== DEFS is string", defs
+    #   @use "gist:086410976e371f5157da"
+    #   @main (d) =>
+    #     console.log "....defs", d
+    #     d2 = {}
+    #     for name, property of d
+    #       if not (name in ["loaded", "isImport"])
+    #         console.log "prop", name, property
+    #         d2[name] = property
+    #         #this[name] = property
+    #     @main d2
+    #   return
+    
     $blab.definitions[@filename] = defs
     defs.loaded = true
     $blab.defs = defs
