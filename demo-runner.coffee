@@ -1,3 +1,5 @@
+console.log "-------------Demo runner"
+
 class MainDemoStart
   
   constructor: (@runDemo) ->
