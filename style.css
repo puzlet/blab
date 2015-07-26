@@ -289,14 +289,19 @@ div[data-file="layout.coffee"] {
 
 /********* Blabr Guide *********/
 
+#blabr-tagline {
+ display: none; 
+}
+
 #demo-list-button {
-  margin-left: 10px;
+  margin-left: 2px;  /* 10px */
 }
 
 #demo-list {
   display: none;
   position: relative;
   width: 960px;
+  /*margin-top: 20px;*/
   padding: 10px 0px;
   /*padding: 15px;*/
   border-radius: 10px;
@@ -306,10 +311,25 @@ div[data-file="layout.coffee"] {
 }
 
 .guide-col {
+  position: relative;
 	display: inline-block;
 	vertical-align: top; 
   margin-left: 10px;
   width: 226px;
+}
+
+#guide-close-button {
+  position: absolute;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  top: 5px;
+  right: 5px;
+}
+
+#guide-close-button img {
+  height: 20px;
+  cursor: pointer;
 }
 
 .guide-col h3 {

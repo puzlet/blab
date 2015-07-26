@@ -1,14 +1,35 @@
 console.log "======== Demo List"
 
+tagline = $ "#blabr-tagline"
+button = $ "#demo-list-button"
 list = $ "#demo-list"
+
+isMain = not $blab.resources.getSource?
+
+#button.after "Scientific computing in the browser." unless isMain
+tagline.fadeIn()
 list.hide()
 
-button = $ "#demo-list-button"
-button.click -> list.slideToggle()
+toggle = ->
+  tagline.animate opacity: 0
+  list.slideToggle()
+  
+button.click -> toggle()
 
 demoLinks = (items) ->
   
   list.empty()
+  
+  close = $ "<div>",
+    id: "guide-close-button"
+    
+  closeImg = $ "<img>",
+    src: "img/UI_175.png"
+    click: ->
+      list.slideToggle 500, -> tagline.animate(opacity: 1)
+  close.append closeImg
+    
+  list.append close
   
   list.append """
   <div class="guide-col">
