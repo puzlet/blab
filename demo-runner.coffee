@@ -303,8 +303,9 @@ class Sliders
     idx = 0
     setSlider = (cb) =>
       v = vals[idx]
-      $("#"+id).slider 'option', 'value', v
-      Widgets.widgets[id].setVal v
+      domId = "slider-"+id
+      $("#"+domId).slider 'option', 'value', v
+      Widgets.widgets[domId].setVal v
       Widgets.compute()
       idx++
       if idx < vals.length
