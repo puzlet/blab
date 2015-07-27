@@ -1122,7 +1122,7 @@ class App
     
   load: ->
     layout = @resources.add url: "layout.coffee"
-    demoList = @resources.add url: "demo-list.coffee"
+    guide = @resources.add url: "guide.coffee"
     if not @resources.getSource? or @resources.getSource("demo.coffee")
       demoRunner = @resources.add(url: "demo-runner.coffee")
       demo = @resources.add(url: "demo.coffee")
@@ -1130,7 +1130,7 @@ class App
       @definitions = new Definitions (cb) =>
         @init()
         layout.compile()
-        demoList?.compile()
+        guide?.compile()
         demoRunner?.compile()
         demo?.compile()
         @resources.postLoadFromSpecFile()
