@@ -26,6 +26,8 @@ class Widget
       @spec = @p1
       @id = @spec.id
       
+  @domId = @id  # Override in subclass
+      
   setUsed: (used=true) ->
     return if used is @used
     @mainContainer.css(opacity: (if used then 1 else 0.2))
@@ -87,7 +89,9 @@ class Widgets
     unless idSpecified
       id = @count
       @count++
-    w = @widgets[id]
+    prefix = Widget.domIdPrefix
+    id2 = if prefix then prefix+id else id
+    w = @widgets[id2]
     return w if w
     # Create new widget
     if idSpecified then @createFromId(Widget, id, v...) else @createFromCounter(Widget, id, v...)
@@ -131,6 +135,15 @@ class Widgets
       postamble: ""
     
     $blab.precompile(precompile)
+    
+  @getFromSignature: (handle, id) ->
+    for name, Widget of @Registry
+      #console.log "W", Widget, Widget.handle, handle
+      continue unless Widget.handle is handle
+      id = Widget.domIdPrefix + id if Widget.domIdPrefix
+      widget = @widgets[id]
+      break
+    widget ? null
 
 
 class WidgetEditor #extends PopupEditor
@@ -145,6 +158,10 @@ class WidgetEditor #extends PopupEditor
     @firstDisplay = true
     @currentLine = null  # compute.coffee
     @viewPortDisplayed = false
+    
+    @sliding = false
+    @next = =>
+    @shown = false
     
     @observers =
       setViewPort: []
@@ -178,7 +195,12 @@ class WidgetEditor #extends PopupEditor
         setTimeout (=> container.parent().hide()), 1000
       @firstDisplay = false
     else
-      @vp txt
+      if @sliding
+        @next = =>
+          @vp txt
+          @next = =>
+      else
+        @vp txt
   
   vp: (txt, first=false) ->
     
@@ -202,7 +224,10 @@ class WidgetEditor #extends PopupEditor
     
     if @start is null
       @editor.spec.viewPort = false
-      @editor.container.parent().slideUp 400
+      @sliding = true
+      @editor.container.parent().slideUp 400, =>
+        @sliding = false
+        @next()
       return
     
     @editor.container.parent().css
@@ -221,8 +246,10 @@ class WidgetEditor #extends PopupEditor
     @editor.container.parent().css
       maxHeight: ""
     
+    @sliding = true
     @editor.container.parent().slideDown 400, =>
-    
+      @sliding = false
+      @next()
     
   deleteButton: ->
     
@@ -399,8 +426,9 @@ class ComputationEditor
     #widgetRegex = /(slider|table|plot|bar|bar2) "([^"]*)"/
     matchArray = widgetRegex.exec(line)
     match = if matchArray is null then null else matchArray[0]
+    type = if matchArray is null then null else matchArray[1]
     id = if matchArray is null then null else matchArray[2]
-    @trigger "cursorOnWidget", {match, id}
+    @trigger "cursorOnWidget", {match, type, id}
     
   on: (evt, observer) -> @observers[evt].push observer
   
@@ -1150,19 +1178,22 @@ class App
     
     @computationEditor.on "cursorOnWidget", (data) =>
       @clickedOnComponent = true
-      widget = if data.id then Widgets.widgets[data.id] else null
-      #console.log "cursorOnWidget", data, widget
+      widget = Widgets.getFromSignature data.type, data.id
       highlight widget?.mainContainer
       @widgetEditor.currentId = null
       @widgetEditor.setViewPort data.match
       @markdownEditor.setViewPort null
     
     $(document).on "clickWidget", (evt, data) =>
+      console.log "data", data
       @clickedOnComponent = true
       highlight data.widget.mainContainer
       #$("#"+data.id).css background: "yellow"
+      
+      shortId = Widgets.widgets[data.id].id
+      
       @widgetEditor.currentId = data.id
-      @widgetEditor.setViewPort data.type + " " + "\"#{data.id}\""
+      @widgetEditor.setViewPort data.type + " " + "\"#{shortId}\""
       @markdownEditor.setViewPort null
       setTimeout (=> @clickedOnComponent = false), 300
     
