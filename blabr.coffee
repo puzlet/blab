@@ -609,11 +609,11 @@ class MarkdownEditor #extends PopupEditor
     @process() if @widgetsRendered
   
   process: ->
-    console.log "MarkdownEditor::process"
+    #console.log "MarkdownEditor::process"
     unless marked?
       @loadMarked => @init()
       return
-    console.log "MarkdownEditor::process/marked"
+    #console.log "MarkdownEditor::process/marked"
     @text.empty()
     $(".rendered-markdown").remove()
     
@@ -1022,7 +1022,7 @@ class Definitions
     "{#{list}} = $blab.defs"
     
   initEditor: ->
-    console.log "defs containers", @coffee.containers
+    #console.log "defs containers", @coffee.containers
     @editor = @coffee.containers?.fileNodes?[0].editor
     #return unless @editor
     @aceEditor = @editor.editor
