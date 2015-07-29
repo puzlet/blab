@@ -403,7 +403,7 @@ class ComputationEditor
     @selection.on "changeCursor", => @setLine()
     
     @aceEditor.on "focus", =>
-      @currentLine = null
+      #@currentLine = null
       @setLine()
       @hint.fadeIn()
       
@@ -413,6 +413,7 @@ class ComputationEditor
     cursor = @selection?.getCursor()
     if cursor?.row isnt @currentLine
       @currentLine = cursor?.row
+      
       @inspectLineForWidget()
       
   insertCode: (code) ->
@@ -1335,7 +1336,7 @@ class App
       @markdownEditor.setViewPort null
     
     $(document).on "clickWidget", (evt, data) =>
-      console.log "data", data
+      #console.log "data", data
       @clickedOnComponent = true
       @highlight data.widget.mainContainer
       #$("#"+data.id).css background: "yellow"
