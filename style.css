@@ -195,9 +195,21 @@ div[data-file="layout.coffee"] {
   background: #aaf;
 }
 
-.code-heading {
+/*.code-heading {
   cursor: pointer;
   color: blue;
+}*/
+
+.code-heading {
+  color: #aaa;
+  font-size: 10pt;
+}
+
+.code-hint {
+  display: inline-block;
+  margin-left: 20px;
+  color: #ccc;
+  font-size: 10pt;
 }
 
 #computation-buttons {

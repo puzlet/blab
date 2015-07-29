@@ -359,6 +359,10 @@ class ComputationEditor
     
     @observers =
       cursorOnWidget: []
+      
+    $("#computation-code-heading").html "Computation <div id='computation-hint' class='code-hint'>Press shift-enter to run</div>"
+    @hint = $ "#computation-hint"
+    @hint.hide()
     
     $(document).on "preCompileCoffee", (evt, data) =>
       resource = data.resource
@@ -400,6 +404,9 @@ class ComputationEditor
     @aceEditor.on "focus", =>
       @currentLine = null
       @setLine()
+      @hint.show()
+      
+    @aceEditor.on "blur", => @hint.hide()
     
   setLine: =>
     cursor = @selection?.getCursor()
@@ -888,6 +895,10 @@ class Definitions
   
   constructor: (@done) ->
     
+    $("#defs-code-heading").html "Definitions <div id='defs-hint' class='code-hint'>Press shift-enter to run</div>"
+    @hint = $ "#defs-hint"
+    @hint.hide()
+    
     @resources = $blab.resources
     
     @coffee = @resources.add url: @filename
@@ -1015,6 +1026,9 @@ class Definitions
     @editor = @coffee.containers?.fileNodes?[0].editor
     #return unless @editor
     @aceEditor = @editor.editor
+    
+    @aceEditor.on "focus", => @hint.show()
+    @aceEditor.on "blur", => @hint.hide()
   
   loadCoffee: (url, callback) ->
     
@@ -1235,7 +1249,7 @@ class App
     @computationEditor = new ComputationEditor
     
     # ZZZ not used
-    new ComputationButtons
+    #new ComputationButtons
     
     #textEditor = new TextEditor  # ZZZ to deprecate
     @markdownEditor = new MarkdownEditor
