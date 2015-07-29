@@ -1109,14 +1109,20 @@ class Buttons
     @isBlab = @isGist and not @isDemo 
     
     settings = spec.getSettings()
-    if settings?.showCodeOnLoad or @isStart or @isDemo
+    
+    
+    if settings?.showCodeOnLoad or ((@isStart or @isDemo) and not settings?.showCodeOnLoad?)
       $("#computation-code-wrapper").show()
     
+    showCode = -> $("#computation-code-wrapper").show()
+    
     if @isStart
+      showCode() if settings?.showCodeOnLoad
       @spec.makeEditable()
       @startButtons()
       
     if @isBlab
+      showCode() if settings?.showCodeOnLoad
       @append "<hr>"
       #console.log "SETTINGS!", spec.getSettings()
       #$("#computation-code-wrapper").hide()
@@ -1126,6 +1132,7 @@ class Buttons
       @linkButton "Edit Page", => @makeEditable()
         
     if @isDemo
+      showCode() if not settings? or settings?.showCodeOnLoad is true
       @makeEditable()
       
   #setSettings: (@s) ->
