@@ -404,9 +404,9 @@ class ComputationEditor
     @aceEditor.on "focus", =>
       @currentLine = null
       @setLine()
-      @hint.show()
+      @hint.fadeIn()
       
-    @aceEditor.on "blur", => @hint.hide()
+    @aceEditor.on "blur", => @hint.fadeOut()
     
   setLine: =>
     cursor = @selection?.getCursor()
@@ -1027,8 +1027,8 @@ class Definitions
     #return unless @editor
     @aceEditor = @editor.editor
     
-    @aceEditor.on "focus", => @hint.show()
-    @aceEditor.on "blur", => @hint.hide()
+    @aceEditor.on "focus", => @hint.fadeIn()
+    @aceEditor.on "blur", => @hint.fadeOut()
   
   loadCoffee: (url, callback) ->
     
