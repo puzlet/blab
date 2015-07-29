@@ -1109,7 +1109,7 @@ class Buttons
     @isBlab = @isGist and not @isDemo 
     
     settings = spec.getSettings()
-    if settings.showCodeOnLoad
+    if settings?.showCodeOnLoad or @isStart or @isDemo
       $("#computation-code-wrapper").show()
     
     if @isStart
