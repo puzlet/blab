@@ -76,7 +76,7 @@ class Guide
     
     @container = $ "#demo-list"
     @container.hide()
-    @guideControl = new GuideControl @container 
+    #@guideControl = new GuideControl @container 
     @isMain = not $blab.resources.getSource?  # Needed?
     @container.empty()
   
@@ -88,6 +88,10 @@ class Guide
     new Credits @container, refsCol, content.credits
     
   append: (txt) -> @container.append txt
+  
+  slideDown: -> @container.slideDown 500
+
+  slideToggle: -> @container.slideToggle 500
     
   tips: ->
     
@@ -181,7 +185,7 @@ class GuideCloseButton
     @img = $ "<img>",
       src: "img/UI_175.png"
       click: =>
-        @guide.slideUp 500, => @control.show()
+        @guide.slideUp 500, => @control?.show()
     
     @button.append @img
     
@@ -230,4 +234,4 @@ $blab.refListHtml = (spec) ->
   html += "</ul>\n"
 
 
-new Guide
+$blab.blabrGuide = new Guide

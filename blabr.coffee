@@ -1079,6 +1079,84 @@ class Definitions
     )
 
 
+class Buttons
+  
+  constructor: (@spec) ->
+    
+    @container = $ "#buttons"
+    
+    @resources = $blab.resources
+    @isGist = @resources.getSource?
+    @isDemo = @isGist and @resources.getSource("demo.coffee")
+    
+    @isStart = not @isGist
+    @isBlab = @isGist and not @isDemo 
+    
+    if @isStart
+      @spec.makeEditable()
+      @startButtons()
+      
+    if @isBlab
+      @append "<hr>"
+      $("#computation-code-wrapper").hide()
+      @append "Powered by "
+      @linkButton "Blabr", => @spec.guide()
+      @sep()
+      @linkButton "Edit Page", => @makeEditable()
+        
+    if @isDemo
+      @makeEditable()
+  
+  startButtons: ->
+    @container.empty()
+    @docButton()
+    @sep()
+    @linkButton "Settings", =>
+      console.log "settings"
+      @spec.settings()
+    
+  makeEditable: ->
+    return if @isStart
+    $("#computation-code-wrapper").show(500)
+    @spec.makeEditable()
+    @startButtons()
+    @appendBlabButtons()
+    
+  appendBlabButtons: ->
+    @sep()
+    @sourceButton()
+      
+    @sep()
+    @forkButton = @linkButton "Fork", =>
+      forceNew = true
+      $blab.github?.save(forceNew)
+      
+  docButton: ->
+    @linkButton "Doc & Examples", => @spec.guide()
+    
+  sourceButton: ->
+    @linkButton "GitHub Source", (->), $blab.github?.sourceLink()
+    
+  createButton: (txt) ->
+    button = $ "<button>", text: txt
+    @append button
+    button
+    
+  linkButton: (txt, click, href) ->
+    button = $ "<a>",
+      #class: "link-button"
+      click: -> click?()
+      text: txt
+      target: "_blank"
+    button.attr(href: href) if href
+    @append button
+    button
+    
+  append: (element) -> @container.append element
+  
+  sep: -> @append " | "
+    
+
 codeSections = ->
   title = "Show/hide code"
   comp = $ "#computation-code-section"
@@ -1165,21 +1243,51 @@ class App
     $pz.renderHtml = ->
       #textEditor?.process()
       @markdownEditor.process()
+      
+    $(document).on "aceFilesLoaded", =>
+      #textEditor.process()
+      @markdownEditor.process()
+      @definitions.initEditor()
+      
+    Layout.on "renderedWidgets", =>
+      console.log "App::renderedWidgets"
+      #textEditor.setWidgetsRendered()
+      @markdownEditor.setWidgetsRendered()
     
+    @buttons = new Buttons
+      guide: => $blab.blabrGuide.slideToggle()
+      makeEditable: => @makeEditable()
+      settings: =>
+        @clickedOnComponent = false
+        @layoutMode()
+      
+    @firstChange = true
+    $(document).on "codeNodeChanged", =>
+      return unless @firstChange
+      @buttons.makeEditable()
+      @firstChange = false
+      
     @clickedOnComponent = false
     #@clickedLayout = false
     
     @currentComponent = null
+      
+    #@makeEditable()
     
-    highlight = (component) =>
-      @currentComponent?.removeClass "widget-highlight"
-      @currentComponent = component
-      @currentComponent?.addClass "widget-highlight"
+  makeEditable: ->
+    
+    return if @isEditable
+    @isEditable = true
+    
+    #highlight = (component) =>
+    #  @currentComponent?.removeClass "widget-highlight"
+    #  @currentComponent = component
+    #  @currentComponent?.addClass "widget-highlight"
     
     @computationEditor.on "cursorOnWidget", (data) =>
       @clickedOnComponent = true
       widget = Widgets.getFromSignature data.type, data.id
-      highlight widget?.mainContainer
+      @highlight widget?.mainContainer
       @widgetEditor.currentId = null
       @widgetEditor.setViewPort data.match
       @markdownEditor.setViewPort null
@@ -1187,7 +1295,7 @@ class App
     $(document).on "clickWidget", (evt, data) =>
       console.log "data", data
       @clickedOnComponent = true
-      highlight data.widget.mainContainer
+      @highlight data.widget.mainContainer
       #$("#"+data.id).css background: "yellow"
       
       shortId = Widgets.widgets[data.id].id
@@ -1199,7 +1307,7 @@ class App
     
     @markdownEditor.on "clickText", (data) =>
       @clickedOnComponent = true
-      highlight null
+      @highlight null
       @widgetEditor.setViewPort null
       @markdownEditor.setViewPort data.start
     
@@ -1207,7 +1315,7 @@ class App
       #console.log "click", $(evt.target).attr("class")
       setTimeout (=>
         unless @clickedOnComponent or $(evt.target).attr("class") # Hack for Ace editor click
-          highlight null
+          @highlight null
           @widgetEditor.setViewPort null
           @markdownEditor.setViewPort null
         @clickedOnComponent = false
@@ -1220,26 +1328,31 @@ class App
     
     @widgetEditor.on "setViewPort", => highlightLayout()
     @markdownEditor.on "setViewPort", => highlightLayout()
+      
+    Layout.on "clickBox", => @layoutMode()
+      #return if @clickedOnComponent  # Order of observer registration matters here
+      #console.log "clicked box"
+      #highlight null
+      #@clickedOnComponent = true
+      #setTimeout (=> @clickedOnComponent = false), 300
+      #@widgetEditor.setViewPort "layout"
+      #@markdownEditor.setViewPort null
+      
+  highlight: (component) =>
+    @currentComponent?.removeClass "widget-highlight"
+    @currentComponent = component
+    @currentComponent?.addClass "widget-highlight"
+      
+  layoutMode: ->
+    console.log "layout mode", @clickedOnComponent
+    return if @clickedOnComponent  # Order of observer registration matters here
+    console.log "clicked box"
+    @highlight null
+    @clickedOnComponent = true
+    setTimeout (=> @clickedOnComponent = false), 300
+    @widgetEditor.setViewPort "layout"
+    @markdownEditor.setViewPort null
     
-    Layout.on "renderedWidgets", =>
-      console.log "App::renderedWidgets"
-      #textEditor.setWidgetsRendered()
-      @markdownEditor.setWidgetsRendered()
-      
-    $(document).on "aceFilesLoaded", =>
-      #textEditor.process()
-      @markdownEditor.process()
-      @definitions.initEditor()
-      
-    Layout.on "clickBox", =>
-      return if @clickedOnComponent  # Order of observer registration matters here
-      console.log "clicked box"
-      highlight null
-      @clickedOnComponent = true
-      setTimeout (=> @clickedOnComponent = false), 300
-      @widgetEditor.setViewPort "layout"
-      @markdownEditor.setViewPort null
-      
   homePage: ->
     
     gistSource = @resources.getSource?

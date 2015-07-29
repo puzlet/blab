@@ -229,6 +229,21 @@ div[data-file="layout.coffee"] {
   color: #aaa;
 }
 
+/********* Buttons *********/
+
+#buttons {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-size: 10pt;
+  color: #aaa;
+}
+
+#buttons a {
+  color: #aaa;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 /********* Demo *********/
 
 #demo-start-button-area {

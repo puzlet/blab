@@ -202,8 +202,8 @@ class Text
   
   explain: (html, background, cb) ->
     @guide.show()
-    c = $("#blabr-tagline")
-    pos = c.offset()
+    #c = $("#blabr-tagline")
+    #pos = c.offset()
     #top = pos.top + 60
     h = $(window).height()
     top = h/3 #if top > h - 200
@@ -524,7 +524,7 @@ class Demo
     @script.step (cb) =>
       html = """
         <b>Learn more about Blabr</b><br><br>
-        The button <button>Blabr</button> (bottom of page)<br>
+        The "Doc & Examples" link (bottom of page)<br>
         shows demos, examples, and documentation.<br><br>
         <a href="#{window.location}">Run this demo again</a>
       """
