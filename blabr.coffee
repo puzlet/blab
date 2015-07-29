@@ -119,6 +119,7 @@ class Widgets
       @tCompile = null
     @tCompile = setTimeout (=> 
       resource.compile()
+      $.event.trigger "layoutCompiled"
 #  REINSTATE    @viewport()
     ), t
     
@@ -773,6 +774,7 @@ class Layout
   
   @shortcuts: """
     layout = (spec) -> $blab.Widgets.Layout.set(spec)
+    settings = (spec) -> $blab.blabrApp.setSettings(spec)
     pos = (spec) -> $blab.Widgets.Layout.pos(spec)
     text = (spec) -> $blab.Widgets.Layout.text(spec)
   """
@@ -1106,13 +1108,18 @@ class Buttons
     @isStart = not @isGist
     @isBlab = @isGist and not @isDemo 
     
+    settings = spec.getSettings()
+    if settings.showCodeOnLoad
+      $("#computation-code-wrapper").show()
+    
     if @isStart
       @spec.makeEditable()
       @startButtons()
       
     if @isBlab
       @append "<hr>"
-      $("#computation-code-wrapper").hide()
+      #console.log "SETTINGS!", spec.getSettings()
+      #$("#computation-code-wrapper").hide()
       @append "Powered by "
       @linkButton "Blabr", => @spec.guide()
       @sep()
@@ -1120,6 +1127,9 @@ class Buttons
         
     if @isDemo
       @makeEditable()
+      
+  #setSettings: (@s) ->
+  #  console.log "**** SET...", @s
   
   startButtons: ->
     @container.empty()
@@ -1127,7 +1137,7 @@ class Buttons
     @sep()
     @linkButton "Settings", =>
       console.log "settings"
-      @spec.settings()
+      @spec.editSettings()
     
   makeEditable: ->
     return if @isStart
@@ -1262,18 +1272,29 @@ class App
       #textEditor.process()
       @markdownEditor.process()
       @definitions.initEditor()
-      
+    
     Layout.on "renderedWidgets", =>
       console.log "App::renderedWidgets"
       #textEditor.setWidgetsRendered()
       @markdownEditor.setWidgetsRendered()
+      
+      return unless @firstRender
     
-    @buttons = new Buttons
-      guide: => $blab.blabrGuide.slideToggle()
-      makeEditable: => @makeEditable()
-      settings: =>
-        @clickedOnComponent = false
-        @layoutMode()
+    
+    $("#computation-code-wrapper").hide()
+    
+    @firstRender = true
+    $(document).on "layoutCompiled", =>
+      
+      @firstRender = false
+      
+      @buttons = new Buttons
+        guide: => $blab.blabrGuide.slideToggle()
+        makeEditable: => @makeEditable()
+        editSettings: =>
+          @clickedOnComponent = false
+          @editSettingsMode()
+        getSettings: => @settings
       
     @firstChange = true
     $(document).on "codeNodeChanged", =>
@@ -1367,6 +1388,16 @@ class App
     @widgetEditor.setViewPort "layout"
     @markdownEditor.setViewPort null
     
+  editSettingsMode: ->
+    console.log "edit settings mode", @clickedOnComponent
+    return if @clickedOnComponent  # Order of observer registration matters here
+    #console.log "clicked box"
+    @highlight null
+    @clickedOnComponent = true
+    setTimeout (=> @clickedOnComponent = false), 300
+    @widgetEditor.setViewPort "settings"
+    @markdownEditor.setViewPort null
+    
   homePage: ->
     
     gistSource = @resources.getSource?
@@ -1376,6 +1407,9 @@ class App
       
     #$("")
     
+  setSettings: (@settings) ->
+    console.log "===========SET SETTINGS", @settings
+    #@buttons.setSettings(@settings)
 
 
 $blab.blabrApp = new App
