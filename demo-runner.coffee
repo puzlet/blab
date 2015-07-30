@@ -10,7 +10,8 @@ class MainDemoStart
   clear: (callback) ->
     @button.clear()
     @container.slideUp 1000, =>
-      $("#main-markdown").animate {opacity: 1}, 1500, -> callback?()
+      $("#top-banner").slideUp 400, =>
+        $("#main-markdown").animate {opacity: 1}, 1500, -> callback?()
     
   create: ->
     

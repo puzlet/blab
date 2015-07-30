@@ -1111,7 +1111,6 @@ class Buttons
     
     settings = spec.getSettings()
     
-    
     if settings?.showCodeOnLoad or ((@isStart or @isDemo) and not settings?.showCodeOnLoad?)
       $("#computation-code-wrapper").show()
     
@@ -1123,6 +1122,7 @@ class Buttons
       @startButtons()
       
     if @isBlab
+      $("#top-banner").slideUp()
       showCode() if settings?.showCodeOnLoad
       @append "<hr>"
       #console.log "SETTINGS!", spec.getSettings()
@@ -1134,11 +1134,21 @@ class Buttons
       @linkButton "Edit Page", => @makeEditable()
         
     if @isDemo
+      $("#top-banner").slideUp()
       showCode() if not settings? or settings?.showCodeOnLoad is true
       @makeEditable()
       
   #setSettings: (@s) ->
   #  console.log "**** SET...", @s
+  
+  #logoBanner: ->
+  #  logoDiv = $ "<div>",
+  #    id: "blabr-logo-banner"
+  #    click: =>
+  #  logo = $ "<img>",
+  #    src: "img/blabr-logo.png"
+  #  logoDiv.append(logo).append("Blabr")
+  #  $("#top-banner").append(logoDiv)
   
   logo: ->
     logoDiv = $ "<div>",
