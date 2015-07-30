@@ -1203,6 +1203,7 @@ class Buttons
     a = $ "<a>",
       text: "@"+owner
       href: "//gist.github.com/#{owner}"
+      target: "_blank"
       css: textDecoration: "none"
     
     author.append a
