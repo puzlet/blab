@@ -1132,11 +1132,13 @@ class Buttons
       #@linkButton "Blabr", => @spec.guide()
       # @sep()
       @linkButton "Edit Page", => @makeEditable()
+      @author()
         
     if @isDemo
       $("#top-banner").slideUp()
       showCode() if not settings? or settings?.showCodeOnLoad is true
       @makeEditable()
+      @author()
       
   #setSettings: (@s) ->
   #  console.log "**** SET...", @s
@@ -1189,6 +1191,23 @@ class Buttons
     
   sourceButton: ->
     @linkButton "GitHub Source", (->), $blab.github?.sourceLink()
+  
+  author: ->
+    owner = $blab.github?.gist?.gistOwner
+    return unless owner
+    
+    author = $ "<div>",
+      text: "Author: "
+      css: float: "right"
+        
+    a = $ "<a>",
+      text: "@"+owner
+      href: "//gist.github.com/#{owner}"
+      css: textDecoration: "none"
+    
+    author.append a
+    
+    @container.append author
     
   createButton: (txt) ->
     button = $ "<button>", text: txt

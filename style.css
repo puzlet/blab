@@ -286,6 +286,7 @@ div[data-file="layout.coffee"] {
 /********* Buttons *********/
 
 #buttons {
+  width: 960px;
   margin-top: 10px;
   margin-bottom: 20px;
   font-size: 10pt;
