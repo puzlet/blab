@@ -90,7 +90,7 @@ class Widgets
       id = @count
       @count++
     prefix = Widget.domIdPrefix
-    id2 = if prefix and Widget.domId then prefix+id else id
+    id2 = if prefix then prefix+id else id
     w = @widgets[id2]
     return w if w
     # Create new widget
