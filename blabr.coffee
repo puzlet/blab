@@ -1138,7 +1138,6 @@ class Buttons
       $("#top-banner").slideUp()
       showCode() if not settings? or settings?.showCodeOnLoad is true
       @makeEditable()
-      @author()
       
   #setSettings: (@s) ->
   #  console.log "**** SET...", @s
@@ -1176,6 +1175,7 @@ class Buttons
     @spec.makeEditable()
     @startButtons()
     @appendBlabButtons()
+    @author()
     
   appendBlabButtons: ->
     @sep()
