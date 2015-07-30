@@ -1128,9 +1128,9 @@ class Buttons
       #console.log "SETTINGS!", spec.getSettings()
       #$("#computation-code-wrapper").hide()
       @logo()
-      @append "Powered by "
-      @linkButton "Blabr", => @spec.guide()
-      @sep()
+      #@append "Powered by "
+      #@linkButton "Blabr", => @spec.guide()
+      # @sep()
       @linkButton "Edit Page", => @makeEditable()
         
     if @isDemo
@@ -1141,10 +1141,13 @@ class Buttons
   #  console.log "**** SET...", @s
   
   logo: ->
-    logo = $ "<img>",
+    logoDiv = $ "<div>",
       id: "blabr-logo-footer"
+      click: => @spec.guide()
+    logo = $ "<img>",
       src: "img/blabr-logo.png"
-    @append(logo)
+    logoDiv.append(logo).append("Blabr")
+    @append(logoDiv)
   
   startButtons: ->
     @container.empty()

@@ -21,7 +21,7 @@ class MainDemoStart
     @div = $ "<div>",
       class: "demo-start-button-main-text"
         
-    @logo()
+    #@logo()
     
     @div.append "<h1>Scientific computing in the browser.</h1>"
     
