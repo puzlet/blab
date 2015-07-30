@@ -20,6 +20,8 @@ class MainDemoStart
     
     @div = $ "<div>",
       class: "demo-start-button-main-text"
+        
+    @logo()
     
     @div.append "<h1>Scientific computing in the browser.</h1>"
     
@@ -27,6 +29,16 @@ class MainDemoStart
     @container.click => @clear => @runDemo()
     
     @button = new PlayButton @div, (=>)
+    
+  logo: ->
+    
+    @logoContainer = $ "<div>", id: "blabr-logo"
+    @div.append @logoContainer
+    
+    @logo = $ "<img>",
+      src: "img/blabr-logo.png"
+      height: 60
+    @logoContainer.append(@logo).append("<p>Blabr</p>")
 
 
 class DemoButton

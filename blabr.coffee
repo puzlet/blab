@@ -1127,6 +1127,7 @@ class Buttons
       @append "<hr>"
       #console.log "SETTINGS!", spec.getSettings()
       #$("#computation-code-wrapper").hide()
+      @logo()
       @append "Powered by "
       @linkButton "Blabr", => @spec.guide()
       @sep()
@@ -1139,8 +1140,15 @@ class Buttons
   #setSettings: (@s) ->
   #  console.log "**** SET...", @s
   
+  logo: ->
+    logo = $ "<img>",
+      id: "blabr-logo-footer"
+      src: "img/blabr-logo.png"
+    @append(logo)
+  
   startButtons: ->
     @container.empty()
+    @logo()
     @docButton()
     @sep()
     @linkButton "Settings", =>

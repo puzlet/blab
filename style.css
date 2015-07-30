@@ -282,12 +282,31 @@ div[data-file="layout.coffee"] {
   position: absolute;
   width: 100%;
   left: 0;
-  margin-top: 110px;
+  margin-top: 40px; /*110px;*/
   padding-top: 5px;
   text-align: center;
   border-radius: 10px;
   font-size: 10pt;
   line-height: 100%;
+}
+
+#blabr-logo {
+  margin-top: 0px;
+  font-size: 16pt;
+  margin-bottom: 40px;
+  opacity: 0.7;
+  /*margin-bottom: 10px;*/
+}
+
+#blabr-logo p {
+  margin-top: 5px;
+}
+
+#blabr-logo-footer {
+  height: 20px;
+  opacity: 0.4;
+  margin-right: 8px;
+  vertical-align: top;
 }
 
 .demo-start-button-main-text h1 {
@@ -302,6 +321,10 @@ div[data-file="layout.coffee"] {
   width: 100%;
   left: 0;
   opacity: 0.15;
+}
+
+#main-markdown {
+  /*display: inline-block;*/
 }
 
 #demo-guide {
