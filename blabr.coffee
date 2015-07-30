@@ -1334,7 +1334,7 @@ class App
     
     @firstRender = true
     $(document).on "layoutCompiled", =>
-      
+      return unless @firstRender
       @firstRender = false
       
       @buttons = new Buttons
