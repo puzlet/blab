@@ -1413,6 +1413,18 @@ class App
     #  @currentComponent = component
     #  @currentComponent?.addClass "widget-highlight"
     
+    # Force rendering of editors (e.g., mathjax, links)
+    @computationEditor.aceEditor.focus()
+    setTimeout (=>
+      @definitions.aceEditor.focus()
+      setTimeout (=>
+        @definitions.aceEditor.blur()
+      ), 300
+    ), 300
+    
+
+    #@computationEditor.editor.customRenderer.render()
+    
     @computationEditor.on "cursorOnWidget", (data) =>
       @clickedOnComponent = true
       widget = Widgets.getFromSignature data.type, data.id
