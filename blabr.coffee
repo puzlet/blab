@@ -452,7 +452,9 @@ class ComputationEditor
       @setLine()
       @hint.fadeIn()
       
-    @aceEditor.on "blur", => @hint.fadeOut()
+    @aceEditor.on "blur", =>
+      @hint.fadeOut()
+      @currentLine = null
     
   setLine: =>
     cursor = @selection?.getCursor()
