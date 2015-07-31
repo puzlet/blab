@@ -1156,21 +1156,21 @@ class Buttons
     @isStart = not @isGist
     @isBlab = @isGist and not @isDemo 
     
-    settings = spec.getSettings()
+    @settings = spec.getSettings()
     
-    if settings?.showCodeOnLoad or ((@isStart or @isDemo) and not settings?.showCodeOnLoad?)
+    if @settings?.showCodeOnLoad or ((@isStart or @isDemo) and not @settings?.showCodeOnLoad?)
       $("#computation-code-wrapper").show()
     
     showCode = -> $("#computation-code-wrapper").show()
     
     if @isStart
-      showCode() if settings?.showCodeOnLoad
+      showCode() if @settings?.showCodeOnLoad
       @spec.makeEditable()
       @startButtons()
       
     if @isBlab
       $("#top-banner").slideUp()
-      showCode() if settings?.showCodeOnLoad
+      showCode() if @settings?.showCodeOnLoad
       @append "<hr>"
       #console.log "SETTINGS!", spec.getSettings()
       #$("#computation-code-wrapper").hide()
@@ -1179,11 +1179,11 @@ class Buttons
       #@linkButton "Blabr", => @spec.guide()
       # @sep()
       @linkButton "Edit Page", => @makeEditable()
-      @author()
+      @author() if @settings?.showAuthor
         
     if @isDemo
       $("#top-banner").slideUp()
-      showCode() if not settings? or settings?.showCodeOnLoad is true
+      showCode() if not @settings? or @settings?.showCodeOnLoad is true
       @makeEditable()
       
   #setSettings: (@s) ->
@@ -1243,7 +1243,9 @@ class Buttons
     owner = $blab.github?.gist?.gistOwner
     return unless owner
     
+    console.log "===========AUTHOR"
     author = $ "<div>",
+      id: "blab-author"
       text: "Author: "
       css: float: "right"
         
@@ -1443,7 +1445,6 @@ class App
       ), 300
     ), 300
     
-
     #@computationEditor.editor.customRenderer.render()
     
     @computationEditor.on "cursorOnWidget", (data) =>
@@ -1536,7 +1537,12 @@ class App
     
   setSettings: (@settings) ->
     @setBackground @settings?.background
-    
+    author = $("#blab-author")
+    @settings.showAuthor = not @settings?.showAuthor? or @settings?.showAuthor
+    console.log "author", author, @settings
+    if author.length
+      if @settings?.showAuthor then author.show() else author.hide()
+
     #console.log "===========SET SETTINGS", @settings
     #@buttons.setSettings(@settings)
 
