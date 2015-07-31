@@ -1384,6 +1384,8 @@ class App
       return unless @firstRender
       @firstRender = false
       
+      @setBackground @settings.background
+      
       @buttons = new Buttons
         guide: => $blab.blabrGuide.slideToggle()
         makeEditable: => @makeEditable()
@@ -1404,6 +1406,16 @@ class App
     @currentComponent = null
       
     #@makeEditable()
+    
+  setBackground: (background) ->
+    return unless background
+    $(document.body).css backgroundImage: "url(#{background})"
+    $("#outer-container").addClass "outer-background"
+    $("#outer-container").css
+      marginTop: 30
+      paddingTop: 10
+    $("#container").css
+      marginTop: 20
     
   makeEditable: ->
     
