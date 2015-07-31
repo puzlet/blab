@@ -168,8 +168,8 @@ class Widgets
     
     preamble = Layout.shortcuts + "\n"
     
-    for n, W of @Registry
-      console.log "***Widget", W, W.layoutPreamble()
+    #for n, W of @Registry
+    #  console.log "***Widget", W, W.layoutPreamble()
       
     preamble += W.layoutPreamble()+"\n" for n, W of @Registry
 #    preamble += Widget.layoutPreamble+"\n" for n, Widget of @Registry
