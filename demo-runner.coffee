@@ -550,7 +550,9 @@ class Demo
           background: bg
         guide.hide()
         cb()
-      setTimeout (-> $("#demo-list").slideDown()), 1000
+        
+      $blab.blabrGuide.slideDown()
+      #setTimeout (-> $("#demo-list").slideDown()), 1000
       @textGuide.explain html, bg, =>
         @dwell dwell, -> done()
 
