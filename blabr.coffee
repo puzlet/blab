@@ -1516,7 +1516,7 @@ class App
     #$("")
     
   setSettings: (@settings) ->
-    console.log "===========SET SETTINGS", @settings
+    #console.log "===========SET SETTINGS", @settings
     #@buttons.setSettings(@settings)
 
 

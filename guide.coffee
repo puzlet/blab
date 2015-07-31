@@ -91,7 +91,16 @@ class Guide
   
   slideDown: -> @container.slideDown 500
 
-  slideToggle: -> @container.slideToggle 500
+  slideToggle: ->
+    @container.slideToggle 500, =>
+      return unless @container.is ":visible"
+      wTop = $(window).scrollTop()
+      cTop = @container.offset().top
+      wh = $(window).height()
+      ch = @container.height()
+      diff = cTop+ch - (wTop+wh)
+      if diff>0
+        $("html, body").animate {scrollTop: wTop + diff + 70}, 400
     
   tips: ->
     
