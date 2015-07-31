@@ -8,11 +8,38 @@ $blab.codeDecoration = true
 
 class Widget
   
-  @layoutPreamble:
-    "#{@handle} = (id, spec) -> new #{@api}(id, spec)"
+  @handle: null
+  
+  @register: (W) -> Widgets.register W
+  
+  @getWidget: -> Widgets.Registry[@name]
+  
+  @getApi: -> "$blab.Widgets.Registry."+@name
+  
+  @layoutPreamble: ->
+    W = @getWidget()
+    api = @getApi()
+    "#{W.handle} = (id, spec) -> new #{api}(id, spec)"
+  
+  @computePreamble: ->
+    W = @getWidget()
+    api = @getApi()
+    "#{W.handle} = (id, v...) ->\n  #{api}.compute(id, v...)"
+  
+  @fetch: (id, v...) ->
+    W = @getWidget()
+    Widgets.fetch(W, id, v...)
     
-  @computePreamble:
-    "#{@handle} = (id) -> #{@api}.compute(id)"
+  @getVal: (id, v...) ->
+    @fetch(id, v...)?.getVal()
+    
+  @setVal: (id, v...) ->
+    @fetch(id, v...)?.setVal(v)
+    null
+  
+  @domIdPrefix: ->
+    W = @getWidget()
+    W.handle + "-"
     
   constructor: (@p1, @p2) ->
     
@@ -26,8 +53,21 @@ class Widget
       @spec = @p1
       @id = @spec.id
       
-  @domId = @id  # Override in subclass
-      
+    @create?(@spec)
+    
+  appendToCanvas: (@mainContainer) ->
+    Widgets.append @domId(), this, @mainContainer
+  
+  domId: ->
+    @constructor.domIdPrefix() + @id
+    
+  select: ->
+    type = @constructor.handle
+    $.event.trigger "clickWidget", type: type, id: @domId(), widget: this  # ZZZ just pass widget?
+    
+  computeAll: ->
+    Widgets.compute()
+  
   setUsed: (used=true) ->
     return if used is @used
     @mainContainer.css(opacity: (if used then 1 else 0.2))
@@ -41,7 +81,6 @@ class Widgets
   @Registry: {}
   
   @register: (WidgetSet) ->
-    #console.log "****REGISTER", WidgetSet, @Registry
     @Registry[Widget.name] = Widget for Widget in WidgetSet
   
   @widgets: {}
@@ -89,7 +128,7 @@ class Widgets
     unless idSpecified
       id = @count
       @count++
-    prefix = Widget.domIdPrefix
+    prefix = Widget.domIdPrefix()
     id2 = if prefix then prefix+id else id
     w = @widgets[id2]
     return w if w
@@ -128,7 +167,12 @@ class Widgets
   @precode: ->
     
     preamble = Layout.shortcuts + "\n"
-    preamble += Widget.layoutPreamble+"\n" for n, Widget of @Registry
+    
+    for n, W of @Registry
+      console.log "***Widget", W, W.layoutPreamble()
+      
+    preamble += W.layoutPreamble()+"\n" for n, W of @Registry
+#    preamble += Widget.layoutPreamble+"\n" for n, Widget of @Registry
     
     precompile = {}
     precompile[@filename] =
@@ -141,7 +185,8 @@ class Widgets
     for name, Widget of @Registry
       #console.log "W", Widget, Widget.handle, handle
       continue unless Widget.handle is handle
-      id = Widget.domIdPrefix + id if Widget.domIdPrefix
+      prefix = Widget.domIdPrefix()
+      id = prefix + id if prefix
       widget = @widgets[id]
       break
     widget ? null
@@ -327,7 +372,7 @@ class Computation
   @precode: ->
     
     preamble = ""
-    preamble += Widget.computePreamble+"\n" for WidgetName, Widget of Widgets.Registry
+    preamble += W.computePreamble()+"\n" for WidgetName, W of Widgets.Registry
     preamble += @defs+"\n" if @defs
     
     #preDefine = $blab.resources.find("predefine.coffee")
