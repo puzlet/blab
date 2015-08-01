@@ -691,10 +691,9 @@ class MarkdownEditor #extends PopupEditor
       .replace(/\\&pound;/g,"\\$")
       .replace(/\\&sect;/g,"\\`")
       .replace(/\\&yen;/g,"$")
-  
-    #console.log "text", text
+      
     text
-  
+    
   process: ->
     #console.log "MarkdownEditor::process"
     unless marked?
