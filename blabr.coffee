@@ -663,6 +663,7 @@ class MarkdownEditor #extends PopupEditor
     preText = file
       .replace(/\\\$/g,"\\&pound;") # \$
       .replace(/\\`/g,"\\&sect;") # \`
+      .replace(/---/g, "&mdash;") 
       
     # escape matching text
     matchEscape = (text, RE, escape) ->
