@@ -656,6 +656,44 @@ class MarkdownEditor #extends PopupEditor
     @setViewPort null
     
     @process() if @widgetsRendered
+    
+  preProcess: (file) ->
+    
+    # replace troublesome stuff
+    preText = file
+      .replace(/\\\$/g,"\\&pound;") # \$
+      .replace(/\\`/g,"\\&sect;") # \`
+      
+    # escape matching text
+    matchEscape = (text, RE, escape) ->
+      out = ""
+      pos = 0 # end position of last match 
+      while (match = RE.exec(text)) isnt null
+        preMatch = text[pos...match.index]
+        escMatch = escape match[0]
+        out += preMatch + escMatch
+        pos = match.index+match[0].length 
+      out += text[pos..] # from last match to end
+  
+    # escape $ within code sections
+    escCodeMath = (u) -> u.replace /\$/g, (m) -> "\\&yen;"
+    codeRe = /(```)([\s\S]*?)(```)|(`)([\s\S]*?)(`)/mg
+    textCodeEsc =  matchEscape(preText, codeRe, escCodeMath)
+    
+    # escape MD chars within equations
+    escRe = /[\\`\*_\{\}\[\]\(\)#\+\-\.\!]/g
+    escMarkdown = (u) -> u.replace escRe, (m) -> "\\#{m}"
+    texRe = /(\$\$)([\s\S]*?)(\$\$)|(\$)([\s\S]*?)(\$)/mg
+    textMdEsc =  matchEscape(textCodeEsc, texRe, escMarkdown)
+    
+    # restore escaped stuff
+    text = textMdEsc
+      .replace(/\\&pound;/g,"\\$")
+      .replace(/\\&sect;/g,"\\`")
+      .replace(/\\&yen;/g,"$")
+  
+    #console.log "text", text
+    text
   
   process: ->
     #console.log "MarkdownEditor::process"
@@ -666,7 +704,8 @@ class MarkdownEditor #extends PopupEditor
     @text.empty()
     $(".rendered-markdown").remove()
     
-    md = @snippets @resource.content
+    md = @snippets(@preProcess @resource.content)
+#    md = @snippets(@resource.content)
     
     out = []
     for m in md
@@ -1448,6 +1487,7 @@ class App
     #@computationEditor.editor.customRenderer.render()
     
     @computationEditor.on "cursorOnWidget", (data) =>
+      return if @settings?.popupWidgetEditor? and not @settings?.popupWidgetEditor
       @clickedOnComponent = true
       widget = Widgets.getFromSignature data.type, data.id
       @highlight widget?.mainContainer
