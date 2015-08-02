@@ -1476,7 +1476,7 @@ class App
     #  @currentComponent?.addClass "widget-highlight"
     
     # Force rendering of editors (e.g., mathjax, links)
-    @computationEditor.aceEditor.focus()
+    @computationEditor.aceEditor?.focus()
     setTimeout (=>
       @definitions.aceEditor.focus()
       setTimeout (=>
