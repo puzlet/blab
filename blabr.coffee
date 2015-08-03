@@ -36,6 +36,9 @@ class Widget
   @setVal: (id, v...) ->
     @fetch(id, v...)?.setVal(v)
     null
+    
+  @setValAndGet: (id, v...) ->
+    @fetch(id, v...)?.setVal(v)
   
   @domIdPrefix: ->
     W = @getWidget()
@@ -1591,7 +1594,7 @@ class App
     console.log "author", author, @settings
     if author.length
       if @settings?.showAuthor then author.show() else author.hide()
-
+      
     #console.log "===========SET SETTINGS", @settings
     #@buttons.setSettings(@settings)
 

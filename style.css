@@ -530,6 +530,14 @@ div[data-file="layout.coffee"] {
   font-weight: bold;
 }
 
+/******** New Table ********/
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+}
+
 /********* Unused *********/
 
 .green_demo-button {
