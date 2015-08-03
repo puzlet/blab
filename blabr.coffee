@@ -446,21 +446,22 @@ class ComputationEditor
     @selection = @aceEditor.selection
     
     @selection.on "changeCursor", => @setLine()
+  
+  initFocusBlur: ->
     
     @aceEditor.on "focus", =>
       #@currentLine = null
-      @setLine()
+      @setLine(true)
       @hint.fadeIn()
       
     @aceEditor.on "blur", =>
       @hint.fadeOut()
       @currentLine = null
     
-  setLine: =>
+  setLine: (force) =>
     cursor = @selection?.getCursor()
-    if cursor?.row isnt @currentLine
+    if force or cursor?.row isnt @currentLine
       @currentLine = cursor?.row
-      
       @inspectLineForWidget()
       
   insertCode: (code) ->
@@ -1318,6 +1319,7 @@ class Buttons
   sep: -> @append " | "
     
 
+
 codeSections = ->
   title = "Show/hide code"
   comp = $ "#computation-code-section"
@@ -1476,13 +1478,20 @@ class App
     #  @currentComponent?.addClass "widget-highlight"
     
     # Force rendering of editors (e.g., mathjax, links)
-    @computationEditor.aceEditor?.focus()
     setTimeout (=>
-      @definitions.aceEditor.focus()
+      @computationEditor.aceEditor?.focus()
       setTimeout (=>
-        @definitions.aceEditor.blur()
+        @computationEditor.aceEditor?.blur()
+        @definitions.aceEditor.focus()
+        setTimeout (=>
+          @definitions.aceEditor.blur()
+          @computationEditor.initFocusBlur()
+          @makeEditable2()
+        ), 300
       ), 300
     ), 300
+  
+  makeEditable2: ->
     
     #@computationEditor.editor.customRenderer.render()
     
