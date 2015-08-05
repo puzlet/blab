@@ -1386,6 +1386,23 @@ class App
     
     codeSections()
     
+    $(document.body).mousedown (e) =>
+      console.log "MOUSE DOWN"
+      $.event.trigger "blabmousedown"
+    
+    (document.body).addEventListener "copy", (e) =>
+      #e.preventDefault()
+      #e.clipboardData.setData('text/plain', "hello")
+      $.event.trigger "blabcopy", {original: e}
+    
+    #$(document.body).off "copy"
+    #(document.body).addEventListener "paste", (e) =>
+    #  console.log "paste"
+    #  #e.preventDefault()
+      #e.clipboardData.setData('text/plain', "hello")
+    #  $.event.trigger "blabpaste", {original: e}
+    
+    
     # ZZZ should be method in Widgets?
     $(document).on "preCompileCoffee", (evt, data) =>
       resource = data.resource
@@ -1393,6 +1410,11 @@ class App
       if url is "compute.coffee"
         Computation.precode()
         w.setUsed false for id, w of Widgets.widgets
+      #if url is "layout.coffee"
+      
+      $(document).unbind "blabmousedown"
+      $(document).unbind "blabcopy"
+      $(document).unbind "blabpaste"
     
     Widgets.initialize()
     
@@ -1427,6 +1449,7 @@ class App
     
     @firstRender = true
     $(document).on "layoutCompiled", =>
+      
       return unless @firstRender
       @firstRender = false
       
@@ -1481,18 +1504,19 @@ class App
     #  @currentComponent?.addClass "widget-highlight"
     
     # Force rendering of editors (e.g., mathjax, links)
-    setTimeout (=>
-      @computationEditor.aceEditor?.focus()
-      setTimeout (=>
-        @computationEditor.aceEditor?.blur()
-        @definitions.aceEditor.focus()
-        setTimeout (=>
-          @definitions.aceEditor.blur()
-          @computationEditor.initFocusBlur()
-          @makeEditable2()
-        ), 300
-      ), 300
-    ), 300
+    # setTimeout (=>
+    #   @computationEditor.aceEditor?.focus()
+    #   setTimeout (=>
+    #     @computationEditor.aceEditor?.blur()
+    #     @definitions.aceEditor.focus()
+    #     setTimeout (=>
+    #       @definitions.aceEditor.blur()
+    #       @computationEditor.initFocusBlur()
+    #       @makeEditable2()
+    #     ), 300
+    #   ), 300
+    # ), 300
+    @makeEditable2()
   
   makeEditable2: ->
     
