@@ -38,9 +38,9 @@ $blab.demoScript = (spec) ->
     guide: "Add column headings to table.<br>Supports MathJax."
     dwell: 3000
     
-  widget
-    find: "widths: [100]", replace: "widths: [100, 100]"
-    guide: "Set column widths."
+  #widget
+  #  find: "widths: [100]", replace: "widths: [100, 100]"
+  #  guide: "Set column widths."
   
   compute "plot \"plot\", x, y", "Plot the data.", 3000
   
