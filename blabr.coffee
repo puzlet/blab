@@ -1287,7 +1287,6 @@ class Buttons
     owner = $blab.github?.gist?.gistOwner
     return unless owner
     
-    console.log "===========AUTHOR"
     author = $ "<div>",
       id: "blab-author"
       text: "Author: "
@@ -1388,7 +1387,7 @@ class App
     codeSections()
     
     $(document.body).mousedown (e) =>
-      console.log "MOUSE DOWN"
+      #console.log "MOUSE DOWN"
       $.event.trigger "blabmousedown"
     
     (document.body).addEventListener "copy", (e) =>
@@ -1495,7 +1494,6 @@ class App
       $("#container").css
         marginTop: 20
     else
-      console.log "REMOVE BG"
       $(document.body).css backgroundImage: ""
       $("#outer-container").removeClass "outer-background"
       $("#outer-container").css
@@ -1527,7 +1525,7 @@ class App
     #     ), 300
     #   ), 300
     # ), 300
-    @makeEditable2()
+    setTimeout (=> @makeEditable2()), 900
   
   makeEditable2: ->
     
@@ -1626,7 +1624,6 @@ class App
     @setBackground @settings?.background
     author = $("#blab-author")
     @settings.showAuthor = not @settings?.showAuthor? or @settings?.showAuthor
-    console.log "author", author, @settings
     if author.length
       if @settings?.showAuthor then author.show() else author.hide()
       
