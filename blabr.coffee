@@ -372,6 +372,7 @@ class Computation
     resource = $blab.resources.find(@filename)
     resource?.compile()
     
+    
   @precode: ->
     
     preamble = ""
@@ -1395,6 +1396,12 @@ class App
       #e.clipboardData.setData('text/plain', "hello")
       $.event.trigger "blabcopy", {original: e}
     
+    $(document).unbind "blabcompute"
+    
+    $(document).on "compiledCoffeeScript", (e, data) =>
+      return unless data.url is "compute.coffee"
+      $.event.trigger "blabcompute"
+    
     #$(document.body).off "copy"
     #(document.body).addEventListener "paste", (e) =>
     #  console.log "paste"
@@ -1415,6 +1422,7 @@ class App
       $(document).unbind "blabmousedown"
       $(document).unbind "blabcopy"
       $(document).unbind "blabpaste"
+      #$(document).unbind "blabcompute"
     
     Widgets.initialize()
     
