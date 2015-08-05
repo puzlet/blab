@@ -1419,6 +1419,9 @@ class App
         w.setUsed false for id, w of Widgets.widgets
       #if url is "layout.coffee"
       
+      if url is "layout.coffee"
+        $(document).off "blabcompute"
+      
       $(document).unbind "blabmousedown"
       $(document).unbind "blabcopy"
       $(document).unbind "blabpaste"
