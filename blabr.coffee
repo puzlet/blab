@@ -1367,6 +1367,7 @@ class App
   load: ->
     layout = @resources.add url: "layout.coffee"
     guide = @resources.add url: "guide.coffee"
+    tables = @resources.add url: "tables.json"
     if not @resources.getSource? or @resources.getSource("demo.coffee")
       demoRunner = @resources.add(url: "demo-runner.coffee")
       demo = @resources.add(url: "demo.coffee")
