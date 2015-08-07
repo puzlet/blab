@@ -455,10 +455,12 @@ class ComputationEditor
     
     @aceEditor.on "focus", =>
       #@currentLine = null
+      console.log "FOCUS" 
       @setLine(true)
       @hint.fadeIn()
       
     @aceEditor.on "blur", =>
+      console.log "BLUR"
       @hint.fadeOut()
       @currentLine = null
     
@@ -1253,6 +1255,7 @@ class Buttons
   
   startButtons: ->
     @container.empty()
+    @append "<hr>"
     @logo()
     @docButton()
     @sep()
@@ -1592,7 +1595,11 @@ class App
     #     ), 300
     #   ), 300
     # ), 300
-    setTimeout (=> @makeEditable2()), 900
+    setTimeout (=> 
+      @computationEditor.aceEditor?.focus()
+      @computationEditor.initFocusBlur()
+      @makeEditable2()
+    ), 900
   
   makeEditable2: ->
     
@@ -1610,7 +1617,7 @@ class App
     
     $(document).on "clickWidget", (evt, data) =>
       return unless @layoutEnabled
-      return if @settings?.popupWidgetEditor? and not @settings?.popupWidgetEditor
+      #return if @settings?.popupWidgetEditor? and not @settings?.popupWidgetEditor
       #console.log "data", data
       @clickedOnComponent = true
       @highlight data.widget.mainContainer
@@ -1652,7 +1659,7 @@ class App
       
     Layout.on "clickBox", =>
       return unless @layoutEnabled
-      return if @settings?.popupWidgetEditor? and not @settings?.popupWidgetEditor
+      #return if @settings?.popupWidgetEditor? and not @settings?.popupWidgetEditor
       @layoutMode()
       #return if @clickedOnComponent  # Order of observer registration matters here
       #console.log "clicked box"
