@@ -307,6 +307,12 @@ div[data-file="layout.coffee"] {
   color: #aaa;
 }
 
+#edit-page-button-container {
+	display: inline-block;
+	vertical-align: top;
+	margin-right: 20px
+}
+
 /********* Buttons *********/
 
 #buttons {

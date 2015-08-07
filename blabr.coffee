@@ -1357,6 +1357,56 @@ codeSections = ->
       toggleHeading()
 
 
+class EditPageButton
+    
+  constructor: (@container, @callback) ->
+    
+    # TODO: user-select off
+    console.log "%%%%%%%%% EDIT PAGE BUTTON"
+    
+    @checked = false
+    
+    @div = $ "<div>",
+      id: "edit-page-button-container"
+      css:
+        position: "fixed"
+        bottom: 20
+        right: 10
+        zIndex: 300
+    
+    @b = $ "<a>",
+      id: "edit-page-button"
+      #type: "checkbox"
+      #checked: true
+      click: =>
+        #return
+        #@checked = not @checked
+        #$( "input:checked" ).length
+        #checked = @b.is(':checked')
+        #console.log "CHECKED", @checked
+        @b.button("refresh")
+        @callback?()
+    
+    #l = $ "<label>",
+    #  for: "edit-page-button"
+    #  text: "Disable"
+    
+    @div.append(@b)  #.append(l) #.append(@savingMessage)
+    @container.append @div
+    
+    @b.button()
+    
+    @hide()
+    
+  show: -> @b.show()
+  
+  hide: -> @b.hide()
+  
+  layoutLabel: (@layoutMode=true) ->
+    label = if @layoutMode then "Layout" else "Disable"
+    @b.button {label}
+
+
 class App
   
   constructor: ->
@@ -1384,6 +1434,18 @@ class App
   init: ->
     
     @homePage()
+    
+    @layoutEnabled = false
+    
+    editPageButtonCallback = =>
+      unless @layoutEnabled and @editPageButton.layoutMode
+        @layoutEnabled = not @layoutEnabled
+      if @layoutEnabled
+        @layoutMode()
+      else
+        @hideLayout()
+        
+    @editPageButton = new EditPageButton($("#edit-page"), -> editPageButtonCallback())
     
     codeSections()
     
@@ -1510,6 +1572,7 @@ class App
     
     return if @isEditable
     @isEditable = true
+    @layoutEnabled = true
     
     #highlight = (component) =>
     #  @currentComponent?.removeClass "widget-highlight"
@@ -1536,6 +1599,7 @@ class App
     #@computationEditor.editor.customRenderer.render()
     
     @computationEditor.on "cursorOnWidget", (data) =>
+      return unless @layoutEnabled
       return if @settings?.popupWidgetEditor? and not @settings?.popupWidgetEditor
       @clickedOnComponent = true
       widget = Widgets.getFromSignature data.type, data.id
@@ -1545,6 +1609,8 @@ class App
       @markdownEditor.setViewPort null
     
     $(document).on "clickWidget", (evt, data) =>
+      return unless @layoutEnabled
+      return if @settings?.popupWidgetEditor? and not @settings?.popupWidgetEditor
       #console.log "data", data
       @clickedOnComponent = true
       @highlight data.widget.mainContainer
@@ -1558,6 +1624,7 @@ class App
       setTimeout (=> @clickedOnComponent = false), 300
     
     @markdownEditor.on "clickText", (data) =>
+      return unless @layoutEnabled
       @clickedOnComponent = true
       @highlight null
       @widgetEditor.setViewPort null
@@ -1566,22 +1633,27 @@ class App
     $(document.body).click (evt, data) =>
       #console.log "click", $(evt.target).attr("class")
       setTimeout (=>
-        unless @clickedOnComponent or $(evt.target).attr("class") # Hack for Ace editor click
-          @highlight null
-          @widgetEditor.setViewPort null
-          @markdownEditor.setViewPort null
+        @hideLayout() unless @clickedOnComponent or $(evt.target).attr("class") # Hack for Ace editor click
         @clickedOnComponent = false
       ), 100
     
     @widgetEditor.on "clickDelete", => @clickedOnComponent = true
     
     highlightLayout = =>
-      Layout.highlight(@widgetEditor.viewPortDisplayed or @markdownEditor.viewPortDisplayed)
+      displayed = @widgetEditor.viewPortDisplayed or @markdownEditor.viewPortDisplayed
+      Layout.highlight(displayed)
+      if displayed
+        @editPageButton.layoutLabel(false)
+        @editPageButton.b.show()
+        #@editPageButton.b.fadeIn 400, => 
     
     @widgetEditor.on "setViewPort", => highlightLayout()
     @markdownEditor.on "setViewPort", => highlightLayout()
       
-    Layout.on "clickBox", => @layoutMode()
+    Layout.on "clickBox", =>
+      return unless @layoutEnabled
+      return if @settings?.popupWidgetEditor? and not @settings?.popupWidgetEditor
+      @layoutMode()
       #return if @clickedOnComponent  # Order of observer registration matters here
       #console.log "clicked box"
       #highlight null
@@ -1590,6 +1662,13 @@ class App
       #@widgetEditor.setViewPort "layout"
       #@markdownEditor.setViewPort null
       
+  #makeUneditable: ->
+  #  @computationEditor.off "cursorOnWidget"
+  #  $(document).off "clickWidget"
+  #  @markdownEditor.off "clickText"
+  #  Layout.off "clickBox"
+    
+    
   highlight: (component) =>
     @currentComponent?.removeClass "widget-highlight"
     @currentComponent = component
@@ -1605,6 +1684,17 @@ class App
     @widgetEditor.setViewPort "layout"
     @markdownEditor.setViewPort null
     
+  hideLayout: ->
+    @highlight null
+    @widgetEditor.setViewPort null
+    @markdownEditor.setViewPort null
+    
+    @editPageButton.layoutLabel()
+    if @layoutEnabled
+      @editPageButton.hide()
+    else
+      @editPageButton.show()
+  
   editSettingsMode: ->
     console.log "edit settings mode", @clickedOnComponent
     return if @clickedOnComponent  # Order of observer registration matters here
