@@ -1388,8 +1388,10 @@ class App
     codeSections()
     
     $(document.body).mousedown (e) =>
-      #console.log "MOUSE DOWN"
       $.event.trigger "blabmousedown"
+      
+    $(document.body).mouseup (e) =>
+      $.event.trigger "blabmouseup"
     
     (document.body).addEventListener "copy", (e) =>
       #e.preventDefault()
@@ -1423,6 +1425,7 @@ class App
         $(document).off "blabcompute"
       
       $(document).unbind "blabmousedown"
+      $(document).unbind "blabmouseup"
       $(document).unbind "blabcopy"
       $(document).unbind "blabpaste"
       #$(document).unbind "blabcompute"
