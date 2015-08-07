@@ -1604,7 +1604,7 @@ class App
     #   ), 300
     # ), 300
     setTimeout (=> 
-      @computationEditor.aceEditor?.focus()
+      #@computationEditor.aceEditor?.focus()
       @computationEditor.initFocusBlur()
       @makeEditable2()
     ), 900
