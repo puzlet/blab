@@ -929,7 +929,7 @@ class Layout
         c = $ "<div>",
           id: boxId
           class: boxClass
-          click: => @trigger "clickBox"
+          mouseup: => @trigger "clickBox"  # Use mouseup instead of click so can control propagation.
         c.addClass "layout-box"
         r.append c
         @appendNum c, n
