@@ -435,7 +435,9 @@ class ComputationEditor
       @setLine()
       
     $(document).on "allBlabDefinitionsLoaded", -> # unused
-  
+    
+    @changeCursor = => #@setLine()
+    
   init: (@resource) ->
     
     return if @editor  # Return if already defined
@@ -449,7 +451,10 @@ class ComputationEditor
     @currentLine = null
     @selection = @aceEditor.selection
     
-    @selection.on "changeCursor", => @setLine()
+    @selection.on "changeCursor", =>
+      console.log "Change cursor"
+      @changeCursor()
+      #@setLine()
   
   initFocusBlur: ->
     
@@ -457,12 +462,14 @@ class ComputationEditor
       #@currentLine = null
       console.log "FOCUS" 
       @setLine(true)
+      @changeCursor = => @setLine()
       @hint.fadeIn()
       
     @aceEditor.on "blur", =>
       console.log "BLUR"
       @hint.fadeOut()
       @currentLine = null
+      @changeCursor = =>
     
   setLine: (force) =>
     cursor = @selection?.getCursor()
@@ -491,6 +498,7 @@ class ComputationEditor
     match = if matchArray is null then null else matchArray[0]
     type = if matchArray is null then null else matchArray[1]
     id = if matchArray is null then null else matchArray[2]
+    console.log "*** Trigger cursorOnWidget"
     @trigger "cursorOnWidget", {match, type, id}
     
   on: (evt, observer) -> @observers[evt].push observer
@@ -1605,7 +1613,10 @@ class App
     
     #@computationEditor.editor.customRenderer.render()
     
+    console.log "%%%%%%%%%%%% makeEditable2"
+    
     @computationEditor.on "cursorOnWidget", (data) =>
+      console.log "cursorOnWidget"
       return unless @layoutEnabled
       return if @settings?.popupWidgetEditor? and not @settings?.popupWidgetEditor
       @clickedOnComponent = true
@@ -1613,6 +1624,12 @@ class App
       @highlight widget?.mainContainer
       @widgetEditor.currentId = null
       @widgetEditor.setViewPort data.match
+      
+      # Hack: dup code.
+      unless data.match
+        @editPageButton.layoutLabel()
+        @editPageButton.hide()
+        
       @markdownEditor.setViewPort null
     
     $(document).on "clickWidget", (evt, data) =>
@@ -1692,6 +1709,7 @@ class App
     @markdownEditor.setViewPort null
     
   hideLayout: ->
+    console.log "hide layout"
     @highlight null
     @widgetEditor.setViewPort null
     @markdownEditor.setViewPort null
