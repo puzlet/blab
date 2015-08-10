@@ -116,8 +116,10 @@ class Widgets
     
     $(document).on "compiledCoffeeScript", (evt, data) =>
       return unless data.url is @filename
-      $.event.trigger "layoutError", {source: @filename, error: $blab.windowError}
-      if $blab.windowError
+      err = $blab.windowError
+      $.event.trigger "layoutError", {source: @filename, error: err}
+      $.event.trigger "blabError", {source: @filename, error: err}
+      if err
         $blab.windowError = false
         return
       widget?.initialize?() for key, widget in @widgets
@@ -1596,20 +1598,24 @@ class App
       s = data.resource.url
       @compErrors = null if s is "compute.coffee"
       @defErrors = null if s is "defs.coffee"
+      @layoutErrors = null if s is "layout.coffee"
     
     $(document).on "blabError", (evt, data) =>
       s = data.source
-      return unless s in ["compute.coffee", "defs.coffee"]
+      return unless s in ["compute.coffee", "defs.coffee", "layout.coffee"]
       $blab.windowError = false
       if s is "compute.coffee"
         @compErrors = if data.error then "<b>Computation</b><br>#{data.error}" else null
       if s is "defs.coffee"
         @defErrors = if data.error then "<b>Definitions</b><br>#{data.error}" else null
+      if s is "layout.coffee"
+        @layoutErrors = if data.error then "<b>Layout</b><br>#{data.error}" else null
       d = $("#blab-error")
-      br = (if @compErrors and @defErrors then "<br><br>" else "")
-      txt = (@compErrors ? "") + br + (@defErrors ? "")
+      br1 = (if @compErrors and @defErrors then "<br><br>" else "")
+      br2 = (if @layoutErrors and (@compErrors or @defErrors) then "<br><br>" else "")
+      txt = (@compErrors ? "") + br1 + (@defErrors ? "") + br2 + (@layoutErrors ? "")
       d.html txt
-      if @compErrors or @defErrors then d.show() else d.hide()
+      if @compErrors or @defErrors or @layoutErrors then d.show() else d.hide()
     
     #@makeEditable()
     
