@@ -125,7 +125,7 @@ class Widgets
       
     window.onerror = (e) =>
       console.log e
-      alert e
+      #alert e
       @windowError = true
       
     @queueCompile 2000  # Hack to force compile for Gist source
