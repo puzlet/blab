@@ -116,9 +116,17 @@ class Widgets
     
     $(document).on "compiledCoffeeScript", (evt, data) =>
       return unless data.url is @filename
+      if @windowError
+        @windowError = false
+        return
       widget?.initialize?() for key, widget in @widgets
       Computation.init()
       $.event.trigger "htmlOutputUpdated"
+      
+    window.onerror = (e) =>
+      console.log e
+      alert e
+      @windowError = true
       
     @queueCompile 2000  # Hack to force compile for Gist source
       
