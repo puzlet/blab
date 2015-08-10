@@ -657,7 +657,7 @@ class MarkdownEditor #extends PopupEditor
     @text = $ @containerId
     return unless @text.length
     @text.css(cursor: "default")  # ZZZ do in CSS
-    @text.click => @trigger "clickText", {start: 0}
+    @text.mouseup => @trigger "clickText", {start: 0}
     
     @resources = $blab.resources
     @widgetsRendered = false
@@ -769,7 +769,7 @@ class MarkdownEditor #extends PopupEditor
     div = $ "<div>",
       class: "rendered-markdown"
       css: cursor: "default"
-      click: (evt) =>
+      mouseup: (evt) =>
         @trigger "clickText", {start: parseInt(div.attr "data-start")}
     div.attr("data-pos": m.pos, "data-order": m.order, "data-start": m.start)
     div.append m.html
@@ -934,7 +934,7 @@ class Layout
       for col in row
         c = $ "<div>",
           class: col
-          click: => @trigger "clickBox"
+          mouseup: => @trigger "clickBox"
         c.addClass "layout-box"
         @appendNum c, n
         n++
