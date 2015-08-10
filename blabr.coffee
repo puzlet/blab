@@ -116,18 +116,14 @@ class Widgets
     
     $(document).on "compiledCoffeeScript", (evt, data) =>
       return unless data.url is @filename
-      if @windowError
-        @windowError = false
+      $.event.trigger "layoutError", {source: @filename, error: $blab.windowError}
+      if $blab.windowError
+        $blab.windowError = false
         return
       widget?.initialize?() for key, widget in @widgets
       Computation.init()
       $.event.trigger "htmlOutputUpdated"
-      
-    window.onerror = (e) =>
-      console.log e
-      #alert e
-      @windowError = true
-      
+    
     @queueCompile 2000  # Hack to force compile for Gist source
       
   @append: (id, widget, element) ->
@@ -224,6 +220,11 @@ class WidgetEditor #extends PopupEditor
       setViewPort: []
       clickDelete: []
       
+    $(document).on "layoutError", (evt, data) =>
+      #console.log "ERROR", data.error
+      e = if data.error then data.error else ""
+      @message?.text e
+      
   init: (@resource) ->
     return if @editor
     @editor = @resource.containers?.fileNodes?[0].editor
@@ -291,6 +292,7 @@ class WidgetEditor #extends PopupEditor
       maxHeight: "10px"
     @editor.container.parent().show()
     @deleteButton()
+    @errorMessage()
     
     @editor.show true if @start
     spec.viewPort = true
@@ -339,6 +341,20 @@ class WidgetEditor #extends PopupEditor
         @trigger "clickDelete"
       
     @del.append @delButton
+    
+  errorMessage: ->
+    
+    @message?.empty()
+    
+    unless @message?.length
+      @message = $ "<div>",
+        css:
+          position: "absolute"
+          display: "inline-block"
+          top: 5
+          right: 15
+          color: "red"
+      @editor.editorContainer.append @message
       
   folding: ->
     # ZZZ to do
@@ -1038,7 +1054,7 @@ class Definitions
       $blab.defs = {}
       $blab.definitions = {}
       @allLoaded = false
-      
+    
     @resources.loadUnloaded => @coffee.compile()
     
   main: (defs) ->
@@ -1482,8 +1498,12 @@ class App
     $(document).unbind "blabcompute"
     
     $(document).on "compiledCoffeeScript", (e, data) =>
-      return unless data.url is "compute.coffee"
-      $.event.trigger "blabcompute"
+      if data.url isnt "layout.coffee" and data.url isnt "compute.coffee"
+        console.log "compiled", data.url
+        #if $blab.windowError
+        $.event.trigger "blabError", {source: data.url, error: $blab.windowError}
+        #$blab.windowError = false
+      $.event.trigger "blabcompute" if data.url is "compute.coffee"  # only if no error?
     
     #$(document.body).off "copy"
     #(document.body).addEventListener "paste", (e) =>
@@ -1566,7 +1586,31 @@ class App
     #@clickedLayout = false
     
     @currentComponent = null
-      
+    
+    window.onerror = (e, url, line) =>
+      console.log e, $blab.coffeeCompilerSource, line
+      $blab.windowError = e
+      # Add true at end to supress red error in console.
+    
+    $(document).on "preCompileCoffee", (evt, data) =>
+      s = data.resource.url
+      @compErrors = null if s is "compute.coffee"
+      @defErrors = null if s is "defs.coffee"
+    
+    $(document).on "blabError", (evt, data) =>
+      s = data.source
+      return unless s in ["compute.coffee", "defs.coffee"]
+      $blab.windowError = false
+      if s is "compute.coffee"
+        @compErrors = if data.error then "<b>Computation</b><br>#{data.error}" else null
+      if s is "defs.coffee"
+        @defErrors = if data.error then "<b>Definitions</b><br>#{data.error}" else null
+      d = $("#blab-error")
+      br = (if @compErrors and @defErrors then "<br><br>" else "")
+      txt = (@compErrors ? "") + br + (@defErrors ? "")
+      d.html txt
+      if @compErrors or @defErrors then d.show() else d.hide()
+    
     #@makeEditable()
     
   setBackground: (background) ->

@@ -313,6 +313,25 @@ div[data-file="layout.coffee"] {
 	margin-right: 20px
 }
 
+#blab-error {
+  position: fixed;
+  top: 60px;
+  right: 10px;
+  width: 200px;
+  min-height: 60px;
+  /*height: 100px;*/
+  padding: 10px;
+  z-index: 300;
+  text-align: center;
+  font-size: 10pt;
+  background: #ffebeb;
+  color: red;
+  opacity: 0.95;
+  border: 2px solid red;
+  border-radius: 10px;
+  display: none;
+}
+
 /********* Buttons *********/
 
 #buttons {
