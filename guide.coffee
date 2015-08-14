@@ -18,7 +18,7 @@ content =
     {text: "Basic math", id: "58ef3095767efcdf1977"}
     {text: "Basic plot", id: "ee2036a3e55336c6d010"}
     {text: "Text", id: "277bf74a4b1e7364df29"}
-    {text: "Tables", id: "e31dcf9a402f12fbf4f5"}
+    {text: "Tables", id: "0a248098997a6f95635c"}
     {text: "Sliders", id: "9b6fbf80ed838d1e1cef"}
     {text: "Layout of components", id: "c7837da7dd136710e2ba"}
     {text: "Function definitions", id: "e8457f2a62b292e1d0a2"}
