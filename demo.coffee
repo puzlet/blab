@@ -82,9 +82,9 @@ $blab.demoScript = (spec) ->
   widget
     find: "[]", replace: "[\"$x$\", \"$kx^2$\"]"
     guide: "Add column headings."
-    dwell: 0
+    dwell: 200
   compute "z = k*x*x", "Computation for second column, based on values in first column.", 1000
-  text "Enter value in first column, then press return.  Enter more values.", 10000
+  text "Enter value in first cell, then press return.  Enter more values.<br><br>Backspace to delete empty cell.", 10000
   
   text """
   You can save a blab as a <a href="//gist.github.com" target="_blank">GitHub Gist</a>.<br>
