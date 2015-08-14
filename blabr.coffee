@@ -199,6 +199,9 @@ class Widgets
       widget = @widgets[id]
       break
     widget ? null
+    
+  @setAllUnused: ->
+    w.setUsed false for id, w of @widgets
 
 
 class WidgetEditor #extends PopupEditor
@@ -222,10 +225,10 @@ class WidgetEditor #extends PopupEditor
       setViewPort: []
       clickDelete: []
       
-    $(document).on "layoutError", (evt, data) =>
+    #$(document).on "layoutError", (evt, data) =>
       #console.log "ERROR", data.error
-      e = if data.error then data.error else ""
-      @message?.text e
+    #  e = if data.error then data.error else ""
+    #  @message?.text e
       
   init: (@resource) ->
     return if @editor
@@ -234,7 +237,14 @@ class WidgetEditor #extends PopupEditor
     @aceEditor = @editor.editor
     @setViewPort null
     # ZZZ init folding here?
-    @editor.onChange => 
+    @editor.onChange =>
+    @aceEditor.setShowFoldWidgets true
+    
+    #session = @aceEditor.getSession()
+    #session.on "changeFold", ->
+      #ed.setHeight session.getScreenLength()
+    #session.foldAll(1, 10000, 0)
+    #session.unfold(1, true)
       
   setViewPort: (txt) ->
     
@@ -299,7 +309,7 @@ class WidgetEditor #extends PopupEditor
     @editor.show true if @start
     spec.viewPort = true
     spec.startLine = @start+1
-    spec.endLine = @end+1
+    spec.endLine = if @end-@start+1<20 then @end+1 else @start+20
     @editor.setViewPort()
     @editor.editorContainer[0].onwheel = -> false
     
@@ -396,8 +406,8 @@ class Computation
     
   @compute: ->
     resource = $blab.resources.find(@filename)
+    # This does not recompile of resource has not changed.  It just re-evaluates compiled JS.
     resource?.compile()
-    
     
   @precode: ->
     
@@ -478,7 +488,7 @@ class ComputationEditor
     @selection = @aceEditor.selection
     
     @selection.on "changeCursor", =>
-      console.log "Change cursor"
+      #console.log "Change cursor"
       @changeCursor()
       #@setLine()
   
@@ -524,8 +534,9 @@ class ComputationEditor
     match = if matchArray is null then null else matchArray[0]
     type = if matchArray is null then null else matchArray[1]
     id = if matchArray is null then null else matchArray[2]
-    console.log "*** Trigger cursorOnWidget"
-    @trigger "cursorOnWidget", {match, type, id}
+    #console.log "*** Trigger cursorOnWidget"
+    widget = Widgets.getFromSignature type, id
+    @trigger "cursorOnWidget", {widget, match}
     
   on: (evt, observer) -> @observers[evt].push observer
   
@@ -1238,10 +1249,9 @@ class Buttons
     
     @settings = spec.getSettings()
     
-    if @settings?.showCodeOnLoad or ((@isStart or @isDemo) and not @settings?.showCodeOnLoad?)
-      $("#computation-code-wrapper").show()
-    
     showCode = -> $("#computation-code-wrapper").show()
+    
+    showCode() if @settings?.showCodeOnLoad or ((@isStart or @isDemo) and not @settings?.showCodeOnLoad?)
     
     if @isStart
       showCode() if @settings?.showCodeOnLoad
@@ -1360,6 +1370,7 @@ class Buttons
     
 
 
+# Not used
 codeSections = ->
   title = "Show/hide code"
   comp = $ "#computation-code-section"
@@ -1444,20 +1455,74 @@ class EditPageButton
     @b.button {label}
 
 
-class App
+class Errors
+  
+  errors:
+    "compute.coffee": {heading: "Computation", error: null}
+    "defs.coffee": {heading: "Definitions", error: null}
+    "layout.coffee": {heading: "Layout", error: null}
+    
+  containerSel: "#blab-error"
   
   constructor: ->
+    
+    @container = $(@containerSel)
+    
+    @filenames = (name for name of @errors)
+    
+    window.onerror = (e, url, line) =>
+      $blab.windowError = e
+      # Optional: Return "true" to suppress red error in console.
+    
+    $(document).on "preCompileCoffee", (e, data) => @reset data.resource.url
+    
+    $(document).on "blabError", (evt, data) =>
+      filename = data.source
+      return unless filename in @filenames
+      $blab.windowError = false
+      @set filename, data.error
+      @disp()
+      
+  reset: (filename) ->
+    for name, e of @errors
+      @errors[name].error = null if filename is name
+  
+  set: (filename, error) ->
+    for name, e of @errors
+      if filename is name
+        @errors[name].error = if error then error else null
+  
+  disp: ->
+    first = true
+    show = false
+    str = ""
+    for name, e of @errors
+      error = e.error
+      continue unless error
+      show = true
+      str += "<br><br>" unless first
+      str += "<b>#{e.heading}</b><br>" + error
+      first = false
+    @container.html str
+    if show then @container.show() else @container.hide()
+    
+
+
+class Loader
+  
+  constructor: (@init)->
+    
     @resources = $blab.resources
     @resources.blockPostLoadFromSpecFile = true
-    @load()
     
-  load: ->
     layout = @resources.add url: "layout.coffee"
     guide = @resources.add url: "guide.coffee"
     tables = @resources.add url: "tables.json"
+    
     if not @resources.getSource? or @resources.getSource("demo.coffee")
       demoRunner = @resources.add(url: "demo-runner.coffee")
       demo = @resources.add(url: "demo.coffee")
+    
     @resources.loadUnloaded =>
       @definitions = new Definitions (cb) =>
         @init()
@@ -1467,159 +1532,41 @@ class App
         demo?.compile()
         @resources.postLoadFromSpecFile()
         cb()
+
+
+class BlabEvents
+  
+  constructor: ->
+    @body = $(document.body)
+    @body.mousedown (e) => @trigger "blabmousedown"
+    @body.mouseup (e) => @trigger "blabmouseup"
+    document.body.addEventListener "copy", (e) => @trigger "blabcopy", {original: e}
+    @unbind ["blabcompute"]
+    @on "preCompileCoffee", (e, data) => @unbinds data.resource.url
+    @on "compiledCoffeeScript", (e, data) => @triggers data.url
+  
+  unbinds: (filename) ->
+    @unbind ["blabcompute"] if filename is "layout.coffee"
+    @unbind ["blabmousedown", "blabmouseup", "blabcopy", "blabpaste"]
+  
+  triggers: (filename) ->
+    isCompute = filename is "compute.coffee"
+    isLayout = filename is "layout.coffee"
+    unless isCompute or isLayout
+      @trigger "blabError", {source: filename, error: $blab.windowError}
+    @trigger "blabcompute" if isCompute  # only if no error?
+    
+  on: (name, handler) -> $(document).on name, (evt, data) -> handler(evt, data)
+  
+  trigger: (evt, data) -> $.event.trigger evt, data
+  
+  unbind: (events) -> $(document).unbind(e) for e in events
+
+
+class Background
+  
+  constructor: (background) ->
       
-  init: ->
-    
-    @homePage()
-    
-    @layoutEnabled = false
-    
-    editPageButtonCallback = =>
-      unless @layoutEnabled and @editPageButton.layoutMode
-        @layoutEnabled = not @layoutEnabled
-      if @layoutEnabled
-        @layoutMode()
-      else
-        @hideLayout()
-        
-    @editPageButton = new EditPageButton($("#edit-page"), -> editPageButtonCallback())
-    
-    codeSections()
-    
-    $(document.body).mousedown (e) =>
-      $.event.trigger "blabmousedown"
-      
-    $(document.body).mouseup (e) =>
-      $.event.trigger "blabmouseup"
-    
-    (document.body).addEventListener "copy", (e) =>
-      #e.preventDefault()
-      #e.clipboardData.setData('text/plain', "hello")
-      $.event.trigger "blabcopy", {original: e}
-    
-    $(document).unbind "blabcompute"
-    
-    $(document).on "compiledCoffeeScript", (e, data) =>
-      if data.url isnt "layout.coffee" and data.url isnt "compute.coffee"
-        console.log "compiled", data.url
-        #if $blab.windowError
-        $.event.trigger "blabError", {source: data.url, error: $blab.windowError}
-        #$blab.windowError = false
-      $.event.trigger "blabcompute" if data.url is "compute.coffee"  # only if no error?
-    
-    #$(document.body).off "copy"
-    #(document.body).addEventListener "paste", (e) =>
-    #  console.log "paste"
-    #  #e.preventDefault()
-      #e.clipboardData.setData('text/plain', "hello")
-    #  $.event.trigger "blabpaste", {original: e}
-    
-    
-    # ZZZ should be method in Widgets?
-    $(document).on "preCompileCoffee", (evt, data) =>
-      resource = data.resource
-      url = resource.url
-      if url is "compute.coffee"
-        Computation.precode()
-        w.setUsed false for id, w of Widgets.widgets
-      #if url is "layout.coffee"
-      
-      if url is "layout.coffee"
-        $(document).off "blabcompute"
-      
-      $(document).unbind "blabmousedown"
-      $(document).unbind "blabmouseup"
-      $(document).unbind "blabcopy"
-      $(document).unbind "blabpaste"
-      #$(document).unbind "blabcompute"
-    
-    Widgets.initialize()
-    
-    @widgetEditor = Widgets.widgetEditor
-    
-    @computationEditor = new ComputationEditor
-    
-    # ZZZ not used
-    #new ComputationButtons
-    
-    #textEditor = new TextEditor  # ZZZ to deprecate
-    @markdownEditor = new MarkdownEditor
-    
-    $pz.renderHtml = ->
-      #textEditor?.process()
-      @markdownEditor.process()
-      
-    $(document).on "aceFilesLoaded", =>
-      #textEditor.process()
-      @markdownEditor.process()
-      @definitions.initEditor()
-    
-    Layout.on "renderedWidgets", =>
-      console.log "App::renderedWidgets"
-      #textEditor.setWidgetsRendered()
-      @markdownEditor.setWidgetsRendered()
-      
-      return unless @firstRender
-    
-    
-    $("#computation-code-wrapper").hide()
-    
-    @firstRender = true
-    $(document).on "layoutCompiled", =>
-      
-      return unless @firstRender
-      @firstRender = false
-      
-      @buttons = new Buttons
-        guide: => $blab.blabrGuide.slideToggle()
-        makeEditable: => @makeEditable()
-        editSettings: =>
-          @clickedOnComponent = false
-          @editSettingsMode()
-        getSettings: => @settings
-      
-    @firstChange = true
-    $(document).on "codeNodeChanged", =>
-      return unless @firstChange
-      @buttons.makeEditable()
-      @firstChange = false
-      
-    @clickedOnComponent = false
-    #@clickedLayout = false
-    
-    @currentComponent = null
-    
-    window.onerror = (e, url, line) =>
-      console.log e, $blab.coffeeCompilerSource, line
-      $blab.windowError = e
-      # Add true at end to supress red error in console.
-    
-    $(document).on "preCompileCoffee", (evt, data) =>
-      s = data.resource.url
-      @compErrors = null if s is "compute.coffee"
-      @defErrors = null if s is "defs.coffee"
-      @layoutErrors = null if s is "layout.coffee"
-    
-    $(document).on "blabError", (evt, data) =>
-      s = data.source
-      return unless s in ["compute.coffee", "defs.coffee", "layout.coffee"]
-      $blab.windowError = false
-      if s is "compute.coffee"
-        @compErrors = if data.error then "<b>Computation</b><br>#{data.error}" else null
-      if s is "defs.coffee"
-        @defErrors = if data.error then "<b>Definitions</b><br>#{data.error}" else null
-      if s is "layout.coffee"
-        @layoutErrors = if data.error then "<b>Layout</b><br>#{data.error}" else null
-      d = $("#blab-error")
-      br1 = (if @compErrors and @defErrors then "<br><br>" else "")
-      br2 = (if @layoutErrors and (@compErrors or @defErrors) then "<br><br>" else "")
-      txt = (@compErrors ? "") + br1 + (@defErrors ? "") + br2 + (@layoutErrors ? "")
-      d.html txt
-      if @compErrors or @defErrors or @layoutErrors then d.show() else d.hide()
-    
-    #@makeEditable()
-    
-  setBackground: (background) ->
     if background
       $(document.body).css backgroundImage: "url(#{background})"
       $("#outer-container").addClass "outer-background"
@@ -1636,139 +1583,97 @@ class App
         paddingTop: 0
       $("#container").css
         marginTop: 40
-    
-  makeEditable: ->
-    
-    return if @isEditable
-    @isEditable = true
-    @layoutEnabled = true
-    
-    #highlight = (component) =>
-    #  @currentComponent?.removeClass "widget-highlight"
-    #  @currentComponent = component
-    #  @currentComponent?.addClass "widget-highlight"
-    
-    # Force rendering of editors (e.g., mathjax, links)
-    # setTimeout (=>
-    #   @computationEditor.aceEditor?.focus()
-    #   setTimeout (=>
-    #     @computationEditor.aceEditor?.blur()
-    #     @definitions.aceEditor.focus()
-    #     setTimeout (=>
-    #       @definitions.aceEditor.blur()
-    #       @computationEditor.initFocusBlur()
-    #       @makeEditable2()
-    #     ), 300
-    #   ), 300
-    # ), 300
-    setTimeout (=> 
-      #@computationEditor.aceEditor?.focus()
-      @computationEditor.initFocusBlur()
-      @makeEditable2()
-    ), 900
+
+
+class Settings
   
-  makeEditable2: ->
-    
-    #@computationEditor.editor.customRenderer.render()
-    
-    console.log "%%%%%%%%%%%% makeEditable2"
-    
-    @computationEditor.on "cursorOnWidget", (data) =>
-      console.log "cursorOnWidget"
-      return unless @layoutEnabled
-      return if @settings?.popupWidgetEditor? and not @settings?.popupWidgetEditor
-      @clickedOnComponent = true
-      widget = Widgets.getFromSignature data.type, data.id
-      @highlight widget?.mainContainer
-      @widgetEditor.currentId = null
-      @widgetEditor.setViewPort data.match
+  set: (@spec) ->
+    new Background @spec?.background
+    author = $("#blab-author")
+    @spec.showAuthor = not @spec?.showAuthor? or @spec?.showAuthor
+    if author.length
+      if @spec?.showAuthor then author.show() else author.hide()
       
-      # Hack: dup code.
-      unless data.match
-        @editPageButton.layoutLabel()
-        @editPageButton.hide()
-        
-      @markdownEditor.setViewPort null
+  #showAuthor: -> @spec.showAuthor
+
+
+class PopupEditorManager
+  
+  constructor: (@spec) ->
     
-    $(document).on "clickWidget", (evt, data) =>
-      return unless @layoutEnabled
-      #return if @settings?.popupWidgetEditor? and not @settings?.popupWidgetEditor
-      #console.log "data", data
-      @clickedOnComponent = true
-      @highlight data.widget.mainContainer
-      #$("#"+data.id).css background: "yellow"
-      
-      shortId = Widgets.widgets[data.id].id
-      
-      @widgetEditor.currentId = data.id
-      @widgetEditor.setViewPort data.type + " " + "\"#{shortId}\""
-      @markdownEditor.setViewPort null
-      setTimeout (=> @clickedOnComponent = false), 300
+    {@widgetEditor, @markdownEditor} = @spec
     
-    @markdownEditor.on "clickText", (data) =>
-      return unless @layoutEnabled
-      @clickedOnComponent = true
-      @highlight null
-      @widgetEditor.setViewPort null
-      @markdownEditor.setViewPort data.start
+    # States
+    @layoutEnabled = false
+    @clickedOnComponent = false
+    @currentComponent = null
     
-    $(document.body).click (evt, data) =>
-      #console.log "click", $(evt.target).attr("class")
-      setTimeout (=>
-        @hideLayout() unless @clickedOnComponent or $(evt.target).attr("class") # Hack for Ace editor click
-        @clickedOnComponent = false
-      ), 100
+    @markdownEditor.on "clickText", (data) => @showMarkdownEditor data.start
+    @markdownEditor.on "setViewPort", => @highlightLayout()
     
+    @widgetEditor.on "setViewPort", => @highlightLayout()
     @widgetEditor.on "clickDelete", => @clickedOnComponent = true
     
-    highlightLayout = =>
-      displayed = @widgetEditor.viewPortDisplayed or @markdownEditor.viewPortDisplayed
-      Layout.highlight(displayed)
-      if displayed
-        @editPageButton.layoutLabel(false)
-        @editPageButton.b.show()
-        #@editPageButton.b.fadeIn 400, => 
+    @on "clickWidget", (evt, data) => @showLayoutEditor(widget: data.widget)
     
-    @widgetEditor.on "setViewPort", => highlightLayout()
-    @markdownEditor.on "setViewPort", => highlightLayout()
-      
-    Layout.on "clickBox", =>
-      return unless @layoutEnabled
-      #return if @settings?.popupWidgetEditor? and not @settings?.popupWidgetEditor
-      @layoutMode()
-      #return if @clickedOnComponent  # Order of observer registration matters here
-      #console.log "clicked box"
-      #highlight null
-      #@clickedOnComponent = true
-      #setTimeout (=> @clickedOnComponent = false), 300
-      #@widgetEditor.setViewPort "layout"
-      #@markdownEditor.setViewPort null
-      
-  #makeUneditable: ->
-  #  @computationEditor.off "cursorOnWidget"
-  #  $(document).off "clickWidget"
-  #  @markdownEditor.off "clickText"
-  #  Layout.off "clickBox"
+    Layout.on "clickBox", => @showLayoutEditor(signature: "layout")
     
+    $(document.body).click (evt) => @hideAll(evt)
     
-  highlight: (component) =>
-    @currentComponent?.removeClass "widget-highlight"
-    @currentComponent = component
-    @currentComponent?.addClass "widget-highlight"
-      
-  layoutMode: ->
-    console.log "layout mode", @clickedOnComponent
-    return if @clickedOnComponent  # Order of observer registration matters here
-    console.log "clicked box"
-    @highlight null
+    @editPageButton = new EditPageButton($("#edit-page"), => @toggleLayoutMode())
+  
+  enable: (enabled=true) ->
+    @layoutEnabled = enabled
+    
+  cursorOnWidget: (widget) ->
+    @showLayoutEditor(widget: widget, id: null, clicked: false)  # Why id null?
+  
+  showMarkdownEditor: (start) ->
+    return unless @layoutEnabled
     @clickedOnComponent = true
-    setTimeout (=> @clickedOnComponent = false), 300
-    @widgetEditor.setViewPort "layout"
-    @markdownEditor.setViewPort null
+    @highlightWidget null
+    @widgetEditor.setViewPort null
+    @markdownEditor.setViewPort start
     
+  showLayoutEditor: (spec) ->
+    
+    # Will hide layout editor if no widget or signature (e.g., cursor not on widget line).
+    
+    return unless @layoutEnabled
+    return if @clickedOnComponent  # Order of observer registration matters here
+    
+    widget = spec.widget
+    signature = spec.signature ? null
+    clicked = spec.clicked ? true  # Default true
+    
+    if widget
+      type = widget.constructor.handle
+      id = widget.id
+      signature = type + " " + "\"#{id}\""
+    
+    if clicked
+      @clickedOnComponent = true
+      setTimeout (=> @clickedOnComponent = false), 300
+    
+    @widgetEditor.setViewPort signature
+    @markdownEditor.setViewPort null
+    @highlightWidget(widget?.mainContainer ? null)
+    @widgetEditor.currentId = widget.domId() if widget
+    
+    # Need to consolidate?  into highlightLayout?
+    unless signature
+      @editPageButton.layoutLabel()
+      @editPageButton.hide()
+    
+  highlightLayout: ->
+    displayed = @widgetEditor.viewPortDisplayed or @markdownEditor.viewPortDisplayed
+    Layout.highlight(displayed)
+    if displayed
+      @editPageButton.layoutLabel(false)
+      @editPageButton.b.show()
+  
   hideLayout: ->
-    console.log "hide layout"
-    @highlight null
+    @highlightWidget null
     @widgetEditor.setViewPort null
     @markdownEditor.setViewPort null
     
@@ -1778,34 +1683,116 @@ class App
     else
       @editPageButton.show()
   
-  editSettingsMode: ->
-    console.log "edit settings mode", @clickedOnComponent
-    return if @clickedOnComponent  # Order of observer registration matters here
-    #console.log "clicked box"
-    @highlight null
-    @clickedOnComponent = true
-    setTimeout (=> @clickedOnComponent = false), 300
-    @widgetEditor.setViewPort "settings"
-    @markdownEditor.setViewPort null
+  highlightWidget: (component) =>
+    @currentComponent?.removeClass "widget-highlight"
+    @currentComponent = component
+    @currentComponent?.addClass "widget-highlight"
+  
+  toggleLayoutMode: ->
+    unless @layoutEnabled and @editPageButton.layoutMode
+      @enable(not @layoutEnabled)
+    if @layoutEnabled
+      @showLayoutEditor(signature: "layout", clicked: true)
+    else
+      @hideLayout()
+  
+  hideAll: (evt) ->
+    setTimeout (=>
+      @hideLayout() unless @clickedOnComponent or $(evt.target).attr("class") # Hack for Ace editor click
+      @clickedOnComponent = false
+    ), 100
+  
+  on: (name, handler) -> $(document).on name, (evt, data) -> handler(evt, data)
+
+
+class App
+  
+  constructor: ->
+    @loader = new Loader => @init()
+  
+  init: ->
     
-  homePage: ->
+    new BlabEvents
     
-    gistSource = @resources.getSource?
-    #if gistSource
-    #  $(".container").css marginBottom: (if gistSource then 300 else )
-    #else
-      
-    #$("")
+    Widgets.initialize()
+    @widgetEditor = Widgets.widgetEditor
+    @computationEditor = new ComputationEditor
+    @markdownEditor = new MarkdownEditor
+    @definitions = @loader.definitions
     
+    @on "aceFilesLoaded", => @initEditors()
+    
+    @beforeCompute =>
+      Computation.precode()
+      Widgets.setAllUnused()
+    
+    Layout.on "renderedWidgets", => @markdownEditor.setWidgetsRendered()
+    
+    $("#computation-code-wrapper").hide()
+    @on "layoutCompiled", => @initButtons()  # For first layout only
+    
+    @on "codeNodeChanged", =>
+      return if @changed  # First code change only
+      @changed = true
+      @buttons.makeEditable()
+    
+    @settingsObj = new Settings
+    new Errors
+    
+    $pz.renderHtml = => @markdownEditor.process()
+    
+  initEditors: ->
+    @markdownEditor.process()
+    @definitions.initEditor()
+    
+    @editors = new PopupEditorManager {@widgetEditor, @markdownEditor}
+    
+    @computationEditor.on "cursorOnWidget", (data) =>
+      return if @settings?.popupWidgetEditor? and not @settings?.popupWidgetEditor
+      @editors.cursorOnWidget data.widget
+    
+    setTimeout (=> @computationEditor.initFocusBlur()), 900
+    
+  initButtons: ->
+    return if @buttons
+    @buttons = new Buttons
+      guide: => $blab.blabrGuide.slideToggle()
+      makeEditable: => @editors.enable()
+      editSettings: => @editors.showLayoutEditor(signature: "settings")
+      getSettings: => @settings
+  
   setSettings: (@settings) ->
-    @setBackground @settings?.background
-    author = $("#blab-author")
-    @settings.showAuthor = not @settings?.showAuthor? or @settings?.showAuthor
-    if author.length
-      if @settings?.showAuthor then author.show() else author.hide()
+    @settingsObj.set @settings
+  
+  beforeCompute: (handler) ->
+    @on "preCompileCoffee", (e, data) =>
+      return unless data.resource.url is "compute.coffee"
+      handler()
       
-    #console.log "===========SET SETTINGS", @settings
-    #@buttons.setSettings(@settings)
+  # Unused
+  forceEditorRendering: ->
+    # Force rendering of editors (e.g., mathjax, links)
+    setTimeout (=>
+      @computationEditor.aceEditor?.focus()
+      setTimeout (=>
+        @computationEditor.aceEditor?.blur()
+        @definitions.aceEditor.focus()
+        setTimeout (=>
+          @definitions.aceEditor.blur()
+          @computationEditor.initFocusBlur()
+          #@initEditorEventHandlers()
+        ), 300
+      ), 300
+    ), 300
+    #setTimeout (=>
+    #  @computationEditor.aceEditor?.focus()
+    #  @computationEditor.initFocusBlur()
+     #@initEditorEventHandlers()
+    #), 900
+  
+  
+  on: (name, handler) -> $(document).on name, (evt, data) -> handler(evt, data)
+  
 
 
 $blab.blabrApp = new App
