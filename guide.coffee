@@ -5,6 +5,7 @@ content =
   syntaxTips: [
     "k = slider \"k\""
     "table \"my-table\", x, y"
+    "[x] = table \"t\", [], [-> y]"
     "plot \"my-plot\", x, y"
     "x = [1, 2, 3]"
     "x = [1..3]"

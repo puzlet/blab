@@ -468,7 +468,7 @@ class ComputationEditor
     $(document).on "runCode", (evt, data) =>
       return unless data.filename is @filename
       @currentLine = null
-      @setLine()
+      setTimeout (=> @setLine()), 400
       
     $(document).on "allBlabDefinitionsLoaded", -> # unused
     
@@ -534,9 +534,13 @@ class ComputationEditor
     match = if matchArray is null then null else matchArray[0]
     type = if matchArray is null then null else matchArray[1]
     id = if matchArray is null then null else matchArray[2]
-    #console.log "*** Trigger cursorOnWidget"
-    widget = Widgets.getFromSignature type, id
-    @trigger "cursorOnWidget", {widget, match}
+    if @tId
+      clearTimeout @tId
+      @tId = null
+    @tId = setTimeout (=>
+      widget = Widgets.getFromSignature type, id
+      @trigger "cursorOnWidget", {widget, match}
+    ), 200
     
   on: (evt, observer) -> @observers[evt].push observer
   
@@ -1757,8 +1761,8 @@ class App
     return if @buttons
     @buttons = new Buttons
       guide: => $blab.blabrGuide.slideToggle()
-      makeEditable: => @editors.enable()
-      editSettings: => @editors.showLayoutEditor(signature: "settings")
+      makeEditable: => @editors?.enable()
+      editSettings: => @editors?.showLayoutEditor(signature: "settings")
       getSettings: => @settings
   
   setSettings: (@settings) ->
