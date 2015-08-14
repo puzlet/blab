@@ -61,7 +61,7 @@ $blab.demoScript = (spec) ->
   slider
     id: "k", vals: [1..9]
     guide: "Adjust the slider and see the computation updated on-the-fly."
-    
+  
   md
     find: "Untitled", replace: "Quadratic"
     guide: """
@@ -77,6 +77,14 @@ $blab.demoScript = (spec) ->
     
   md
     close: true
+  
+  compute "x = table \"my-table\", [], [-> z]", "You can also create a table with editable cells.", 1000
+  widget
+    find: "[]", replace: "[\"$x$\", \"$kx^2$\"]"
+    guide: "Add column headings."
+    dwell: 0
+  compute "z = k*x*x", "Computation for second column, based on values in first column.", 1000
+  text "Enter value in first column, then press return.  Enter more values.", 10000
   
   text """
   You can save a blab as a <a href="//gist.github.com" target="_blank">GitHub Gist</a>.<br>
