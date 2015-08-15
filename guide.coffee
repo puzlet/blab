@@ -81,7 +81,7 @@ class Guide
     @isMain = not $blab.resources.getSource?  # Needed?
     @container.empty()
   
-    new GuideCloseButton @container, @guideControl
+    new $blab.utils.CloseButton @container, => @container.slideUp(500, => @guideControl?.show())
     @tips()
     @demos()
     @examples()
@@ -184,23 +184,6 @@ class GuideControl
     @click = =>
       @show(false)
       @guide.slideDown 500
-    
-
-
-class GuideCloseButton
-  
-  constructor: (@guide, @control) ->
-    
-    @button = $ "<div>", id: "guide-close-button"
-    @guide.append @button
-    
-    @img = $ "<img>",
-      src: "img/UI_175.png"
-      click: =>
-        @guide.slideUp 500, => @control?.show()
-    
-    @button.append @img
-    
 
 
 class Credits

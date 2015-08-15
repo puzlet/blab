@@ -1412,8 +1412,6 @@ class EditPageButton
   constructor: (@container, @callback) ->
     
     # TODO: user-select off
-    console.log "%%%%%%%%% EDIT PAGE BUTTON"
-    
     @checked = false
     
     @div = $ "<div>",
@@ -1426,22 +1424,11 @@ class EditPageButton
     
     @b = $ "<a>",
       id: "edit-page-button"
-      #type: "checkbox"
-      #checked: true
       click: =>
-        #return
-        #@checked = not @checked
-        #$( "input:checked" ).length
-        #checked = @b.is(':checked')
-        #console.log "CHECKED", @checked
         @b.button("refresh")
         @callback?()
     
-    #l = $ "<label>",
-    #  for: "edit-page-button"
-    #  text: "Disable"
-    
-    @div.append(@b)  #.append(l) #.append(@savingMessage)
+    @div.append(@b)
     @container.append @div
     
     @b.button()
@@ -1496,7 +1483,7 @@ class Errors
   
   disp: ->
     @container.empty()
-    @appendCloseButton()
+    new $blab.utils.CloseButton @container, => @container.hide()
     first = true
     show = false
     str = ""
@@ -1509,15 +1496,6 @@ class Errors
       first = false
     @container.append str
     if show then @container.show() else @container.hide()
-  
-  appendCloseButton: ->
-    @button = $ "<div>", id: "errors-close-button"
-    @img = $ "<img>",
-      src: "img/UI_175.png"
-      click: => @container.hide()
-    @button.append @img
-    @container.append @button
-    
 
 
 class Loader

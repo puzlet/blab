@@ -313,6 +313,22 @@ div[data-file="layout.coffee"] {
 	margin-right: 20px
 }
 
+/********* Close button *********/
+
+.close-button {
+  position: absolute;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  top: 5px;
+  right: 5px;
+}
+
+.close-button img {
+  height: 20px;
+  cursor: pointer;
+}
+
 /********* Errors *********/
 
 #blab-error {
@@ -332,20 +348,6 @@ div[data-file="layout.coffee"] {
   border: 2px solid red;
   border-radius: 10px;
   display: none;
-}
-
-#errors-close-button {
-  position: absolute;
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  top: 5px;
-  right: 5px;
-}
-
-#errors-close-button img {
-  height: 20px;
-  cursor: pointer;
 }
 
 /********* Buttons *********/
@@ -499,20 +501,6 @@ div[data-file="layout.coffee"] {
 	vertical-align: top; 
   margin-left: 10px;
   width: 226px;
-}
-
-#guide-close-button {
-  position: absolute;
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  top: 5px;
-  right: 5px;
-}
-
-#guide-close-button img {
-  height: 20px;
-  cursor: pointer;
 }
 
 .guide-col h3 {
