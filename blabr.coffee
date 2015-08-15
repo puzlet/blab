@@ -1623,7 +1623,9 @@ class App
     @buttons = new Buttons
       guide: => $blab.blabrGuide.slideToggle()
       makeEditable: => @editors?.enable()
-      editSettings: => @editors?.showLayoutEditor(signature: "settings")
+      editSettings: =>
+        @editors?.enable()
+        @editors?.showLayoutEditor(signature: "settings")
       getSettings: => @settings
   
   setSettings: (@settings) ->
