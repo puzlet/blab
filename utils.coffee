@@ -7,6 +7,9 @@ class CloseButton
       click: => @callback?()
     @button.append @img
     @container.append @button
+    
+  css: (css) ->
+    @button.css css
 
 
 $blab.utils = {CloseButton}

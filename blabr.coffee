@@ -224,6 +224,7 @@ class WidgetEditor #extends PopupEditor
     @observers =
       setViewPort: []
       clickDelete: []
+      clickCloseButton: []
       
     #$(document).on "layoutError", (evt, data) =>
       #console.log "ERROR", data.error
@@ -239,6 +240,9 @@ class WidgetEditor #extends PopupEditor
     # ZZZ init folding here?
     @editor.onChange =>
     @aceEditor.setShowFoldWidgets true
+    
+    @closeButton = new $blab.utils.CloseButton @editor.container.parent(), => @trigger "clickCloseButton"
+    @closeButton.css right: 30
     
     #session = @aceEditor.getSession()
     #session.on "changeFold", ->
@@ -564,98 +568,6 @@ class ComputationButtons
   
 
 
-# To deprecate (use MarkdownEditor instead)
-class TextEditor
-  
-  containerId: "#main-text"
-  filename: "text.html"
-  wikyUrl: "/puzlet/puzlet/js/wiky.js"
-  posAttr: "data-pos"
-  widgetsId: "#widgets"
-  
-  constructor: ->
-    
-    @text = $ @containerId
-    return unless @text.length
-    @text.css(cursor: "default")  # ZZZ do in CSS
-    @text.click => @toggle()
-    
-    @resources = $blab.resources
-    @widgetsRendered = false
-      
-  setWidgetsRendered: ->
-    @widgetsRendered = true
-    @process() if Wiky?
-  
-  loadWiky: (callback) ->
-    console.log "TextEditor::loadWiky"
-    @resources.add {url: @wikyUrl}
-    @resources.loadUnloaded -> callback?()
-    
-  init: ->
-    console.log "TextEditor::init"
-    @resource = @resources.find(@filename)
-    @editor = @resource?.containers?.fileNodes?[0].editor
-    return unless @editor
-    @editor.container.removeClass "init-editor"
-    @editor.onChange => @render()
-    @editor.show false
-    @process() if @widgetsRendered
-    
-  render: ->
-    @renderId ?= null
-    clearTimeout(@renderId) if @renderId
-    @renderId = setTimeout (=>
-      #@resource.content = 
-      @process()
-    ), 500
-    
-  process: ->
-    console.log "TextEditor::process"
-    unless Wiky?
-      @loadWiky => @init()
-      return
-    #return unless Wiky?
-    console.log "TextEditor::process/Wiky"
-    @text.empty()
-    html = Wiky.toHtml(@resource.content)
-    return if html is ""
-    @text.append html
-    @setTitle()
-    @positionText()
-    $.event.trigger "htmlOutputUpdated"
-    
-  setTitle: ->
-    headings = $ ":header"
-    return unless headings.length
-    $blab.title = headings[0].innerHTML
-    document.title = $blab.title
-    
-  positionText: ->
-    
-    sel = "div[#{@posAttr}]"
-    widgets = $(@widgetsId)
-    current = widgets.find sel
-    current.remove()
-    
-    divs = @text.find sel
-    return unless divs.length
-    
-    append = => $($(p).attr @posAttr).append($(p)) for p in divs
-    
-    if widgets.length  # Alt: if $("#row1").length
-      append()
-    else
-      # ZZZ needs to trigger after widget rendering
-      setTimeout (-> append()), 1000
-      
-  toggle: ->
-    return unless @editor
-    @editorShown ?= false  # ZZZ get from editor show state?
-    @editor.show(not @editorShown)
-    @editorShown = not @editorShown
-
-
 class MarkdownEditor #extends PopupEditor
   
   containerId: "#main-markdown"
@@ -681,6 +593,7 @@ class MarkdownEditor #extends PopupEditor
     @observers =
       setViewPort: []
       clickText: []
+      clickCloseButton: []
     
   setWidgetsRendered: ->
     @widgetsRendered = true
@@ -706,6 +619,9 @@ class MarkdownEditor #extends PopupEditor
     @editor.container.removeClass "init-editor"
     @editor.onChange => @render()
     @editor.show false
+    
+    @closeButton = new $blab.utils.CloseButton @editor.container.parent(), => @trigger "clickCloseButton"
+    @closeButton.css right: 30
     
     @setViewPort null
     
@@ -1372,47 +1288,12 @@ class Buttons
     
 
 
-# Not used
-codeSections = ->
-  title = "Show/hide code"
-  comp = $ "#computation-code-section"
-  layout = $ "#layout-code-section"
-  predef = $ ".predefined-code"
-  
-  predef.hide()
-  
-  $("#computation-code-heading")
-    .click -> comp.toggle(500)
-  
-  $("#layout-code-heading")
-    .click -> layout.toggle(500)
-  
-  ps = true
-  toggleHeading = ->
-    ps = not ps
-    #$("#predefined-code-heading").html (if ps then "[Hide" else "[Show")+" predefined code]"
-  toggleHeading()
-  
-  removeInit = ->
-    resource = $blab.resources.find("predefine.coffee")
-    editor = resource?.containers?.fileNodes?[0].editor
-    editor?.container.removeClass "init-editor"
-    ev = resource?.containers?.evalNodes?[0].editor
-    ev?.container.removeClass "init-editor"
-  
-  $("#predefined-code-heading")
-    .click ->
-      removeInit()
-      predef.toggle(500)
-      toggleHeading()
-
-
 class EditPageButton
     
   constructor: (@container, @callback) ->
     
     # TODO: user-select off
-    @checked = false
+    #@checked = false
     
     @div = $ "<div>",
       id: "edit-page-button-container"
@@ -1428,20 +1309,16 @@ class EditPageButton
         @b.button("refresh")
         @callback?()
     
+    @b.button {label: "Layout"}
+    
     @div.append(@b)
     @container.append @div
-    
-    @b.button()
     
     @hide()
     
   show: -> @b.show()
   
   hide: -> @b.hide()
-  
-  layoutLabel: (@layoutMode=true) ->
-    label = if @layoutMode then "Layout" else "Disable"
-    @b.button {label}
 
 
 class Errors
@@ -1600,8 +1477,10 @@ class PopupEditorManager
     
     @markdownEditor.on "clickText", (data) => @showMarkdownEditor data.start
     @markdownEditor.on "setViewPort", => @highlightLayout()
+    @markdownEditor.on "clickCloseButton", => @disableLayout()
     
     @widgetEditor.on "setViewPort", => @highlightLayout()
+    @widgetEditor.on "clickCloseButton", => @disableLayout()
     @widgetEditor.on "clickDelete", => @clickedOnComponent = true
     
     @on "clickWidget", (evt, data) => @showLayoutEditor(widget: data.widget)
@@ -1610,9 +1489,18 @@ class PopupEditorManager
     
     $(document.body).click (evt) => @hideAll(evt)
     
-    @editPageButton = new EditPageButton($("#edit-page"), => @toggleLayoutMode())
+    @editPageButton = new EditPageButton $("#edit-page"), => @enableLayout()
+      
+  enableLayout: ->
+    @enable()
+    @showLayoutEditor(signature: "layout", clicked: true)
+    
+  disableLayout: ->
+    @enable(false)
+    @hideLayout()
   
   enable: (enabled=true) ->
+    @initEnabled = true if enabled
     @layoutEnabled = enabled
     
   cursorOnWidget: (widget) ->
@@ -1651,40 +1539,27 @@ class PopupEditorManager
     @widgetEditor.currentId = widget.domId() if widget
     
     # Need to consolidate?  into highlightLayout?
-    unless signature
-      @editPageButton.layoutLabel()
-      @editPageButton.hide()
-    
+    @editPageButton.hide() if signature
+  
   highlightLayout: ->
     displayed = @widgetEditor.viewPortDisplayed or @markdownEditor.viewPortDisplayed
     Layout.highlight(displayed)
-    if displayed
-      @editPageButton.layoutLabel(false)
-      @editPageButton.b.show()
+    @editPageButton.hide() if displayed
   
   hideLayout: ->
     @highlightWidget null
     @widgetEditor.setViewPort null
     @markdownEditor.setViewPort null
     
-    @editPageButton.layoutLabel()
     if @layoutEnabled
       @editPageButton.hide()
     else
-      @editPageButton.show()
+      setTimeout (=> @editPageButton.b.fadeIn(500)), 500 if @initEnabled
   
   highlightWidget: (component) =>
     @currentComponent?.removeClass "widget-highlight"
     @currentComponent = component
     @currentComponent?.addClass "widget-highlight"
-  
-  toggleLayoutMode: ->
-    unless @layoutEnabled and @editPageButton.layoutMode
-      @enable(not @layoutEnabled)
-    if @layoutEnabled
-      @showLayoutEditor(signature: "layout", clicked: true)
-    else
-      @hideLayout()
   
   hideAll: (evt) ->
     setTimeout (=>
@@ -1791,3 +1666,131 @@ $blab.Layout = Layout
 # Export
 $blab.Widget = Widget
 $blab.Widgets = Widgets 
+
+# Not used
+codeSections = ->
+  title = "Show/hide code"
+  comp = $ "#computation-code-section"
+  layout = $ "#layout-code-section"
+  predef = $ ".predefined-code"
+  
+  predef.hide()
+  
+  $("#computation-code-heading")
+    .click -> comp.toggle(500)
+  
+  $("#layout-code-heading")
+    .click -> layout.toggle(500)
+  
+  ps = true
+  toggleHeading = ->
+    ps = not ps
+    #$("#predefined-code-heading").html (if ps then "[Hide" else "[Show")+" predefined code]"
+  toggleHeading()
+  
+  removeInit = ->
+    resource = $blab.resources.find("predefine.coffee")
+    editor = resource?.containers?.fileNodes?[0].editor
+    editor?.container.removeClass "init-editor"
+    ev = resource?.containers?.evalNodes?[0].editor
+    ev?.container.removeClass "init-editor"
+  
+  $("#predefined-code-heading")
+    .click ->
+      removeInit()
+      predef.toggle(500)
+      toggleHeading()
+
+
+# To deprecate (use MarkdownEditor instead)
+class TextEditor
+  
+  containerId: "#main-text"
+  filename: "text.html"
+  wikyUrl: "/puzlet/puzlet/js/wiky.js"
+  posAttr: "data-pos"
+  widgetsId: "#widgets"
+  
+  constructor: ->
+    
+    @text = $ @containerId
+    return unless @text.length
+    @text.css(cursor: "default")  # ZZZ do in CSS
+    @text.click => @toggle()
+    
+    @resources = $blab.resources
+    @widgetsRendered = false
+      
+  setWidgetsRendered: ->
+    @widgetsRendered = true
+    @process() if Wiky?
+  
+  loadWiky: (callback) ->
+    console.log "TextEditor::loadWiky"
+    @resources.add {url: @wikyUrl}
+    @resources.loadUnloaded -> callback?()
+    
+  init: ->
+    console.log "TextEditor::init"
+    @resource = @resources.find(@filename)
+    @editor = @resource?.containers?.fileNodes?[0].editor
+    return unless @editor
+    @editor.container.removeClass "init-editor"
+    @editor.onChange => @render()
+    @editor.show false
+    @process() if @widgetsRendered
+    
+  render: ->
+    @renderId ?= null
+    clearTimeout(@renderId) if @renderId
+    @renderId = setTimeout (=>
+      #@resource.content = 
+      @process()
+    ), 500
+    
+  process: ->
+    console.log "TextEditor::process"
+    unless Wiky?
+      @loadWiky => @init()
+      return
+    #return unless Wiky?
+    console.log "TextEditor::process/Wiky"
+    @text.empty()
+    html = Wiky.toHtml(@resource.content)
+    return if html is ""
+    @text.append html
+    @setTitle()
+    @positionText()
+    $.event.trigger "htmlOutputUpdated"
+    
+  setTitle: ->
+    headings = $ ":header"
+    return unless headings.length
+    $blab.title = headings[0].innerHTML
+    document.title = $blab.title
+    
+  positionText: ->
+    
+    sel = "div[#{@posAttr}]"
+    widgets = $(@widgetsId)
+    current = widgets.find sel
+    current.remove()
+    
+    divs = @text.find sel
+    return unless divs.length
+    
+    append = => $($(p).attr @posAttr).append($(p)) for p in divs
+    
+    if widgets.length  # Alt: if $("#row1").length
+      append()
+    else
+      # ZZZ needs to trigger after widget rendering
+      setTimeout (-> append()), 1000
+      
+  toggle: ->
+    return unless @editor
+    @editorShown ?= false  # ZZZ get from editor show state?
+    @editor.show(not @editorShown)
+    @editorShown = not @editorShown
+
+
