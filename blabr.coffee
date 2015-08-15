@@ -496,13 +496,11 @@ class ComputationEditor
     
     @aceEditor.on "focus", =>
       #@currentLine = null
-      console.log "FOCUS" 
       @setLine(true)
       @changeCursor = => @setLine()
       @hint.fadeIn()
       
     @aceEditor.on "blur", =>
-      console.log "BLUR"
       @hint.fadeOut()
       @currentLine = null
       @changeCursor = =>
@@ -1497,6 +1495,8 @@ class Errors
         @errors[name].error = if error then error else null
   
   disp: ->
+    @container.empty()
+    @appendCloseButton()
     first = true
     show = false
     str = ""
@@ -1507,8 +1507,16 @@ class Errors
       str += "<br><br>" unless first
       str += "<b>#{e.heading}</b><br>" + error
       first = false
-    @container.html str
+    @container.append str
     if show then @container.show() else @container.hide()
+  
+  appendCloseButton: ->
+    @button = $ "<div>", id: "errors-close-button"
+    @img = $ "<img>",
+      src: "img/UI_175.png"
+      click: => @container.hide()
+    @button.append @img
+    @container.append @button
     
 
 
