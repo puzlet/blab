@@ -1615,7 +1615,8 @@ class App
     @editors = new PopupEditorManager {@widgetEditor, @markdownEditor}
     
     @computationEditor.on "cursorOnWidget", (data) =>
-      return if @settings?.popupWidgetEditor? and not @settings?.popupWidgetEditor
+      return if (@settings?.popupWidgetEditor? and not @settings?.popupWidgetEditor) or @disablePopupWidgetEditor
+      console.log "disable", @disablePopupWidgetEditor
       @editors.cursorOnWidget data.widget
     
     setTimeout (=> @computationEditor.initFocusBlur()), 900

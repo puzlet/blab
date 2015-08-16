@@ -96,12 +96,19 @@ class DemoRunner
       @start.clear()
       
   run: =>
-    setTimeout (-> new Demo), 1500
+    new Demo
+    #setTimeout (-> new Demo), 200 #1500
     
     
 new DemoRunner
 
+
 guide = $ "#demo-guide"
+
+guideClose = (guide) ->
+  new $blab.utils.CloseButton guide, =>
+    guide.hide()
+    $.event.trigger "demoGuideClose"
 
 app = $blab.blabrApp
 markdownEditor = app.markdownEditor
@@ -231,6 +238,7 @@ class Text
     #  left: pos.left + 500
     #}, 400, cb
     @guide.html html
+    guideClose @guide
     cb()
 
 
@@ -266,7 +274,7 @@ class Computation extends Editor
     pos = c.position()
     @guide.css
       top: pos.top + c.height() + 30
-      left: pos.left
+      left: pos.left + 300
     @guide.html html
 
 
@@ -314,6 +322,7 @@ class Sliders
     
   animate: (id, vals, cb) ->
     idx = 0
+    $.event.trigger "clickInputWidget"
     setSlider = (cb) =>
       v = vals[idx]
       domId = "slider-"+id
@@ -338,8 +347,8 @@ class Sliders
 
 
 class Tables
-
-  delay: 2000
+  
+  delay: 1000
   
   constructor: (@guide) ->
     
@@ -358,14 +367,16 @@ class Tables
         setTimeout (-> setTable(cb)), @delay
       else
         cb()
-
+        
     setTable(cb)
     
   explain: (html, cb) ->
     @guide.show()
+    c = computationEditor.editor.container
+    pos = c.position()
     @guide.animate {
-      top: 20
-      left: 400
+      top: pos.top - 30
+      left: pos.left
     }, 400, cb
     @guide.html html
 
@@ -464,6 +475,13 @@ class Demo
         @nextStep?()
         @nextStep = null
     
+    $(document).on "demoGuideClose", =>
+      return unless @tId
+      clearTimeout @tId
+      @tId = null
+      @nextStep()
+      @nextStep = null
+    
     $blab.demoScript
       text: (p...) => @text(p...)
       compute: (p...) => @compute(p...)
@@ -472,6 +490,7 @@ class Demo
       slider: (p...) => @slider(p...)
       table: (p...) => @table(p...)
       md: (p...) => @md(p...)
+      widgetEditor: (p...) => @widgetEditor(p...)
       delays: (p...) => @delays(p...)
     
     @learnMore()
@@ -536,9 +555,11 @@ class Demo
           @dwell (spec.dwell ? @dwellDelay), cb
         
   slider: (spec) ->
+    dwell = spec.dwell ? @dwellDelay
     @script.step (cb) =>
       @sliders.explain spec.guide, =>
-        @sliders.animate(spec.id, spec.vals, cb)
+        @sliders.animate spec.id, spec.vals, =>
+          @dwell dwell, -> cb()
   
   table: (spec) ->
     dwell = spec.dwell ? @dwellDelay
@@ -546,6 +567,11 @@ class Demo
       @tables.explain spec.guide, =>
         @tables.populate spec.id, spec.vals, =>
           @dwell dwell, -> cb()
+          
+  widgetEditor: (spec) ->
+    @script.step (cb) =>
+      app.disablePopupWidgetEditor = not(spec.enable) if spec.enable?
+      cb()
         
   delays: (spec) ->
     @script.stepDelay = spec.step if spec.step

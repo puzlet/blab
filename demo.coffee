@@ -1,6 +1,6 @@
 $blab.demoScript = (spec) ->
   
-  {text, md, compute, defs, widget, slider, table, delays} = spec
+  {text, md, compute, defs, widget, slider, table, widgetEditor, delays} = spec
   
   delays
     step: 500
@@ -17,7 +17,10 @@ $blab.demoScript = (spec) ->
   A blab is a web page for interactive computation:<br>math, sliders, tables, plots, etc.
   """, 8000
   
-  compute "k = slider \"k\"", "Create a slider in the canvas above.<br>Specify an id (\"k\") so you can refer to it elsewhere.", 3000
+  widgetEditor enable: false
+  
+  compute "k = slider \"k\"", "Create a slider in the canvas above.", 2000
+  # "<br>Specify an id (<code>\"k\"</code>) so you can refer to it elsewhere.", 3000
   
   #defs "nPoints = 5", "Define a value."
   #defs "quadratic = (x, k) -> k*x*x", "Define a function."
@@ -26,16 +29,18 @@ $blab.demoScript = (spec) ->
   compute "x = [1..5]", "Define a vector."
   
   compute "y = k*x*x", """
-    Vector equation based on slider value and x.<br>The result is shown in the box on the right.
+    Vector equation based on slider value and <code>x</code>.<br>The result is shown in the box on the right.
     """, 5000
 
 #    The code is <a href="//coffeescript.org" target="_blank">CoffeeScript</a>, customized for math and scientific computing. 
+  
+  widgetEditor enable: true
   
   compute "table \"Quadratic\", x, y", "Display the data in a table.<br>Table parameters are shown below.", 4000
   
   widget
     find: "[]", replace: "[\"$x$\", \"$kx^2$\"]", slow: true
-    guide: "Add column headings to table.<br>Supports MathJax."
+    guide: "Add column headings to table.<br>Supports LaTeX/MathJax."
     dwell: 3000
     
   #widget
@@ -67,17 +72,26 @@ $blab.demoScript = (spec) ->
   slider
     id: "k", vals: [1..9]
     guide: "Adjust the slider and see the computation updated on-the-fly."
-  
-  compute "x = table \"My Table\", [], [-> z]", "You can also create a table with editable cells.", 3000
-  widget
-    find: "[]", replace: "[\"$x$\", \"$kx^2$\"]"
-    guide: "Add column headings."
-    dwell: 200
-  compute "z = k*x*x", "Computation for second column, based on values in first column.", 2000
-  table
-    id: "My Table", vals: [6..8]
-    guide: "Enter values in first column of table.  Second column is computed on-the-fly."
     dwell: 2000
+  
+  
+  widgetEditor enable: false
+  
+  compute "x = table \"More values\", [], [-> k*x*x]", """
+      You can also create a table with editable cells.<br>
+      <code>[]</code> is an editable column.  This column is returned as vector <code>x</code>.<br>
+      <code>[-> ]</code> is a formula column.
+    """, 
+    7000
+  # widget
+  #   find: "[]", replace: "[\"$x$\", \"$kx^2$\"]"
+  #   guide: "Add column headings."
+  #   dwell: 200
+  #compute "z = k*x*x", "Computation for second column, based on values in first column.", 2000
+  table
+    id: "More values", vals: [6..8]
+    guide: "Enter values in first column of table.  Second column is computed on-the-fly."
+    dwell: 3000
   
   # compute "x = table \"my-table\", [], [-> z]", "You can also create a table with editable cells.", 3000
   # widget
@@ -98,7 +112,7 @@ $blab.demoScript = (spec) ->
     
   md
     append: "This blab (short for we**_b lab_**)\nshows the quadratic function:\n\n> $f(x) = k x^2$\n\n* * *"
-    guide: "Add markdown (Github-flavored).  Supports MathJax."
+    guide: "Add markdown (Github-flavored).<br>Supports LaTeX/MathJax."
     
   md
     close: true
