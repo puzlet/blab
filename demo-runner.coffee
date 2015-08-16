@@ -339,7 +339,7 @@ class Sliders
 
 class Tables
 
-  delay: 1000
+  delay: 2000
   
   constructor: (@guide) ->
     
