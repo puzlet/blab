@@ -24,7 +24,7 @@ class MainDemoStart
         
     #@logo()
     
-    @div.append "<h1>Scientific computing in the browser.</h1>"
+    @div.append "<h1>Scientific computing for the web.</h1>"
     
     @container.append(img).append(@div)
     @container.click => @clear => @runDemo()
