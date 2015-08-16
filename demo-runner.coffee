@@ -337,6 +337,39 @@ class Sliders
     @guide.html html
 
 
+class Tables
+
+  delay: 1000
+  
+  constructor: (@guide) ->
+    
+  populate: (id, vals, cb) ->
+    idx = 0
+    setTable = (cb) =>
+      v = vals[idx]
+      domId = "table-"+id
+      t = Widgets.widgets[domId]
+      cell = t.editableCells[0][idx]  # 0 needs to be arg.
+      dir = if idx<vals.length-1 then 1 else 0
+      cell.enterVal(v, dir)
+      # setTimeout (-> cell.div.blur()), 1000 if dir is 0
+      idx++
+      if idx < vals.length
+        setTimeout (-> setTable(cb)), @delay
+      else
+        cb()
+
+    setTable(cb)
+    
+  explain: (html, cb) ->
+    @guide.show()
+    @guide.animate {
+      top: 20
+      left: 400
+    }, 400, cb
+    @guide.html html
+
+
 class Script
   
   stepDelay: 500 # 1000 (shouldn't be smaller than 500?)
@@ -416,6 +449,7 @@ class Demo
     @definitions = new Definitions guide
     @layout = new Layout guide
     @sliders = new Sliders guide
+    @tables = new Tables guide
     
     @control = new DemoControl
     @tId = null
@@ -436,6 +470,7 @@ class Demo
       defs: (p...) => @defs(p...)
       widget: (p...) => @widget(p...)
       slider: (p...) => @slider(p...)
+      table: (p...) => @table(p...)
       md: (p...) => @md(p...)
       delays: (p...) => @delays(p...)
     
@@ -504,6 +539,13 @@ class Demo
     @script.step (cb) =>
       @sliders.explain spec.guide, =>
         @sliders.animate(spec.id, spec.vals, cb)
+  
+  table: (spec) ->
+    dwell = spec.dwell ? @dwellDelay
+    @script.step (cb) =>
+      @tables.explain spec.guide, =>
+        @tables.populate spec.id, spec.vals, =>
+          @dwell dwell, -> cb()
         
   delays: (spec) ->
     @script.stepDelay = spec.step if spec.step

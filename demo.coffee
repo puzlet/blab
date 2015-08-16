@@ -1,6 +1,6 @@
 $blab.demoScript = (spec) ->
   
-  {text, md, compute, defs, widget, slider, delays} = spec
+  {text, md, compute, defs, widget, slider, table, delays} = spec
   
   delays
     step: 500
@@ -31,7 +31,7 @@ $blab.demoScript = (spec) ->
 
 #    The code is <a href="//coffeescript.org" target="_blank">CoffeeScript</a>, customized for math and scientific computing. 
   
-  compute "table \"xy\", x, y", "Display the data in a table.<br>Table parameters are shown below.", 4000
+  compute "table \"Quadratic\", x, y", "Display the data in a table.<br>Table parameters are shown below.", 4000
   
   widget
     find: "[]", replace: "[\"$x$\", \"$kx^2$\"]", slow: true
@@ -39,19 +39,25 @@ $blab.demoScript = (spec) ->
     dwell: 3000
     
   #widget
+  #  find: "title: \"xy\"", replace: "title: \"Quadratic\"", slow: true
+  #  guide: "Change table title."
+  #  dwell: 2000
+    
+  #widget
   #  find: "widths: [100]", replace: "widths: [100, 100]"
   #  guide: "Set column widths."
   
-  compute "plot \"plot\", x, y", "Plot the data.", 3000
+  compute "plot \"Quadratic\", x, y", "Plot the data.", 3000
   
-  widget
-    vline: 5, find: "max: 1", replace: "max: 100"
-    guide: "Change the plot's y-axis limit."
-    dwell: 0
+  #widget
+  #  vline: 6, find: "max: 1", replace: "max: 100"
+  #  guide: "Change the plot's y-axis limit."
+  #  dwell: 1000
     
   widget
-    find: "# yaxis", replace: "yaxis"
+    find: "# yaxis: {min: 0, max: 1}", replace: "yaxis: {min: 0, max: 100}"
     guide: "Change the plot's y-axis limit."
+    dwell: 1000
   
   widget
     find: "pos: 1", replace: "pos: 2"
@@ -61,6 +67,25 @@ $blab.demoScript = (spec) ->
   slider
     id: "k", vals: [1..9]
     guide: "Adjust the slider and see the computation updated on-the-fly."
+  
+  compute "x = table \"My Table\", [], [-> z]", "You can also create a table with editable cells.", 3000
+  widget
+    find: "[]", replace: "[\"$x$\", \"$kx^2$\"]"
+    guide: "Add column headings."
+    dwell: 200
+  compute "z = k*x*x", "Computation for second column, based on values in first column.", 2000
+  table
+    id: "My Table", vals: [6..8]
+    guide: "Enter values in first column of table.  Second column is computed on-the-fly."
+    dwell: 2000
+  
+  # compute "x = table \"my-table\", [], [-> z]", "You can also create a table with editable cells.", 3000
+  # widget
+  #   find: "[]", replace: "[\"$x$\", \"$kx^2$\"]"
+  #   guide: "Add column headings."
+  #   dwell: 700
+  # compute "z = k*x*x", "Computation for second column, based on values in first column.", 1000
+  # text "Enter value in first cell, then press return.  Enter more values.<br><br>Backspace to delete empty cell.", 10000
   
   md
     find: "Untitled", replace: "Quadratic"
@@ -77,14 +102,6 @@ $blab.demoScript = (spec) ->
     
   md
     close: true
-  
-  compute "x = table \"my-table\", [], [-> z]", "You can also create a table with editable cells.", 1000
-  widget
-    find: "[]", replace: "[\"$x$\", \"$kx^2$\"]"
-    guide: "Add column headings."
-    dwell: 200
-  compute "z = k*x*x", "Computation for second column, based on values in first column.", 1000
-  text "Enter value in first cell, then press return.  Enter more values.<br><br>Backspace to delete empty cell.", 10000
   
   text """
   You can save a blab as a <a href="//gist.github.com" target="_blank">GitHub Gist</a>.<br>
