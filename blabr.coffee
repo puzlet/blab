@@ -458,17 +458,17 @@ class ComputationEditor
       resource = data.resource
       url = resource?.url
       @init(resource) if url is @filename
-      
+    
+    # This currently does nothing - is it needed?
     $(document).on "compiledCoffeeScript", (evt, data) =>
       return unless data.url is @filename
-      #@currentLine = null
-      @setLine()
+      #@setLine()
       
     # No longer used
     $(document).on "clickComputationButton", (evt, data) =>
       @aceEditor.focus()
       @aceEditor.insert @code[data.button]+"\n"
-      
+    
     $(document).on "runCode", (evt, data) =>
       return unless data.filename is @filename
       @currentLine = null
@@ -1488,6 +1488,8 @@ class PopupEditorManager
     Layout.on "clickBox", => @showLayoutEditor(signature: "layout")
     
     $(document.body).click (evt) => @hideAll(evt)
+      
+    @on "clickInputWidget", (evt, data) => @hideLayout()
     
     @editPageButton = new EditPageButton $("#edit-page"), => @enableLayout()
       
