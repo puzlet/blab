@@ -12,7 +12,7 @@ $blab.demoScript = (spec) ->
   
   text """
   <b>Blabr demo</b><br><br>
-  This demo runs by itself &mdash; like a screencast.<br>Sit back and enjoy.<br><br>
+  This two-minute demo runs by itself &mdash; like a screencast.<br>Sit back and enjoy.<br><br>
   <b>Blabr</b> is a tool for creating a <b>blab</b> (short for we<b><i>b lab</i></b>).<br><br>
   A blab is a web page for interactive computation:<br>math, sliders, tables, plots, etc.
   """, 8000
@@ -30,7 +30,7 @@ $blab.demoScript = (spec) ->
   
   compute "y = k*x*x", """
     Vector equation based on slider value and <code>x</code>.<br>The result is shown in the box on the right.
-    """, 5000
+    """, 5000, 2000
 
 #    The code is <a href="//coffeescript.org" target="_blank">CoffeeScript</a>, customized for math and scientific computing. 
   
@@ -78,11 +78,13 @@ $blab.demoScript = (spec) ->
   widgetEditor enable: false
   
   compute "x = table \"More values\", [], [-> k*x*x]", """
-      You can also create a table with editable cells.<br>
-      <code>[]</code> is an editable column.  This column is returned as vector <code>x</code>.<br>
-      <code>[-> ]</code> is a formula column.
+      You can also create a table with editable cells.
+      <ul>
+      <li><b><code>[]</code></b> is an editable column.  This column is returned as vector <code>x</code>.<br>
+      <li><b><code>[->]</code></b> is a formula column.
+      </ul>
     """, 
-    7000
+    7000, 2000
   # widget
   #   find: "[]", replace: "[\"$x$\", \"$kx^2$\"]"
   #   guide: "Add column headings."
