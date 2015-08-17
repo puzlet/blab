@@ -618,6 +618,8 @@ class MarkdownEditor #extends PopupEditor
       sanitize: false
       smartLists: true
       smartypants: false
+      
+    @customizeLinks()
     
     @resource = @resources.find(@filename)
     @editor = @resource?.containers?.fileNodes?[0].editor
@@ -637,6 +639,19 @@ class MarkdownEditor #extends PopupEditor
     @setViewPort null
     
     @process() if @widgetsRendered
+    
+  customizeLinks: ->
+    marked.Renderer.prototype.link = (href, title, text) ->
+      if this.options.sanitize
+        try
+          prot = decodeURIComponent(unescape(href))
+            .replace(/[^\w:]/g, '')
+            .toLowerCase()
+        catch
+          return ''
+        return '' if (prot.indexOf('javascript:') is 0 or prot.indexOf('vbscript:') is 0)
+      t = if title then " title=\"#{title}\"" else ""
+      out = "<a href=\"#{href}\" target=\"_blank\"#{t}>#{text}</a>"
     
   preProcess: (file) ->
     
