@@ -16,7 +16,7 @@ content =
 
   demos: [
     {text: "Basic math", id: "58ef3095767efcdf1977"}
-    {text: "Basic plot", id: "ee2036a3e55336c6d010"}
+    {text: "Basic plot", id: "3b19d13e5eaa11a4a540"}
     {text: "Text", id: "277bf74a4b1e7364df29"}
     {text: "Tables", id: "0a248098997a6f95635c"}
     {text: "Sliders", id: "9b6fbf80ed838d1e1cef"}
