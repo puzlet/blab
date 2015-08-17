@@ -273,7 +273,7 @@ class Computation extends Editor
     c = @editor.container
     pos = c.position()
     @guide.css
-      top: pos.top + c.height() + 30
+      top: pos.top + c.height() + 40
       left: pos.left + 300
     @guide.html html
 
@@ -352,13 +352,13 @@ class Tables
   
   constructor: (@guide) ->
     
-  populate: (id, vals, cb) ->
+  populate: (id, col, vals, cb) ->
     idx = 0
     setTable = (cb) =>
       v = vals[idx]
       domId = "table-"+id
       t = Widgets.widgets[domId]
-      cell = t.editableCells[0][idx]  # 0 needs to be arg.
+      cell = t.editableCells[col][idx]  # 0 needs to be arg.
       dir = if idx<vals.length-1 then 1 else 0
       cell.enterVal(v, dir)
       # setTimeout (-> cell.div.blur()), 1000 if dir is 0
@@ -565,7 +565,7 @@ class Demo
     dwell = spec.dwell ? @dwellDelay
     @script.step (cb) =>
       @tables.explain spec.guide, =>
-        @tables.populate spec.id, spec.vals, =>
+        @tables.populate spec.id, (spec.col ? 0), spec.vals, =>
           @dwell dwell, -> cb()
           
   widgetEditor: (spec) ->
