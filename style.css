@@ -197,17 +197,11 @@ div[data-file="layout.coffee"] {
   /*max-height: 100px;*/
 }
 
-/* same as layout-code-section */
 #markdown-editor {
 	position: fixed;
 	bottom: 0px;
 	left: 0px;
 	width: 100%;
-	background: #FFEBD6;
-  padding: 10px;
-  border-top: 1px solid #555;
-	z-index: 10;
-  box-shadow: 0px -5px 30px -5px rgba(0,0,0,0.4);
 }
 
 #layout-code-section {
@@ -215,12 +209,15 @@ div[data-file="layout.coffee"] {
 	bottom: 0px;
 	left: 0px;
 	width: 100%;
-	background: #FFEBD6;
+}
+
+/* Class added to #markdown-editor and #layout-code-section */
+.popup-editor {
   padding: 10px;
+  background: #FFEBD6;
   border-top: 1px solid #555;
-	z-index: 10;
+  z-index: 10;
   box-shadow: 0px -5px 30px -5px rgba(0,0,0,0.4);
-	/*display: none;*/
 }
 
 .layout-box {

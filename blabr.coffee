@@ -241,7 +241,10 @@ class WidgetEditor #extends PopupEditor
     @editor.onChange =>
     @aceEditor.setShowFoldWidgets true
     
-    @closeButton = new $blab.utils.CloseButton @editor.container.parent(), => @trigger "clickCloseButton"
+    @container = @editor.container
+    @parent = @container.parent()
+    
+    @closeButton = new $blab.utils.CloseButton @parent, => @trigger "clickCloseButton"
     @closeButton.css right: 30
     
     #session = @aceEditor.getSession()
@@ -257,16 +260,18 @@ class WidgetEditor #extends PopupEditor
     @viewPortDisplayed = txt isnt null # ZZZ temp: global
     @trigger "setViewPort"
     
+    @container = @editor.container
+    @parent = @container.parent()
+    
     if @firstDisplay
-      container = @editor.container
-      container.removeClass "init-editor"
-      container.css maxHeight: "10px"
-      container.parent().show()
+      @container.removeClass "init-editor"
+      @container.css maxHeight: "0px" #"10px"
+      @parent.show()
       @editor.show true
       if txt
         @vp(txt, true)  # Does this ever happen?
       else
-        setTimeout (=> container.parent().hide()), 1000
+        setTimeout (=> @parent.hide()), 1000
       @firstDisplay = false
     else
       if @sliding
@@ -278,7 +283,7 @@ class WidgetEditor #extends PopupEditor
   
   vp: (txt, first=false) ->
     
-    @editor.container.css
+    @container.css
       maxHeight: ""
       border: "3px solid #aaf"
     
@@ -299,14 +304,16 @@ class WidgetEditor #extends PopupEditor
     if @start is null
       @editor.spec.viewPort = false
       @sliding = true
-      @editor.container.parent().slideUp 400, =>
+      @parent.slideUp 400, =>
         @sliding = false
         @next()
       return
     
-    @editor.container.parent().css
-      maxHeight: "10px"
-    @editor.container.parent().show()
+    @parent.addClass "popup-editor" unless @parent.hasClass "popup-editor"
+    
+    @parent.css
+      maxHeight: "0px" # "10px"
+    @parent.show()
     @deleteButton()
     @errorMessage()
     
@@ -317,12 +324,12 @@ class WidgetEditor #extends PopupEditor
     @editor.setViewPort()
     @editor.editorContainer[0].onwheel = -> false
     
-    @editor.container.parent().hide()
-    @editor.container.parent().css
+    @parent.hide()
+    @parent.css
       maxHeight: ""
     
     @sliding = true
-    @editor.container.parent().slideDown 400, =>
+    @parent.slideDown 400, =>
       @sliding = false
       @next()
     
@@ -353,7 +360,7 @@ class WidgetEditor #extends PopupEditor
         selection.selectTo(@end, 0)
         @aceEditor.removeLines()
         @editor.run()
-        @editor.container.parent().hide()
+        @parent.hide()
         @trigger "clickDelete"
       
     @del.append @delButton
@@ -616,11 +623,15 @@ class MarkdownEditor #extends PopupEditor
     @editor = @resource?.containers?.fileNodes?[0].editor
     return unless @editor
     @aceEditor = @editor.editor
-    @editor.container.removeClass "init-editor"
+    
+    @container = @editor.container
+    @parent = @container.parent()
+    
+    @container.removeClass "init-editor"
     @editor.onChange => @render()
     @editor.show false
     
-    @closeButton = new $blab.utils.CloseButton @editor.container.parent(), => @trigger "clickCloseButton"
+    @closeButton = new $blab.utils.CloseButton @parent, => @trigger "clickCloseButton"
     @closeButton.css right: 30
     
     @setViewPort null
@@ -717,11 +728,14 @@ class MarkdownEditor #extends PopupEditor
     @viewPortDisplayed = start isnt null and start isnt false
     @trigger "setViewPort"
     
+    @container = @editor.container
+    @parent = @container.parent()
+    
     if @firstDisplay
-      container = @editor.container
-      container.removeClass "init-editor"  # Done above?
-      container.css maxHeight: "10px"
-      container.parent().show()
+      #container = @editor.container
+      @container.removeClass "init-editor"  # Done above?
+      @container.css maxHeight: "0px" # "10px"
+      @parent.show()
       @editor.show true
       setTimeout (=> @vp start, true), 500
       @firstDisplay = false
@@ -730,7 +744,7 @@ class MarkdownEditor #extends PopupEditor
   
   vp: (startChar, first=false) ->
     
-    @editor.container.css
+    @container.css
       maxHeight: ""
       border: "3px solid #aaf"
     
@@ -743,18 +757,20 @@ class MarkdownEditor #extends PopupEditor
       @editor.setViewPort()
       if first
         @editor.show false
-        @editor.container.parent().hide()
+        @parent.hide()
       else
-        @editor.container.parent().slideUp 400
+        @parent.slideUp 400
       return
       
+    @parent.addClass "popup-editor" unless @parent.hasClass "popup-editor"
+    
     @start = (if startChar is 0 then 0 else @getStartLine startChar)
     @end = @start + @editorHeight - 1
     
     if first
-      @editor.container.parent().show()
+      @parent.show()
     else
-      @editor.container.parent().slideDown 400
+      @parent.slideDown 400
     @editor.show true
     spec.startLine = @start + 1
     spec.endLine = @end + 1
