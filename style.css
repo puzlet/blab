@@ -470,6 +470,7 @@ div[data-file="layout.coffee"] {
   background: #ff9;
   opacity: 0.95;
   display: none;
+  cursor: move;
 }
 
 /********* Blabr Guide *********/

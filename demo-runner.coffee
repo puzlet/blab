@@ -104,6 +104,7 @@ new DemoRunner
 
 
 guide = $ "#demo-guide"
+guide.draggable()
 
 guideClose = (guide) ->
   new $blab.utils.CloseButton guide, =>
