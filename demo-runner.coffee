@@ -573,6 +573,7 @@ class Demo
           
   widgetEditor: (spec) ->
     @script.step (cb) =>
+      widgetEditor.setViewPort null if spec.close
       app.disablePopupWidgetEditor = not(spec.enable) if spec.enable?
       cb()
         
