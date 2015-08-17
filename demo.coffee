@@ -15,11 +15,11 @@ $blab.demoScript = (spec) ->
   This demo runs by itself &mdash; like a screencast.<br>Sit back and enjoy.<br><br>
   <b>Blabr</b> is a tool for creating a <b>blab</b> (short for we<b><i>b lab</i></b>).<br><br>
   A blab is a web page for interactive computation:<br>math, sliders, tables, plots, etc.
-  """, 8000
+  """, 12000
   
   widgetEditor enable: false
   
-  compute "k = slider \"k\"", "Create a slider in the canvas above.", 2000, 4000
+  compute "k = slider \"k\"", "Create a slider in the canvas above.", 2000, 3000
   # "<br>Specify an id (<code>\"k\"</code>) so you can refer to it elsewhere.", 3000
   
   #defs "nPoints = 5", "Define a value."
