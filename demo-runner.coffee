@@ -454,6 +454,8 @@ class Demo
     
     @isMain = not $blab.resources.getSource?
     
+    app.errors.enable = false
+    
     @script = new Script
     @textGuide = new Text guide
     @markdown = new Markdown guide

@@ -1330,6 +1330,8 @@ class Errors
     
   containerSel: "#blab-error"
   
+  enable: true
+  
   constructor: ->
     
     @container = $(@containerSel)
@@ -1344,7 +1346,7 @@ class Errors
     
     $(document).on "blabError", (evt, data) =>
       filename = data.source
-      return unless filename in @filenames
+      return unless @enable and filename in @filenames
       $blab.windowError = false
       @set filename, data.error
       @disp()
@@ -1604,7 +1606,7 @@ class App
       @buttons.makeEditable()
     
     @settingsObj = new Settings
-    new Errors
+    @errors = new Errors
     
     $pz.renderHtml = => @markdownEditor.process()
     
