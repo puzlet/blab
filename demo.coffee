@@ -19,7 +19,7 @@ $blab.demoScript = (spec) ->
   
   widgetEditor enable: false
   
-  compute "k = slider \"k\"", "Create a slider in the canvas above.", 2000
+  compute "k = slider \"k\"", "Create a slider in the canvas above.", 2000, 1000
   # "<br>Specify an id (<code>\"k\"</code>) so you can refer to it elsewhere.", 3000
   
   #defs "nPoints = 5", "Define a value."
@@ -36,7 +36,7 @@ $blab.demoScript = (spec) ->
   
   widgetEditor enable: true
   
-  compute "table \"Quadratic\", x, y", "Display the data in a table.<br>Table parameters are shown below.", 4000
+  compute "table \"Quadratic\", x, y", "Display the data in a table.<br>Table parameters are shown below.", 4000, 2000
   
   widget
     find: "[]", replace: "[\"$x$\", \"$kx^2$\"]", slow: true

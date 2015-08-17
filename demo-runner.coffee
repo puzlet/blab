@@ -129,7 +129,7 @@ class Editor
     @ace = @appEditor.aceEditor
     @firstAppend = true
     
-  statement: (@statementStr, cb) ->
+  statement: (@statementStr, initDelay, cb) ->
     @statementCharIdx = 0
     @statementLength = @statementStr.length
     @ace.focus()
@@ -139,7 +139,7 @@ class Editor
       @firstAppend = false
       @ace.navigateFileEnd()
       @ace.removeToLineStart() if @ace.getCursorPosition().column>0  # Remove any indentation
-      @char cb
+      setTimeout (=> @char cb), initDelay
     
     if @firstAppend and @clearFirst
       @step (=> @ace.selection.selectAll()), =>
@@ -523,7 +523,7 @@ class Demo
         if spec.replace
           @markdown.replace spec, d
         else if spec.append
-          @markdown.statement spec.append, d
+          @markdown.statement spec.append, 0, d
         else if spec.close
           markdownEditor.setViewPort null
           d()
@@ -531,10 +531,10 @@ class Demo
       setTimeout (=> @markdown.explain(spec.guide)), 500 if spec.guide
       setTimeout (-> edit()), 900
   
-  compute: (statement, html="", dwell=@dwellDelay) ->
+  compute: (statement, html="", dwell=@dwellDelay, initDelay=0) ->
     @script.step (cb) =>
       @computation.explain html if html.length
-      @computation.statement statement, =>
+      @computation.statement statement, initDelay, =>
         done = ->
           guide.hide()
           cb()
@@ -543,7 +543,7 @@ class Demo
   defs: (statement, html="", dwell=@dwellDelay) ->
     @script.step (cb) =>
       @definitions.explain html if html.length
-      @definitions.statement statement, =>
+      @definitions.statement statement, 0, =>
         @dwell dwell, -> 
           guide.hide()
           cb()
