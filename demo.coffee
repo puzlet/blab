@@ -19,7 +19,7 @@ $blab.demoScript = (spec) ->
   
   widgetEditor enable: false
   
-  compute "k = slider \"k\"", "Create a slider in the canvas above.", 2000, 1000
+  compute "k = slider \"k\"", "Create a slider in the canvas above.", 2000, 2000
   # "<br>Specify an id (<code>\"k\"</code>) so you can refer to it elsewhere.", 3000
   
   #defs "nPoints = 5", "Define a value."
