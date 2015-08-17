@@ -336,7 +336,7 @@ class Sliders
       else
         cb()
         
-    setSlider(cb)
+    setTimeout (-> setSlider(cb)), 1000
     
   explain: (html, cb) ->
     @guide.show()
