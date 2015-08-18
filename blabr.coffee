@@ -1611,9 +1611,26 @@ class PopupEditorManager
   on: (name, handler) -> $(document).on name, (evt, data) -> handler(evt, data)
 
 
+class GoogleAnalytics
+  
+  constructor: ->
+    @codeChanged = false
+    @title = document.title
+    @track "layoutCompiled", "viewBlab", "view", @title
+    #@track "codeNodeChanged", "edit", "firstEdit", @title, (=> not @codeChanged), (=> @codeChanged = true)
+    #@track "runCode", "runCode", "run", @title
+    
+  track: (blabEvent, gCat, gEvent, gText, condition=(->true), callback) ->
+    $(document).on blabEvent, =>
+      console.log "Track Event", blabEvent
+      _gaq?.push ["_trackEvent", gCat, gEvent, gText] if condition()
+      callback?()
+
+
 class App
   
   constructor: ->
+    new GoogleAnalytics
     @loader = new Loader => @init()
   
   init: ->
