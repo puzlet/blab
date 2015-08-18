@@ -520,7 +520,7 @@ class Demo
     dwell = spec.dwell if spec.dwell
     @script.step (cb) =>
       display = markdownEditor.editor.outer.css "display"
-      markdownEditor.trigger "clickText", {start: 0} if display is "none"
+      markdownEditor.trigger "clickText", {evt: null, start: 0} if display is "none"
       edit = =>
         d = => @dwell dwell, -> cb()
         if spec.replace

@@ -1509,7 +1509,7 @@ class PopupEditorManager
     @currentComponent = null
     
     @markdownEditor.on "clickText", (data) =>
-      if data.evt.target.tagName is "A"
+      if data.evt?.target.tagName is "A"
         data.evt.stopPropagation()
         return
       @showMarkdownEditor data.start
