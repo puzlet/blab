@@ -59,6 +59,7 @@ content =
     {text: "Complex numbers", id: "c182256cc10492eb43b5"}
     {text: "Linear algebra and numeric", id: "19516c877c92649672f4"}
     {text: "Utilities", id: "ccd42df2e696df7e9317"}
+    {text: "Definitions and imports", id: "919000f98b993fcfeb81"}
   ]
   
   credits: [
