@@ -1549,6 +1549,7 @@ class PopupEditorManager
     console.log "showMarkdownEditor"
     return unless @layoutEnabled
     @clickedOnComponent = true
+    setTimeout (=> @clickedOnComponent = false), 300
     @highlightWidget null
     @widgetEditor.setViewPort null
     @markdownEditor.setViewPort start
