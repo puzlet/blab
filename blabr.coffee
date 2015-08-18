@@ -659,7 +659,7 @@ class MarkdownEditor #extends PopupEditor
     preText = file
       .replace(/\\\$/g,"\\&pound;") # \$
       .replace(/\\`/g,"\\&sect;") # \`
-      .replace(/([^-])([-]{3})([^-])/g, "$1&mdash;$3") 
+      .replace(/([^-])([-]{3})([^-])/g, "$1&mdash;$3")  # could be handled using smartypants?
       
     # escape matching text
     matchEscape = (text, RE, escape) ->
