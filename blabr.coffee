@@ -598,6 +598,7 @@ class MarkdownEditor #extends PopupEditor
     @viewPortDisplayed = false
     
     @observers =
+      initialized: []
       setViewPort: []
       clickText: []
       clickCloseButton: []
@@ -639,6 +640,8 @@ class MarkdownEditor #extends PopupEditor
     @setViewPort null
     
     @process() if @widgetsRendered
+    
+    @trigger "initialized"
     
   customizeLinks: ->
     marked.Renderer.prototype.link = (href, title, text) ->
@@ -692,7 +695,7 @@ class MarkdownEditor #extends PopupEditor
     text
     
   process: ->
-    #console.log "MarkdownEditor::process"
+    console.log "MarkdownEditor::process"
     unless marked?
       @loadMarked => @init()
       return
@@ -734,6 +737,7 @@ class MarkdownEditor #extends PopupEditor
   setTitle: ->
     headings = $ ":header"
     $blab.title = if headings.length then headings[0].innerHTML else "Puzlet"
+    console.log "MarkdownEditor::setTitle", $blab.title
     document.title = $blab.title unless $blab.title is "Untitled"
       
   setViewPort: (start) ->
@@ -1615,14 +1619,15 @@ class GoogleAnalytics
   
   constructor: ->
     @codeChanged = false
-    @title = document.title
-    @track "layoutCompiled", "viewBlab", "view", @title
+    title = -> $blab.title
+    @track "blabEditorsInitialized", "viewBlab", "view", title
     #@track "codeNodeChanged", "edit", "firstEdit", @title, (=> not @codeChanged), (=> @codeChanged = true)
     #@track "runCode", "runCode", "run", @title
     
-  track: (blabEvent, gCat, gEvent, gText, condition=(->true), callback) ->
+  track: (blabEvent, gCat, gEvent, gTextFcn, condition=(->true), callback) ->
     $(document).on blabEvent, =>
-      console.log "Track Event", blabEvent, _gaq
+      gText = gTextFcn()
+      console.log "*** Track Event", blabEvent, gText
       _gaq?.push ["_trackEvent", gCat, gEvent, gText] if condition()
       callback?()
 
@@ -1676,6 +1681,10 @@ class App
       @editors.cursorOnWidget data.widget
     
     setTimeout (=> @computationEditor.initFocusBlur()), 900
+    
+    #setTimeout (-> console.log "*** TITLE", document.title), 2000
+    @markdownEditor.on "initialized", =>
+      $.event.trigger "blabEditorsInitialized"  # For google analytics
     
   initButtons: ->
     return if @buttons
