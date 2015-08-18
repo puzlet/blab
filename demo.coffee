@@ -14,7 +14,7 @@ $blab.demoScript = (spec) ->
   <b>Two-minute Blabr demo</b><br><br>
   This demo runs by itself &mdash; like a screencast.<br>Sit back and enjoy.<br><br>
   <b>Blabr</b> is a tool for creating a <b>blab</b> (short for we<b><i>b lab</i></b>).<br><br>
-  A blab is a web page for interactive computation:<br>math, sliders, tables, plots, etc.
+  A blab is a web page for interactive computation:<br><b>math</b>, <b>sliders</b>, <b>tables</b>, <b>plots</b>, etc.
   """, 12000
   
   widgetEditor enable: false
