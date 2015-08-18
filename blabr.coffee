@@ -581,7 +581,7 @@ class MarkdownEditor #extends PopupEditor
   filename: "blab.md"
   markedUrl: "/puzlet/puzlet/js/marked.min.js"
   posAttr: "data-pos"
-  widgetsId: "#widgets"
+  widgetsId: "#widgets-container"
   editorHeight: 15
   
   constructor: ->
@@ -886,7 +886,7 @@ class Layout
       return
     return unless Object.keys(@spec).length
     n = 1
-    widgets = $("#widgets")
+    widgets = $("#widgets-container")
     widgets.empty()
     for label, row of @spec
       r = $ "<div>", id: label
@@ -910,7 +910,7 @@ class Layout
     return unless @spec.length
     #console.log "RENDER LAYOUT", @spec
     n = 1
-    widgets = $("#widgets")
+    widgets = $("#widgets-container")
     widgets.empty()
     for numCols, rowIdx in @spec
       if numCols>4
@@ -1752,7 +1752,7 @@ class TextEditor
   filename: "text.html"
   wikyUrl: "/puzlet/puzlet/js/wiky.js"
   posAttr: "data-pos"
-  widgetsId: "#widgets"
+  widgetsId: "#widgets-container"
   
   constructor: ->
     
