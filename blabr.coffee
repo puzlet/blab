@@ -1622,7 +1622,7 @@ class GoogleAnalytics
     
   track: (blabEvent, gCat, gEvent, gText, condition=(->true), callback) ->
     $(document).on blabEvent, =>
-      console.log "Track Event", blabEvent
+      console.log "Track Event", blabEvent, _gaq
       _gaq?.push ["_trackEvent", gCat, gEvent, gText] if condition()
       callback?()
 
