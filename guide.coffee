@@ -52,6 +52,7 @@ content =
   ]
 
   references: [
+    {text: "Widgets", id: "ff66265ccd580d6a9b04"}
     {text: "Language overview", id: "cac35c998a6640457c39"}
     {text: "Math functions", id: "c19c10d7828efd13ddee"}
     {text: "Vectors and matrices", id: "cb9ef53d61658dcedd45"}
