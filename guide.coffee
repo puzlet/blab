@@ -145,9 +145,10 @@ class Guide
       <div class="guide-col">
         <h3>Examples</h3>
         #{str}
-        <a href="//blabr.org" target="_blank">More blabs<a>
       </div>
     """
+    #         <a href="//blabr.org" target="_blank">More blabs<a>
+
     
   references: ->
   
