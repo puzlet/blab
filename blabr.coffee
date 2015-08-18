@@ -589,7 +589,7 @@ class MarkdownEditor #extends PopupEditor
     @text = $ @containerId
     return unless @text.length
     @text.css(cursor: "default")  # ZZZ do in CSS
-    @text.mouseup => @trigger "clickText", {start: 0}
+    @text.mouseup (evt) => @trigger "clickText", {evt: evt, start: 0}
     
     @resources = $blab.resources
     @widgetsRendered = false
@@ -725,7 +725,7 @@ class MarkdownEditor #extends PopupEditor
       class: "rendered-markdown"
       css: cursor: "default"
       mouseup: (evt) =>
-        @trigger "clickText", {start: parseInt(div.attr "data-start")}
+        @trigger "clickText", {evt: evt, start: parseInt(div.attr "data-start")}
     div.attr("data-pos": m.pos, "data-order": m.order, "data-start": m.start)
     div.append m.html
     container.append div
@@ -1508,7 +1508,8 @@ class PopupEditorManager
     @clickedOnComponent = false
     @currentComponent = null
     
-    @markdownEditor.on "clickText", (data) => @showMarkdownEditor data.start
+    @markdownEditor.on "clickText", (data) =>
+      @showMarkdownEditor data.start unless data.evt.target.tagName is "A"
     @markdownEditor.on "setViewPort", => @highlightLayout()
     @markdownEditor.on "clickCloseButton", => @disableLayout()
     
