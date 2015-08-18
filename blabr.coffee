@@ -1509,7 +1509,10 @@ class PopupEditorManager
     @currentComponent = null
     
     @markdownEditor.on "clickText", (data) =>
-      @showMarkdownEditor data.start unless data.evt.target.tagName is "A"
+      if data.evt.target.tagName is "A"
+        data.evt.stopPropagation()
+        return
+      @showMarkdownEditor data.start
     @markdownEditor.on "setViewPort", => @highlightLayout()
     @markdownEditor.on "clickCloseButton", => @disableLayout()
     
@@ -1543,6 +1546,7 @@ class PopupEditorManager
     @showLayoutEditor(widget: widget, id: null, clicked: false)  # Why id null?
   
   showMarkdownEditor: (start) ->
+    console.log "showMarkdownEditor"
     return unless @layoutEnabled
     @clickedOnComponent = true
     @highlightWidget null
