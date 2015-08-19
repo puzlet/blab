@@ -1619,7 +1619,9 @@ class GoogleAnalytics
   
   constructor: ->
     @codeChanged = false
-    title = -> $blab.title
+    title = -> 
+      id = $blab.github?.gist?.id
+      $blab.title + (if id then " [#{id}]" else "")
     @track "blabEditorsInitialized", "viewBlab", "view", title
     @track "codeNodeChanged", "edit", "firstEdit", title, (=> not @codeChanged), (=> @codeChanged = true)
     #@track "runCode", "runCode", "run", @title
