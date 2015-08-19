@@ -451,6 +451,7 @@ class Demo
     #demo.content = "# Demo"
     
     console.log "DEMO"#, demo
+    $.event.trigger "runBlabDemo"
     
     @isMain = not $blab.resources.getSource?
     

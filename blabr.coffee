@@ -1627,6 +1627,7 @@ class GoogleAnalytics
     @track "saveGitHub", "blab", "saveButton", title
     @track "createBlab", "blab", "createBlab", title
     @track "forkBlab", "blab", "forkBlab", title
+    @track "runBlabDemo", "blab", "runDemo", title
     #@track "runCode", "runCode", "run", @title
     
   track: (blabEvent, gCat, gEvent, gTextFcn, condition=(->true), callback) ->
