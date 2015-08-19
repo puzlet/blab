@@ -1624,6 +1624,7 @@ class GoogleAnalytics
       $blab.title + (if id then " [#{id}]" else "")
     @track "blabEditorsInitialized", "viewBlab", "view", title
     @track "codeNodeChanged", "edit", "firstEdit", title, (=> not @codeChanged), (=> @codeChanged = true)
+    @track "saveGitHub", "save", "saveButton", title
     #@track "runCode", "runCode", "run", @title
     
   track: (blabEvent, gCat, gEvent, gTextFcn, condition=(->true), callback) ->
