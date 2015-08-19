@@ -1621,7 +1621,7 @@ class GoogleAnalytics
     @codeChanged = false
     title = -> $blab.title
     @track "blabEditorsInitialized", "viewBlab", "view", title
-    #@track "codeNodeChanged", "edit", "firstEdit", @title, (=> not @codeChanged), (=> @codeChanged = true)
+    @track "codeNodeChanged", "edit", "firstEdit", title, (=> not @codeChanged), (=> @codeChanged = true)
     #@track "runCode", "runCode", "run", @title
     
   track: (blabEvent, gCat, gEvent, gTextFcn, condition=(->true), callback) ->
