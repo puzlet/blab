@@ -1622,11 +1622,11 @@ class GoogleAnalytics
     title = -> 
       id = $blab.github?.gist?.id
       $blab.title + (if id then " [#{id}]" else "")
-    @track "blabEditorsInitialized", "viewBlab", "view", title
-    @track "codeNodeChanged", "edit", "firstEdit", title, (=> not @codeChanged), (=> @codeChanged = true)
-    @track "saveGitHub", "save", "saveButton", title
-    @track "createBlab", "save", "createBlab", title
-    @track "forkBlab", "save", "forkBlab", title
+    @track "blabEditorsInitialized", "blab", "view", title
+    @track "codeNodeChanged", "blab", "firstEdit", title, (=> not @codeChanged), (=> @codeChanged = true)
+    @track "saveGitHub", "blab", "saveButton", title
+    @track "createBlab", "blab", "createBlab", title
+    @track "forkBlab", "blab", "forkBlab", title
     #@track "runCode", "runCode", "run", @title
     
   track: (blabEvent, gCat, gEvent, gTextFcn, condition=(->true), callback) ->
