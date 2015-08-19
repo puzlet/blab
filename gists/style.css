@@ -1,0 +1,33 @@
+body {
+  font-family: Verdana, 'DejaVu Sans', sans-serif;
+  font-size: 10pt;
+}
+
+#list-gists {
+  width: 1000px;
+  padding: 0px 0px 20px 0px;
+  margin: 0 auto;
+}
+
+#list-gists table, th, tr, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+#list-gists td, th {
+  padding: 5px;
+  max-width: 500px;
+}
+
+.public-gist-link {
+  color: blue;
+}
+
+.secret-gist-link {
+  color: #999;
+}
+
+.app-link {
+  font-size: 8pt;
+  color: #6c6;
+}
