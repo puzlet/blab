@@ -8,6 +8,6 @@ resources
     # "blabr.js"
     "start.coffee"
     #"/puzlet/widgets/widgets.js"
-    "/puzlet/widgets/style.css"
+    #"/puzlet/widgets/style.css"
   ]
 

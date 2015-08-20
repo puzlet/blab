@@ -1,0 +1,183 @@
+/*------Input box------*/
+
+.input-container {
+  margin-top: 5px;
+  margin-bottom: 15px;
+	font-size: 10pt;
+	width: 100%;
+}
+
+.input-prompt-container {
+  display: inline-block;
+  width: 30%;
+  text-align: right;
+}
+
+.input-prompt {
+	padding-right: 10px;
+}
+
+.blab-input {
+  display: inline-block;
+  width: 40%;
+}
+
+.blab-input input {
+  width: 98%;
+}
+
+.input-text-container {
+  display: inline-block;
+  text-align: left;
+	/*padding-left: 10px;*/
+  cursor: default;
+}
+
+.input-text {
+	display: inline-block;
+	padding-left: 10px;
+}
+
+/*------Slider------*/
+
+.slider-container {
+  margin-top: 5px;
+  margin-bottom: 15px;
+	/*cursor: default;*/
+	font-size: 10pt;
+	width: 100%;
+	/*background: #eee;*/
+	/*margin: 0 auto;*/
+}
+
+.slider-prompt-container {
+  display: inline-block;
+  width: 30%;
+	/*padding-right: 10px;*/
+  text-align: right;
+}
+
+.slider-prompt {
+	padding-right: 10px;
+}
+
+.puzlet-slider {
+  display: inline-block;
+  width: 40%;
+  /*margin-left: 10px;*/
+}
+
+.slider-text-container {
+  display: inline-block;
+	/*padding-left: 10px;*/
+  cursor: default;
+}
+
+.slider-text-1 {
+	display: inline-block;
+	padding-left: 10px;
+}
+
+.slider-text-2 {
+	display: inline-block;
+	padding-left: 0.5em;
+	/*padding-left: 10px;*/
+}
+
+/*------Table------*/
+
+table.widget {
+	margin: 0 auto;
+  margin-bottom: 20px;
+  /*user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;*/
+}
+
+table.widget, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  font-size: 10pt;
+}
+
+th, td {
+  text-align: center;
+  line-height: 100%;
+}
+
+th {padding: 6px;}
+td {padding: 4px;}
+
+/*------Editable Table------*/
+
+.editable-table-cell {
+  height: 16px; /*14px;*/
+  line-height: 16px; /*14px;*/ /* May need to make line height same for regular cells */
+  vertical-align: top;
+  cursor: pointer;
+/*  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;*/
+}
+
+.editable-table-input-field {
+  width: 60px;
+  text-align: center;
+  height: 14px;
+  line-height: 14px;
+  vertical-align: top;
+  font-size: 10pt;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+}
+
+/*------Plot------*/
+
+.puzlet-plot {
+	margin: 0 auto;
+	/*background: #eee;*/
+}
+
+.axisLabel {
+	position: absolute;
+	text-align: center;
+	font-size: 12px;
+}
+
+.xaxisLabel {
+	bottom: 2px;
+	left: 50%;
+	transform-origin: 0 0;
+	-o-transform-origin: 0 0;
+	-ms-transform-origin: 0 0;
+	-moz-transform-origin: 0 0;
+	-webkit-transform-origin: 0 0;
+}
+
+.yaxisLabel {
+	top: 50%;
+	left: 2px;
+	transform: rotate(-90deg);
+	-o-transform: rotate(-90deg);
+	-ms-transform: rotate(-90deg);
+	-moz-transform: rotate(-90deg);
+	-webkit-transform:  rotate(-90deg);
+	transform-origin: 0 0;
+	-o-transform-origin: 0 0;
+	-ms-transform-origin: 0 0;
+	-moz-transform-origin: 0 0;
+	-webkit-transform-origin: 0 0;
+}
