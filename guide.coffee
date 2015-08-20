@@ -41,13 +41,18 @@ content =
     }
     {
       text: "Exploring the Interior of Pluto"
-      id: "d6927773b95652943582"
       img: "//spacemath.github.io/resources/images/thumbs/planet-core.png"
+      id: "d6927773b95652943582"
     }
     {
       text: "Star Trek's solitons are real"
       img: "//blabr.org/img/solitons.png"
       id: "2a55efd937f9d3e87d29"
+    }
+    {
+      text: "A toy problem for compressive sensing"
+      img: "//blabr.org/img/cs-intro.png"
+      id: "e8a066234715f21c21fd"
     }
   ]
 
