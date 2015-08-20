@@ -4,10 +4,14 @@ class Gists
   
   constructor: ->
     
+    @container = $("#list-gists")
+    
     @username = $.cookie("gh_user")
     @key = $.cookie("gh_key")
     
-    return unless @username
+    unless @username
+      @container.append "Set username in blab save credentials form"
+      return
     
     @setCredentials() if @username and @key
       
@@ -20,11 +24,10 @@ class Gists
         @display data
   
   display: (data) ->
-    div = $("#list-gists")
-    div.append "<h2>Gists#{if @username then ": "+@username else ""}</h2>"
-    div.append "<p>Gray links are secret gists.</p>"
+    @container.append "<h2>#{if @username then @username else ""}</h2>"
+    @container.append "<p>Gray links are secret gists.</p>"
     table = $ "<table>"
-    div.append table
+    @container.append table
     
     headings = ["Comments", "Description", "Created", "Updated"]
     

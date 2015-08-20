@@ -6,9 +6,11 @@
     Gists.prototype.api = "https://api.github.com";
 
     function Gists() {
+      this.container = $("#list-gists");
       this.username = $.cookie("gh_user");
       this.key = $.cookie("gh_key");
       if (!this.username) {
+        this.container.append("Set username in blab save credentials form");
         return;
       }
       if (this.username && this.key) {
@@ -32,12 +34,11 @@
     }
 
     Gists.prototype.display = function(data) {
-      var d, div, h, headings, table, tr, _i, _j, _len, _len1, _results;
-      div = $("#list-gists");
-      div.append("<h2>Gists" + (this.username ? ": " + this.username : "") + "</h2>");
-      div.append("<p>Gray links are secret gists.</p>");
+      var d, h, headings, table, tr, _i, _j, _len, _len1, _results;
+      this.container.append("<h2>" + (this.username ? this.username : "") + "</h2>");
+      this.container.append("<p>Gray links are secret gists.</p>");
       table = $("<table>");
-      div.append(table);
+      this.container.append(table);
       headings = ["Comments", "Description", "Created", "Updated"];
       for (_i = 0, _len = headings.length; _i < _len; _i++) {
         h = headings[_i];
