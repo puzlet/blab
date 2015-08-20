@@ -84,7 +84,7 @@ $blab.demoScript = (spec) ->
       <li><b><code>[->]</code></b> is a formula column.
       </ul>
     """, 
-    7000, 2000
+    7000, 4000
   # widget
   #   find: "[]", replace: "[\"$x$\", \"$kx^2$\"]"
   #   guide: "Add column headings."
