@@ -1285,11 +1285,11 @@ class Buttons
     @linkButton "Doc & Examples", => @spec.guide()
     
   sourceButton: ->
-    l = @linkButton "Revisions", (->), $blab.github?.sourceLink()
+    l = @linkButton "Revisions", (->), $blab.github?.sourceLink() + "/revisions"
     l.attr title: "View GitHub Gist page for this blab."
     
   commentsButton: ->
-    l = @linkButton "Comment", (->), $blab.github?.sourceLink()
+    l = @linkButton "Comment", (->), $blab.github?.sourceLink() + "#comments"
     l.attr title: "Comment on this blab in GitHub Gist page."
   
   author: ->
