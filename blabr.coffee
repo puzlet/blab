@@ -1223,13 +1223,17 @@ class Buttons
       #@append "Powered by "
       #@linkButton "Blabr", => @spec.guide()
       # @sep()
-      @linkButton "Edit Page", => @makeEditable()
-      @sep()
       @sourceButton()
       @sep()
       @revisionsButton()
       @sep()
       @commentsButton()
+      @sep()
+      @showForkButton()
+      @sep()
+      b = @linkButton "Edit Page", => @makeEditable()
+      b.css color: "green"
+      b.attr title: "Edit blab's layout, text, and widgets."
       @author() if @settings?.showAuthor
         
     if @isDemo
@@ -1263,10 +1267,10 @@ class Buttons
     @append "<hr>"
     @logo()
     @docButton()
-    @sep()
-    @linkButton "Settings", =>
-      console.log "settings"
-      @spec.editSettings()
+    #@sep()
+    #@linkButton "Settings", =>
+    #  console.log "settings"
+    #  @spec.editSettings()
     
   makeEditable: ->
     return if @isStart
@@ -1282,9 +1286,13 @@ class Buttons
     @sep()
     @revisionsButton()
     @sep()
-    @forkButton = @linkButton "Fork", =>
-      forceNew = true
-      $blab.github?.save(forceNew)
+    @commentsButton()
+    @sep()
+    @showForkButton()
+    @sep()
+    @linkButton "Settings", =>
+      console.log "settings"
+      @spec.editSettings()
       
   docButton: ->
     @linkButton "Doc & Examples", => @spec.guide()
@@ -1300,6 +1308,12 @@ class Buttons
   commentsButton: ->
     l = @linkButton "Comment", (->), $blab.github?.sourceLink() + "#comments"
     l.attr title: "Comment on this blab in GitHub Gist page."
+    
+  showForkButton: ->
+    b = @forkButton = @linkButton "Fork", =>
+      forceNew = true
+      $blab.github?.save(forceNew)
+    b.attr title: "Create your own version of this blab."
   
   author: ->
     owner = $blab.github?.gist?.gistOwner
