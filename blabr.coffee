@@ -1232,7 +1232,7 @@ class Buttons
       @showForkButton()
       @sep()
       b = @linkButton "Edit Page", => @makeEditable()
-      b.css color: "green"
+      b.css color: "green", fontWeight: "bold", textDecoration: "none"
       b.attr title: "Edit blab's layout, text, and widgets."
       @author() if @settings?.showAuthor
         
@@ -1290,9 +1290,10 @@ class Buttons
     @sep()
     @showForkButton()
     @sep()
-    @linkButton "Settings", =>
+    s = @linkButton "Settings", =>
       console.log "settings"
       @spec.editSettings()
+    s.attr title: "Edit blab settings."
       
   docButton: ->
     @linkButton "Doc & Examples", => @spec.guide()
