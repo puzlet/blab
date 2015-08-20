@@ -58,7 +58,7 @@
     };
 
     Gists.prototype.link = function(tr, d) {
-      var a, a2, desc, m, p, re, td;
+      var a, a2, desc, edit, m, p, re, td;
       td = $("<td>");
       tr.append(td);
       re = /\[http:/;
@@ -74,6 +74,13 @@
         text: desc
       });
       td.append(a);
+      edit = $("<a>", {
+        "class": "edit-gist-link",
+        href: "//gist.github.com/" + d.owner.login + "/" + d.id + "/edit",
+        target: "_blank",
+        text: "Edit"
+      });
+      td.append(edit);
       if (p) {
         a2 = $("<a>", {
           "class": "app-link",

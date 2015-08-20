@@ -61,6 +61,14 @@ class Gists
     
     td.append(a)
     
+    edit = $ "<a>",
+      class: "edit-gist-link"
+      href: "//gist.github.com/#{d.owner.login}/#{d.id}/edit"
+      target: "_blank"
+      text: "Edit"
+      
+    td.append(edit)
+    
     if p
       a2 = $ "<a>",
         class: "app-link"
