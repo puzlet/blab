@@ -1224,6 +1224,8 @@ class Buttons
       @linkButton "Edit Page", => @makeEditable()
       @sep()
       @sourceButton()
+      @sep()
+      @commentsButton()
       @author() if @settings?.showAuthor
         
     if @isDemo
@@ -1283,7 +1285,12 @@ class Buttons
     @linkButton "Doc & Examples", => @spec.guide()
     
   sourceButton: ->
-    @linkButton "GitHub Source", (->), $blab.github?.sourceLink()
+    l = @linkButton "Revisions", (->), $blab.github?.sourceLink()
+    l.attr title: "View GitHub Gist page for this blab."
+    
+  commentsButton: ->
+    l = @linkButton "Comment", (->), $blab.github?.sourceLink()
+    l.attr title: "Comment on this blab in GitHub Gist page."
   
   author: ->
     owner = $blab.github?.gist?.gistOwner
