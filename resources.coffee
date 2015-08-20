@@ -4,9 +4,10 @@ resources
     "/puzlet/math/puzlet-math.js"
     "/puzlet/ace/ace.js"
     "/puzlet/puzlet/js/render.js"
-    "utils.coffee"
-    "blabr.coffee"
-    "/puzlet/widgets/widgets.coffee"
+    # "utils.js"
+    # "blabr.js"
+    "start.coffee"
+    #"/puzlet/widgets/widgets.js"
     "/puzlet/widgets/style.css"
   ]
 
