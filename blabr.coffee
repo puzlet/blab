@@ -1215,7 +1215,7 @@ class Buttons
     
     if @isStart
       showCode() if @settings?.showCodeOnLoad
-      @spec.makeEditable()
+      #@spec.makeEditable()
       @startButtons()
       
     if @isBlab
@@ -1585,6 +1585,7 @@ class PopupEditorManager
     @hideLayout()
   
   enable: (enabled=true) ->
+    #console.log "****** enabled", enabled
     @initEnabled = true if enabled
     @layoutEnabled = enabled
     
@@ -1592,7 +1593,7 @@ class PopupEditorManager
     @showLayoutEditor(widget: widget, id: null, clicked: false)  # Why id null?
   
   showMarkdownEditor: (start) ->
-    console.log "showMarkdownEditor"
+    console.log "showMarkdownEditor", @layoutEnabled
     return unless @layoutEnabled
     @clickedOnComponent = true
     setTimeout (=> @clickedOnComponent = false), 300
@@ -1676,7 +1677,7 @@ class GoogleAnalytics
   track: (blabEvent, gCat, gEvent, gTextFcn, condition=(->true), callback) ->
     $(document).on blabEvent, =>
       gText = gTextFcn()
-      console.log "*** Track Event", blabEvent, gEvent, gText, condition()
+      #console.log "*** Track Event", blabEvent, gEvent, gText, condition()
       _gaq?.push ["_trackEvent", gCat, gEvent, gText] if condition()
       callback?()
 
@@ -1709,6 +1710,7 @@ class App
     @on "layoutCompiled", => @initButtons()  # For first layout only
     
     @on "codeNodeChanged", =>
+      #console.log "=======codeNodeChanged", @changed
       return if @changed  # First code change only
       @changed = true
       @buttons.makeEditable()
@@ -1719,6 +1721,7 @@ class App
     $pz.renderHtml = => @markdownEditor.process()
     
   initEditors: ->
+    #console.log "**** initEditors"
     @markdownEditor.process()
     @definitions.initEditor()
     
@@ -1734,12 +1737,18 @@ class App
     #setTimeout (-> console.log "*** TITLE", document.title), 2000
     @markdownEditor.on "initialized", =>
       $.event.trigger "blabEditorsInitialized"  # For google analytics
+      
+    #-------------
+    # This isn't working from buttons.
+    @editors.enable() if not $blab.resources.getSource?
     
   initButtons: ->
     return if @buttons
     @buttons = new Buttons
       guide: => $blab.blabrGuide.slideToggle()
-      makeEditable: => @editors?.enable()
+      makeEditable: =>
+        #console.log "---makeEditable", @editors
+        @editors?.enable()
       editSettings: =>
         @editors?.enable()
         @editors?.showLayoutEditor(signature: "settings")
