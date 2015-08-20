@@ -44,6 +44,12 @@ class Widget
     W = @getWidget()
     W.handle + "-"
     
+  @createDomId: (prefix, id) ->
+    # Cannot have spaces in DOM id.  Replace with underscores.
+    domId = prefix + id.split(" ").join("-")
+    #console.log "domId", domId
+    domId
+    
   constructor: (@p1, @p2) ->
     
     @used = false
@@ -62,7 +68,8 @@ class Widget
     Widgets.append @domId(), this, @mainContainer
   
   domId: ->
-    @constructor.domIdPrefix() + @id
+    Widget.createDomId @constructor.domIdPrefix(), @id
+    #@constructor.domIdPrefix() + @id
     
   select: ->
     type = @constructor.handle
@@ -138,7 +145,7 @@ class Widgets
       id = @count
       @count++
     prefix = Widget.domIdPrefix()
-    id2 = if prefix then prefix+id else id
+    id2 = if prefix then Widget.createDomId(prefix, id) else id
     w = @widgets[id2]
     return w if w
     # Create new widget
@@ -195,7 +202,7 @@ class Widgets
       #console.log "W", Widget, Widget.handle, handle
       continue unless Widget.handle is handle
       prefix = Widget.domIdPrefix()
-      id = prefix + id if prefix
+      id = Widget.createDomId(prefix, id) if prefix
       widget = @widgets[id]
       break
     widget ? null
@@ -898,7 +905,7 @@ class Layout
       for col in row
         c = $ "<div>",
           class: col
-          mouseup: => @trigger "clickBox"
+          mouseup: (evt) => @trigger "clickBox", {evt}
         c.addClass "layout-box"
         @appendNum c, n
         n++
@@ -929,7 +936,7 @@ class Layout
         c = $ "<div>",
           id: boxId
           class: boxClass
-          mouseup: => @trigger "clickBox"  # Use mouseup instead of click so can control propagation.
+          mouseup: (evt) => @trigger "clickBox", {evt}  # Use mouseup instead of click so can control propagation.
         c.addClass "layout-box"
         r.append c
         @appendNum c, n
@@ -1559,7 +1566,9 @@ class PopupEditorManager
     
     @on "clickWidget", (evt, data) => @showLayoutEditor(widget: data.widget)
     
-    Layout.on "clickBox", => @showLayoutEditor(signature: "layout")
+    Layout.on "clickBox", (data) =>
+      return if data.evt.target.className is "editable-table-cell"  #  Hack to deal with table cell clicking issue.
+      @showLayoutEditor(signature: "layout")
     
     $(document.body).click (evt) => @hideAll(evt)
       

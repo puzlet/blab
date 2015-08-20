@@ -326,7 +326,7 @@ class Sliders
     $.event.trigger "clickInputWidget"
     setSlider = (cb) =>
       v = vals[idx]
-      domId = "slider-"+id
+      domId = $blab.Widget.createDomId "slider-", id
       $("#"+domId).slider 'option', 'value', v
       Widgets.widgets[domId].setVal v
       Widgets.compute()
@@ -357,7 +357,7 @@ class Tables
     idx = 0
     setTable = (cb) =>
       v = vals[idx]
-      domId = "table-"+id
+      domId = $blab.Widget.createDomId "table-", id
       t = Widgets.widgets[domId]
       cell = t.editableCells[col][idx]  # 0 needs to be arg.
       dir = if idx<vals.length-1 then 1 else 0
