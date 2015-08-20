@@ -1222,6 +1222,8 @@ class Buttons
       #@linkButton "Blabr", => @spec.guide()
       # @sep()
       @linkButton "Edit Page", => @makeEditable()
+      @sep()
+      @sourceButton()
       @author() if @settings?.showAuthor
         
     if @isDemo
