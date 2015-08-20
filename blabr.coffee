@@ -1227,9 +1227,9 @@ class Buttons
       @sep()
       @revisionsButton()
       @sep()
-      @commentsButton()
-      @sep()
       @showForkButton()
+      @sep()
+      @commentsButton()
       @sep()
       b = @linkButton "Edit Page", => @makeEditable()
       b.css color: "green", fontWeight: "bold", textDecoration: "none"
@@ -1286,9 +1286,9 @@ class Buttons
     @sep()
     @revisionsButton()
     @sep()
-    @commentsButton()
-    @sep()
     @showForkButton()
+    @sep()
+    @commentsButton()
     @sep()
     s = @linkButton "Settings", =>
       console.log "settings"
