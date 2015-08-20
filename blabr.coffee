@@ -1225,6 +1225,8 @@ class Buttons
       @sep()
       @sourceButton()
       @sep()
+      @revisionsButton()
+      @sep()
       @commentsButton()
       @author() if @settings?.showAuthor
         
@@ -1275,7 +1277,8 @@ class Buttons
   appendBlabButtons: ->
     @sep()
     @sourceButton()
-      
+    @sep()
+    @revisionsButton()
     @sep()
     @forkButton = @linkButton "Fork", =>
       forceNew = true
@@ -1285,8 +1288,12 @@ class Buttons
     @linkButton "Doc & Examples", => @spec.guide()
     
   sourceButton: ->
-    l = @linkButton "Revisions", (->), $blab.github?.sourceLink() + "/revisions"
+    l = @linkButton "Source Control", (->), $blab.github?.sourceLink()
     l.attr title: "View GitHub Gist page for this blab."
+    
+  revisionsButton: ->
+    l = @linkButton "Revisions", (->), $blab.github?.sourceLink() + "/revisions"
+    l.attr title: "View GitHub Gist revisions for this blab."
     
   commentsButton: ->
     l = @linkButton "Comment", (->), $blab.github?.sourceLink() + "#comments"
