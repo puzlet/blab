@@ -1218,6 +1218,8 @@ class Buttons
       #console.log "SETTINGS!", spec.getSettings()
       #$("#computation-code-wrapper").hide()
       @logo()
+      @docButton()
+      @sep()
       #@append "Powered by "
       #@linkButton "Blabr", => @spec.guide()
       # @sep()
