@@ -1,3 +1,5 @@
+#!vanilla
+
 $blab.demoScript = (spec) ->
   
   {text, md, compute, defs, widget, slider, table, widgetEditor, delays} = spec
