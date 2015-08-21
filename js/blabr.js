@@ -2587,9 +2587,6 @@
       this.computationEditor = new ComputationEditor;
       this.markdownEditor = new MarkdownEditor;
       this.definitions = this.loader.definitions;
-      this.markdownEditor.process();
-      this.markdownEditor.process();
-      this.markdownEditor.initialized = false;
       this.on("aceFilesLoaded", (function(_this) {
         return function() {
           return _this.initEditors();
@@ -2603,7 +2600,9 @@
       })(this));
       Layout.on("renderedWidgets", (function(_this) {
         return function() {
-          return _this.markdownEditor.setWidgetsRendered();
+          _this.markdownEditor.process();
+          _this.markdownEditor.setWidgetsRendered();
+          return _this.markdownEditor.initialized = false;
         };
       })(this));
       $("#computation-code-wrapper").hide();

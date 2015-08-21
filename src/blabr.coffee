@@ -1732,9 +1732,8 @@ class App
     @definitions = @loader.definitions
     
     # TEST rendering md earlier
-    @markdownEditor.process()
-    @markdownEditor.process() #if @widgetsRendered
-    @markdownEditor.initialized = false
+    #@markdownEditor.process() #if @widgetsRendered
+    #@markdownEditor.initialized = false
     
     @on "aceFilesLoaded", => @initEditors()
     
@@ -1742,7 +1741,11 @@ class App
       Computation.precode()
       Widgets.setAllUnused()
     
-    Layout.on "renderedWidgets", => @markdownEditor.setWidgetsRendered()
+    Layout.on "renderedWidgets", =>
+      # TEST rendering md earlier
+      @markdownEditor.process()
+      @markdownEditor.setWidgetsRendered()
+      @markdownEditor.initialized = false
     
     $("#computation-code-wrapper").hide()
     @on "layoutCompiled", =>
