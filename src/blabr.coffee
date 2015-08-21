@@ -1743,9 +1743,9 @@ class App
     
     Layout.on "renderedWidgets", =>
       # TEST rendering md earlier
-      @markdownEditor.process()
+#      @markdownEditor.process()
       @markdownEditor.setWidgetsRendered()
-      @markdownEditor.initialized = false
+#      @markdownEditor.initialized = false
     
     $("#computation-code-wrapper").hide()
     @on "layoutCompiled", =>

@@ -2600,9 +2600,7 @@
       })(this));
       Layout.on("renderedWidgets", (function(_this) {
         return function() {
-          _this.markdownEditor.process();
-          _this.markdownEditor.setWidgetsRendered();
-          return _this.markdownEditor.initialized = false;
+          return _this.markdownEditor.setWidgetsRendered();
         };
       })(this));
       $("#computation-code-wrapper").hide();
