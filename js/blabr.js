@@ -2127,7 +2127,7 @@
 
   Loader = (function() {
     function Loader(init) {
-      var done, hasDemo, layout, tables;
+      var demo, initDemo, layout, tables;
       this.init = init;
       this.resources = $blab.resources;
       this.resources.blockPostLoadFromSpecFile = true;
@@ -2137,36 +2137,26 @@
       tables = this.resources.add({
         url: "tables.json"
       });
-      hasDemo = (this.resources.getSource == null) || this.resources.getSource("demo.coffee");
-      done = (function(_this) {
-        return function(cb) {
-          _this.resources.postLoadFromSpecFile();
-          return cb();
+      if ((this.resources.getSource == null) || this.resources.getSource("demo.coffee")) {
+        demo = this.resources.add({
+          url: "demo.coffee"
+        });
+        initDemo = function() {
+          $blab.initDemoRunner();
+          return demo.compile();
         };
-      })(this);
+      }
       this.resources.loadUnloaded((function(_this) {
         return function() {
           return _this.definitions = new Definitions(function(cb) {
-            var demo;
             _this.init();
             layout.compile();
             $blab.blabrGuide = new $blab.guideClass;
-            if (hasDemo) {
-              demo = _this.resources.add({
-                url: "demo.coffee"
-              });
-              _this.resources.add({
-                url: "js/demo-runner.js"
-              });
-              return _this.resources.loadUnloaded(function() {
-                if (demo != null) {
-                  demo.compile();
-                }
-                return done(cb);
-              });
-            } else {
-              return done(cb);
+            if (typeof initDemo === "function") {
+              initDemo();
             }
+            _this.resources.postLoadFromSpecFile();
+            return cb();
           });
         };
       })(this));

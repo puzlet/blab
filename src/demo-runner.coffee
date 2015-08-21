@@ -103,8 +103,8 @@ class DemoRunner
 #$blab.DemoRunner = DemoRunner
 #new DemoRunner
 
-guide = $ "#demo-guide"
-guide.draggable()
+guide = null
+#guide = $ "#demo-guide"
 
 guideClose = (guide) ->
   new $blab.utils.CloseButton guide, =>
@@ -112,12 +112,19 @@ guideClose = (guide) ->
     $.event.trigger "demoGuideClose"
 
 
-app = $blab.blabrApp
-markdownEditor = app.markdownEditor
-computationEditor = app.computationEditor
-defsEditor = app.definitions
-widgetEditor = app.widgetEditor
-Widgets = $blab.Widgets
+#app = $blab.blabrApp
+#markdownEditor = app.markdownEditor
+#computationEditor = app.computationEditor
+#defsEditor = app.definitions
+#widgetEditor = app.widgetEditor
+#Widgets = $blab.Widgets
+
+app = null
+markdownEditor = null
+computationEditor = null
+defsEditor = null
+widgetEditor = null
+Widgets = null
 
 class Editor
   
@@ -631,9 +638,20 @@ class Demo
         @dwell dwell, -> done()
 
 
-new DemoRunner
+#new DemoRunner
 
-#$blab.initDemoRunner = ->
+$blab.initDemoRunner = ->
   # Closure (app etc.)
 #  console.log "DEMO RUNNER", app, markdownEditor 
-#  new DemoRunner
+  
+  guide = $ "#demo-guide"
+  guide.draggable()
+  
+  app = $blab.blabrApp
+  markdownEditor = app.markdownEditor
+  computationEditor = app.computationEditor
+  defsEditor = app.definitions
+  widgetEditor = app.widgetEditor
+  Widgets = $blab.Widgets
+  
+  new DemoRunner

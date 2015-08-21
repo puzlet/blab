@@ -177,9 +177,7 @@
 
   })();
 
-  guide = $("#demo-guide");
-
-  guide.draggable();
+  guide = null;
 
   guideClose = function(guide) {
     return new $blab.utils.CloseButton(guide, (function(_this) {
@@ -190,17 +188,17 @@
     })(this));
   };
 
-  app = $blab.blabrApp;
+  app = null;
 
-  markdownEditor = app.markdownEditor;
+  markdownEditor = null;
 
-  computationEditor = app.computationEditor;
+  computationEditor = null;
 
-  defsEditor = app.definitions;
+  defsEditor = null;
 
-  widgetEditor = app.widgetEditor;
+  widgetEditor = null;
 
-  Widgets = $blab.Widgets;
+  Widgets = null;
 
   Editor = (function() {
     Editor.prototype.delay = 500;
@@ -1078,6 +1076,16 @@
 
   })();
 
-  new DemoRunner;
+  $blab.initDemoRunner = function() {
+    guide = $("#demo-guide");
+    guide.draggable();
+    app = $blab.blabrApp;
+    markdownEditor = app.markdownEditor;
+    computationEditor = app.computationEditor;
+    defsEditor = app.definitions;
+    widgetEditor = app.widgetEditor;
+    Widgets = $blab.Widgets;
+    return new DemoRunner;
+  };
 
 }).call(this);
