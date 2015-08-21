@@ -1038,9 +1038,7 @@ class Definitions
   
   constructor: (@done) ->
     
-    $("#defs-code-heading").html "Definitions <div id='defs-hint' class='code-hint'>Press shift-enter to run</div>"
-    @hint = $ "#defs-hint"
-    @hint.hide()
+    #@setHeading()
     
     @resources = $blab.resources
     
@@ -1070,7 +1068,14 @@ class Definitions
       $blab.definitions = {}
       @allLoaded = false
     
-    @resources.loadUnloaded => @coffee.compile()
+    @resources.loadUnloaded =>
+      @setHeading()
+      @coffee.compile()
+      
+  setHeading: ->
+    $("#defs-code-heading").html "Definitions <div id='defs-hint' class='code-hint'>Press shift-enter to run</div>"
+    @hint = $ "#defs-hint"
+    @hint.hide()
     
   main: (defs) ->
     # Main defs.coffee

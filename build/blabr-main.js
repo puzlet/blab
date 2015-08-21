@@ -1440,9 +1440,6 @@
 
     function Definitions(done) {
       this.done = done;
-      $("#defs-code-heading").html("Definitions <div id='defs-hint' class='code-hint'>Press shift-enter to run</div>");
-      this.hint = $("#defs-hint");
-      this.hint.hide();
       this.resources = $blab.resources;
       this.coffee = this.resources.add({
         url: this.filename
@@ -1479,10 +1476,17 @@
       })(this));
       this.resources.loadUnloaded((function(_this) {
         return function() {
+          _this.setHeading();
           return _this.coffee.compile();
         };
       })(this));
     }
+
+    Definitions.prototype.setHeading = function() {
+      $("#defs-code-heading").html("Definitions <div id='defs-hint' class='code-hint'>Press shift-enter to run</div>");
+      this.hint = $("#defs-hint");
+      return this.hint.hide();
+    };
 
     Definitions.prototype.main = function(defs) {
       if (typeof defs === "string") {
