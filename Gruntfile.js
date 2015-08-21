@@ -10,7 +10,7 @@ module.exports = function(grunt) {
           'build/guide.js': ['src/guide.coffee'],
           'build/utils.js': ['src/utils.coffee'],
           'build/demo-runner.js': ['src/demo-runner.coffee'],
-          'build/widgets.js': ['src/widgets.coffee']
+          'js/widgets.js': ['src/widgets.coffee']
         }
       }
     },
