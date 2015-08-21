@@ -897,7 +897,7 @@
 
     MarkdownEditor.prototype.setWidgetsRendered = function() {
       this.widgetsRendered = true;
-      if (typeof marked !== "undefined" && marked !== null) {
+      if (this.initialized) {
         return this.process();
       }
     };
@@ -918,6 +918,7 @@
       this.customizeLinks();
       this.resource = this.resources.find(this.filename);
       this.editor = (ref = this.resource) != null ? (ref1 = ref.containers) != null ? (ref2 = ref1.fileNodes) != null ? ref2[0].editor : void 0 : void 0 : void 0;
+      this.initialized = true;
       if (!this.editor) {
         return;
       }
@@ -1001,12 +1002,8 @@
     MarkdownEditor.prototype.process = function() {
       var container, i, len, m, md, out;
       console.log("MarkdownEditor::process");
-      if (typeof marked === "undefined" || marked === null) {
-        this.loadMarked((function(_this) {
-          return function() {
-            return _this.init();
-          };
-        })(this));
+      if (!this.initialized) {
+        this.init();
         return;
       }
       this.text.empty();
@@ -1030,9 +1027,6 @@
 
     MarkdownEditor.prototype.loadMarked = function(callback) {
       console.log("MarkdownEditor::loadMarked");
-      this.resources.add({
-        url: this.markedUrl
-      });
       return this.resources.loadUnloaded(function() {
         return typeof callback === "function" ? callback() : void 0;
       });

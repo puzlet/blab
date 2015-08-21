@@ -586,7 +586,7 @@ class MarkdownEditor #extends PopupEditor
   
   containerId: "#main-markdown"
   filename: "blab.md"
-  markedUrl: "/puzlet/puzlet/js/marked.min.js"
+  markedUrl: "/puzlet/puzlet/js/marked.min.js"  # To go in index.html.
   posAttr: "data-pos"
   widgetsId: "#widgets-container"
   editorHeight: 15
@@ -612,7 +612,7 @@ class MarkdownEditor #extends PopupEditor
     
   setWidgetsRendered: ->
     @widgetsRendered = true
-    @process() if marked?
+    @process() if @initialized #marked?
   
   init: ->
     console.log "MarkdownEditor::init"
@@ -631,6 +631,9 @@ class MarkdownEditor #extends PopupEditor
     
     @resource = @resources.find(@filename)
     @editor = @resource?.containers?.fileNodes?[0].editor
+    
+    @initialized = true
+    
     return unless @editor
     @aceEditor = @editor.editor
     
@@ -703,9 +706,12 @@ class MarkdownEditor #extends PopupEditor
     
   process: ->
     console.log "MarkdownEditor::process"
-    unless marked?
-      @loadMarked => @init()
+    unless @initialized
+      @init()
       return
+    #unless marked?
+    #  @loadMarked => @init()
+    #  return
     #console.log "MarkdownEditor::process/marked"
     @text.empty()
     $(".rendered-markdown").remove()
@@ -725,6 +731,7 @@ class MarkdownEditor #extends PopupEditor
     $.event.trigger "htmlOutputUpdated"
     @trigger "setViewPort"
     
+  # Note used - marked loaded in index.html.
   loadMarked: (callback) ->
     console.log "MarkdownEditor::loadMarked"
     @resources.add {url: @markedUrl}
