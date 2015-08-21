@@ -868,6 +868,7 @@
 
     function MarkdownEditor() {
       this.markdownDiv = bind(this.markdownDiv, this);
+      this.initMarked();
       this.text = $(this.containerId);
       if (!this.text.length) {
         return;
@@ -902,21 +903,14 @@
       }
     };
 
+    MarkdownEditor.prototype.initResource = function() {
+      return this.resource = this.resources.find(this.filename);
+    };
+
     MarkdownEditor.prototype.init = function() {
       var ref, ref1, ref2;
-      console.log("MarkdownEditor::init");
-      marked.setOptions({
-        renderer: new marked.Renderer,
-        gfm: true,
-        tables: true,
-        breaks: false,
-        pedantic: false,
-        sanitize: false,
-        smartLists: true,
-        smartypants: false
-      });
-      this.customizeLinks();
-      this.resource = this.resources.find(this.filename);
+      this.initMarked();
+      this.initResource();
       console.log("**** MD", this.resource);
       this.editor = (ref = this.resource) != null ? (ref1 = ref.containers) != null ? (ref2 = ref1.fileNodes) != null ? ref2[0].editor : void 0 : void 0 : void 0;
       this.initialized = true;
@@ -946,6 +940,23 @@
         this.process();
       }
       return this.trigger("initialized");
+    };
+
+    MarkdownEditor.prototype.initMarked = function() {
+      if (typeof marked === "undefined" || marked === null) {
+        return;
+      }
+      marked.setOptions({
+        renderer: new marked.Renderer,
+        gfm: true,
+        tables: true,
+        breaks: false,
+        pedantic: false,
+        sanitize: false,
+        smartLists: true,
+        smartypants: false
+      });
+      return this.customizeLinks();
     };
 
     MarkdownEditor.prototype.customizeLinks = function() {
@@ -1000,13 +1011,8 @@
       return text;
     };
 
-    MarkdownEditor.prototype.process = function() {
+    MarkdownEditor.prototype.renderMd = function() {
       var container, i, len, m, md, out;
-      console.log("MarkdownEditor::process");
-      if (!this.initialized) {
-        this.init();
-        return;
-      }
       this.text.empty();
       $(".rendered-markdown").remove();
       md = this.snippets(this.preProcess(this.resource.content));
@@ -1022,7 +1028,16 @@
         }
       }
       this.setTitle(out.join("\n"));
-      $.event.trigger("htmlOutputUpdated");
+      return $.event.trigger("htmlOutputUpdated");
+    };
+
+    MarkdownEditor.prototype.process = function() {
+      console.log("MarkdownEditor::process");
+      if (!this.initialized) {
+        this.init();
+        return;
+      }
+      this.renderMd();
       return this.trigger("setViewPort");
     };
 
@@ -2600,6 +2615,8 @@
       })(this));
       Layout.on("renderedWidgets", (function(_this) {
         return function() {
+          _this.markdownEditor.initResource();
+          _this.markdownEditor.renderMd();
           return _this.markdownEditor.setWidgetsRendered();
         };
       })(this));

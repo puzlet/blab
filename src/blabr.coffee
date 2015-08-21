@@ -593,6 +593,8 @@ class MarkdownEditor #extends PopupEditor
   
   constructor: ->
     
+    @initMarked()
+    
     @text = $ @containerId
     return unless @text.length
     @text.css(cursor: "default")  # ZZZ do in CSS
@@ -614,22 +616,31 @@ class MarkdownEditor #extends PopupEditor
     @widgetsRendered = true
     @process() if @initialized #marked?
   
+  initResource: ->
+    @resource = @resources.find(@filename) #unless @resource
+  
   init: ->
-    console.log "MarkdownEditor::init"
     
-    marked.setOptions
-      renderer: new marked.Renderer
-      gfm: true
-      tables: true
-      breaks: false
-      pedantic: false
-      sanitize: false
-      smartLists: true
-      smartypants: false
-      
-    @customizeLinks()
+    @initMarked()
     
-    @resource = @resources.find(@filename)
+    # console.log "MarkdownEditor::init"
+    #
+    # marked.setOptions
+    #   renderer: new marked.Renderer
+    #   gfm: true
+    #   tables: true
+    #   breaks: false
+    #   pedantic: false
+    #   sanitize: false
+    #   smartLists: true
+    #   smartypants: false
+    #
+    # @customizeLinks()
+    
+    #@resource = @resources.find(@filename)
+    
+    @initResource()
+    
     console.log "**** MD", @resource
     @editor = @resource?.containers?.fileNodes?[0].editor
     
@@ -653,7 +664,23 @@ class MarkdownEditor #extends PopupEditor
     @process() if @widgetsRendered
     
     @trigger "initialized"
+  
+  initMarked: ->
     
+    return unless marked?
+    
+    marked.setOptions
+      renderer: new marked.Renderer
+      gfm: true
+      tables: true
+      breaks: false
+      pedantic: false
+      sanitize: false
+      smartLists: true
+      smartypants: false
+      
+    @customizeLinks()
+  
   customizeLinks: ->
     marked.Renderer.prototype.link = (href, title, text) ->
       if this.options.sanitize
@@ -704,12 +731,12 @@ class MarkdownEditor #extends PopupEditor
       .replace(/\\&yen;/g,"$")
       
     text
-    
-  process: ->
-    console.log "MarkdownEditor::process"
-    unless @initialized
-      @init()
-      return
+  
+  renderMd: ->
+    #console.log "MarkdownEditor::process"
+    #unless @initialized
+    #  @init()
+    #  return
     #unless marked?
     #  @loadMarked => @init()
     #  return
@@ -730,6 +757,13 @@ class MarkdownEditor #extends PopupEditor
         @markdownDiv(container, m)
     @setTitle(out.join "\n")
     $.event.trigger "htmlOutputUpdated"
+    
+  process: ->
+    console.log "MarkdownEditor::process"
+    unless @initialized
+      @init()
+      return
+    @renderMd()
     @trigger "setViewPort"
     
   # Note used - marked loaded in index.html.
@@ -1743,6 +1777,8 @@ class App
     
     Layout.on "renderedWidgets", =>
       # TEST rendering md earlier
+      @markdownEditor.initResource()
+      @markdownEditor.renderMd()
 #      @markdownEditor.process()
       @markdownEditor.setWidgetsRendered()
 #      @markdownEditor.initialized = false
