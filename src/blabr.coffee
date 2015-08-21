@@ -1207,7 +1207,7 @@ class Buttons
     @isStart = not @isGist
     @isBlab = @isGist and not @isDemo 
     
-    @settings = spec.getSettings()
+    @settings = @spec.getSettings()
     
     showCode = -> $("#computation-code-wrapper").show()
     

@@ -208,7 +208,7 @@ class Credits
     @footer.hide()
   
     l = (txt, url) -> "<a href='//#{url}' target='_blank'>#{txt}</a>"
-    str = (l(credit.name, credit.url) for credit in credits).join(", ")
+    str = (l(credit.name, credit.url) for credit in @credits).join(", ")
   
     @footer.append """
       <a href='//blabr.org' target='_blank'>Blabr</a> 
