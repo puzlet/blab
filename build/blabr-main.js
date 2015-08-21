@@ -2588,6 +2588,8 @@
       this.markdownEditor = new MarkdownEditor;
       this.definitions = this.loader.definitions;
       this.markdownEditor.process();
+      this.markdownEditor.process();
+      this.markdownEditor.initialized = false;
       this.on("aceFilesLoaded", (function(_this) {
         return function() {
           return _this.initEditors();

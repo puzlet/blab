@@ -1731,7 +1731,10 @@ class App
     @markdownEditor = new MarkdownEditor
     @definitions = @loader.definitions
     
-    @markdownEditor.process()  # TEMP
+    # TEST rendering md earlier
+    @markdownEditor.process()
+    @markdownEditor.process() #if @widgetsRendered
+    @markdownEditor.initialized = false
     
     @on "aceFilesLoaded", => @initEditors()
     
