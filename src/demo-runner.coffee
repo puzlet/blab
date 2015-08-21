@@ -90,7 +90,7 @@ class DemoRunner
     @firstLayout = true
     $blab.Layout.on "renderedWidgets", =>
       return unless @firstLayout
-      @start.activate()
+      @start.activate?()
       @firstLayout = false
       
     @firstChange = true

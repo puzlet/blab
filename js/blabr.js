@@ -3119,10 +3119,13 @@
       this.firstLayout = true;
       $blab.Layout.on("renderedWidgets", (function(_this) {
         return function() {
+          var base;
           if (!_this.firstLayout) {
             return;
           }
-          _this.start.activate();
+          if (typeof (base = _this.start).activate === "function") {
+            base.activate();
+          }
           return _this.firstLayout = false;
         };
       })(this));
