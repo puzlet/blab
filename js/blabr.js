@@ -2127,43 +2127,46 @@
 
   Loader = (function() {
     function Loader(init) {
-      var demo, demoRunner, guide, layout, tables;
+      var done, hasDemo, layout, tables;
       this.init = init;
       this.resources = $blab.resources;
       this.resources.blockPostLoadFromSpecFile = true;
       layout = this.resources.add({
         url: "layout.coffee"
       });
-      guide = this.resources.add({
-        url: "guide.coffee"
-      });
       tables = this.resources.add({
         url: "tables.json"
       });
-      if ((this.resources.getSource == null) || this.resources.getSource("demo.coffee")) {
-        demoRunner = this.resources.add({
-          url: "demo-runner.coffee"
-        });
-        demo = this.resources.add({
-          url: "demo.coffee"
-        });
-      }
+      hasDemo = (this.resources.getSource == null) || this.resources.getSource("demo.coffee");
+      done = (function(_this) {
+        return function(cb) {
+          _this.resources.postLoadFromSpecFile();
+          return cb();
+        };
+      })(this);
       this.resources.loadUnloaded((function(_this) {
         return function() {
           return _this.definitions = new Definitions(function(cb) {
+            var demo;
             _this.init();
             layout.compile();
-            if (guide != null) {
-              guide.compile();
+            $blab.blabrGuide = new $blab.guideClass;
+            if (hasDemo) {
+              demo = _this.resources.add({
+                url: "demo.coffee"
+              });
+              _this.resources.add({
+                url: "js/demo-runner.js"
+              });
+              return _this.resources.loadUnloaded(function() {
+                if (demo != null) {
+                  demo.compile();
+                }
+                return done(cb);
+              });
+            } else {
+              return done(cb);
             }
-            if (demoRunner != null) {
-              demoRunner.compile();
-            }
-            if (demo != null) {
-              demo.compile();
-            }
-            _this.resources.postLoadFromSpecFile();
-            return cb();
           });
         };
       })(this));

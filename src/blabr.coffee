@@ -1460,22 +1460,39 @@ class Loader
     @resources.blockPostLoadFromSpecFile = true
     
     layout = @resources.add url: "layout.coffee"
-    guide = @resources.add url: "guide.coffee"
+    #guide = @resources.add url: "guide.coffee"
     tables = @resources.add url: "tables.json"
     
-    if not @resources.getSource? or @resources.getSource("demo.coffee")
-      demoRunner = @resources.add(url: "demo-runner.coffee")
-      demo = @resources.add(url: "demo.coffee")
+    hasDemo = not @resources.getSource? or @resources.getSource("demo.coffee")
+    #if hasDemo
+      #demoRunner = @resources.add(url: "src/demo-runner.coffee")
+    #  demo = @resources.add(url: "demo.coffee")
+    
+    done = (cb) =>
+      @resources.postLoadFromSpecFile()
+      cb()
     
     @resources.loadUnloaded =>
       @definitions = new Definitions (cb) =>
         @init()
         layout.compile()
-        guide?.compile()
-        demoRunner?.compile()
-        demo?.compile()
-        @resources.postLoadFromSpecFile()
-        cb()
+        #guide?.compile()
+        #console.log "$blab", $blab
+        $blab.blabrGuide = new $blab.guideClass
+        if hasDemo
+          #demo = @resources.add(url: "demo.coffee")
+          demo = @resources.add(url: "demo.coffee")
+          @resources.add(url: "js/demo-runner.js")
+          @resources.loadUnloaded =>
+            #demoRunner?.compile()
+            #$blab.initDemoRunner()
+          #demoRunner?.compile()
+            demo?.compile()
+            done cb
+        else
+          done cb
+        #  @resources.postLoadFromSpecFile()
+        #  cb()
 
 
 class BlabEvents

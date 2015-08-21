@@ -99,7 +99,7 @@ class Guide
   append: (txt) -> @container.append txt
   
   slideDown: -> @container.slideDown 500, => @scroll()
-
+  
   slideToggle: ->
     @container.slideToggle 500, => @scroll()
         
@@ -124,7 +124,7 @@ class Guide
         #{str}
       </div>
     """
-    
+  
   demos: ->
     
     @append """
@@ -154,7 +154,6 @@ class Guide
       </div>
     """
     #         <a href="//blabr.org" target="_blank">More blabs<a>
-
     
   references: ->
   
@@ -238,4 +237,6 @@ $blab.refListHtml = (spec) ->
   html += "</ul>\n"
 
 
-$blab.blabrGuide = new Guide
+$blab.guideClass = Guide
+
+#$blab.blabrGuide = new Guide

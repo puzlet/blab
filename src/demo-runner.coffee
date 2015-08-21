@@ -98,10 +98,10 @@ class DemoRunner
   run: =>
     new Demo
     #setTimeout (-> new Demo), 200 #1500
-    
-    
-new DemoRunner
 
+
+#$blab.DemoRunner = DemoRunner
+#new DemoRunner
 
 guide = $ "#demo-guide"
 guide.draggable()
@@ -110,6 +110,7 @@ guideClose = (guide) ->
   new $blab.utils.CloseButton guide, =>
     guide.hide()
     $.event.trigger "demoGuideClose"
+
 
 app = $blab.blabrApp
 markdownEditor = app.markdownEditor
@@ -629,3 +630,10 @@ class Demo
       @textGuide.explain html, bg, =>
         @dwell dwell, -> done()
 
+
+new DemoRunner
+
+#$blab.initDemoRunner = ->
+  # Closure (app etc.)
+#  console.log "DEMO RUNNER", app, markdownEditor 
+#  new DemoRunner
