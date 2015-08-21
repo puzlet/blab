@@ -6,7 +6,7 @@ resources
     "/puzlet/puzlet/js/render.js"
     # "utils.js"
     # "blabr.js"
-    "start.coffee"
+    "src/start.coffee"
     #"/puzlet/widgets/widgets.js"
     #"/puzlet/widgets/style.css"
   ]
