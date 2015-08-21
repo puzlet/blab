@@ -630,6 +630,7 @@ class MarkdownEditor #extends PopupEditor
     @customizeLinks()
     
     @resource = @resources.find(@filename)
+    console.log "**** MD", @resource
     @editor = @resource?.containers?.fileNodes?[0].editor
     
     @initialized = true
@@ -1467,6 +1468,7 @@ class Loader
     @resources.blockPostLoadFromSpecFile = true
     
     layout = @resources.add url: "layout.coffee"
+    md = @resources.add url: "blab.md"
     #guide = @resources.add url: "guide.coffee"
     tables = @resources.add url: "tables.json"
     
@@ -1729,6 +1731,8 @@ class App
     @markdownEditor = new MarkdownEditor
     @definitions = @loader.definitions
     
+    @markdownEditor.process()  # TEMP
+    
     @on "aceFilesLoaded", => @initEditors()
     
     @beforeCompute =>
@@ -1738,7 +1742,8 @@ class App
     Layout.on "renderedWidgets", => @markdownEditor.setWidgetsRendered()
     
     $("#computation-code-wrapper").hide()
-    @on "layoutCompiled", => @initButtons()  # For first layout only
+    @on "layoutCompiled", =>
+      @initButtons()  # For first layout only
     
     @on "codeNodeChanged", =>
       #console.log "=======codeNodeChanged", @changed

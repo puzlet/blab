@@ -917,6 +917,7 @@
       });
       this.customizeLinks();
       this.resource = this.resources.find(this.filename);
+      console.log("**** MD", this.resource);
       this.editor = (ref = this.resource) != null ? (ref1 = ref.containers) != null ? (ref2 = ref1.fileNodes) != null ? ref2[0].editor : void 0 : void 0 : void 0;
       this.initialized = true;
       if (!this.editor) {
@@ -1027,6 +1028,9 @@
 
     MarkdownEditor.prototype.loadMarked = function(callback) {
       console.log("MarkdownEditor::loadMarked");
+      this.resources.add({
+        url: this.markedUrl
+      });
       return this.resources.loadUnloaded(function() {
         return typeof callback === "function" ? callback() : void 0;
       });
@@ -2120,12 +2124,15 @@
 
   Loader = (function() {
     function Loader(init) {
-      var demo, initDemo, layout, tables;
+      var demo, initDemo, layout, md, tables;
       this.init = init;
       this.resources = $blab.resources;
       this.resources.blockPostLoadFromSpecFile = true;
       layout = this.resources.add({
         url: "layout.coffee"
+      });
+      md = this.resources.add({
+        url: "blab.md"
       });
       tables = this.resources.add({
         url: "tables.json"
@@ -2580,6 +2587,7 @@
       this.computationEditor = new ComputationEditor;
       this.markdownEditor = new MarkdownEditor;
       this.definitions = this.loader.definitions;
+      this.markdownEditor.process();
       this.on("aceFilesLoaded", (function(_this) {
         return function() {
           return _this.initEditors();
