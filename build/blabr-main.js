@@ -904,14 +904,14 @@
     };
 
     MarkdownEditor.prototype.initResource = function() {
-      return this.resource = this.resources.find(this.filename);
+      this.resource = this.resources.find(this.filename);
+      return console.log("**** MD", this.resource);
     };
 
     MarkdownEditor.prototype.init = function() {
       var ref, ref1, ref2;
       this.initMarked();
       this.initResource();
-      console.log("**** MD", this.resource);
       this.editor = (ref = this.resource) != null ? (ref1 = ref.containers) != null ? (ref2 = ref1.fileNodes) != null ? ref2[0].editor : void 0 : void 0 : void 0;
       this.initialized = true;
       if (!this.editor) {

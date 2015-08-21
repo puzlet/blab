@@ -42,7 +42,10 @@
         "class": "demo-start-button-main-text"
       });
       this.div.append("<h1>Scientific computing for the web.</h1>");
-      this.container.append(img).append(this.div);
+      return this.container.append(img).append(this.div);
+    };
+
+    MainDemoStart.prototype.activate = function() {
       this.container.click((function(_this) {
         return function() {
           return _this.clear(function() {
@@ -147,13 +150,14 @@
           return _this.run();
         };
       })(this));
+      this.start.create();
       this.firstLayout = true;
       $blab.Layout.on("renderedWidgets", (function(_this) {
         return function() {
           if (!_this.firstLayout) {
             return;
           }
-          _this.start.create();
+          _this.start.activate();
           return _this.firstLayout = false;
         };
       })(this));

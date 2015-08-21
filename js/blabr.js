@@ -904,14 +904,14 @@
     };
 
     MarkdownEditor.prototype.initResource = function() {
-      return this.resource = this.resources.find(this.filename);
+      this.resource = this.resources.find(this.filename);
+      return console.log("**** MD", this.resource);
     };
 
     MarkdownEditor.prototype.init = function() {
       var ref, ref1, ref2;
       this.initMarked();
       this.initResource();
-      console.log("**** MD", this.resource);
       this.editor = (ref = this.resource) != null ? (ref1 = ref.containers) != null ? (ref2 = ref1.fileNodes) != null ? ref2[0].editor : void 0 : void 0 : void 0;
       this.initialized = true;
       if (!this.editor) {
@@ -3003,7 +3003,10 @@
         "class": "demo-start-button-main-text"
       });
       this.div.append("<h1>Scientific computing for the web.</h1>");
-      this.container.append(img).append(this.div);
+      return this.container.append(img).append(this.div);
+    };
+
+    MainDemoStart.prototype.activate = function() {
       this.container.click((function(_this) {
         return function() {
           return _this.clear(function() {
@@ -3108,13 +3111,14 @@
           return _this.run();
         };
       })(this));
+      this.start.create();
       this.firstLayout = true;
       $blab.Layout.on("renderedWidgets", (function(_this) {
         return function() {
           if (!_this.firstLayout) {
             return;
           }
-          _this.start.create();
+          _this.start.activate();
           return _this.firstLayout = false;
         };
       })(this));

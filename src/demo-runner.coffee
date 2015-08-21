@@ -27,6 +27,8 @@ class MainDemoStart
     @div.append "<h1>Scientific computing for the web.</h1>"
     
     @container.append(img).append(@div)
+    
+  activate: ->
     @container.click => @clear => @runDemo()
     
     @button = new PlayButton @div, (=>)
@@ -83,11 +85,12 @@ class DemoRunner
     @isMain = not $blab.resources.getSource?
     
     @start = if @isMain then new MainDemoStart(=> @run()) else new DemoButton(=> @run())
+    @start.create()  # Revise so button npt active.
     
     @firstLayout = true
     $blab.Layout.on "renderedWidgets", =>
       return unless @firstLayout
-      @start.create()
+      @start.activate()
       @firstLayout = false
       
     @firstChange = true

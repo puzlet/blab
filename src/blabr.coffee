@@ -618,6 +618,7 @@ class MarkdownEditor #extends PopupEditor
   
   initResource: ->
     @resource = @resources.find(@filename) #unless @resource
+    console.log "**** MD", @resource
   
   init: ->
     
@@ -641,7 +642,6 @@ class MarkdownEditor #extends PopupEditor
     
     @initResource()
     
-    console.log "**** MD", @resource
     @editor = @resource?.containers?.fileNodes?[0].editor
     
     @initialized = true
