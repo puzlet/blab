@@ -100,7 +100,9 @@ class Widgets
       for W in WidgetSet
         console.log "reg widget", W, W.name, /^function\s+([\w\$]+)\s*\(/.exec( W.toString() )[ 1 ]
     ), 1000
-    @Registry[Widget.name] = Widget for Widget in WidgetSet
+    for Widget in WidgetSet
+      name = Widget.name ? /^function\s+([\w\$]+)\s*\(/.exec(W.toString())[1]
+      @Registry[name] = Widget
   
   @widgets: {}
   @count: 0
