@@ -533,7 +533,7 @@ class EditableCell
       focus: (e) =>
         @clickCell()
         #e.preventDefault()
-        setTimeout (=> @selectElementContents @div[0]), 10
+        setTimeout (=> @selectElementContents @div[0]), 0
       
       mousedown: (e) => $.event.trigger "clickInputWidget"
       #mouseup: (e) => e.stopPropagation()
@@ -557,7 +557,8 @@ class EditableCell
     range.selectNodeContents(el)
     sel = window.getSelection()
     sel.removeAllRanges()
-    sel?.addRange?(range) if range
+    console.log sel, sel.addRange, range
+    sel?.addRange?(range) if range #and Object.keys(range).length isnt 0
   
   click: (e) ->
     @div.focus()

@@ -773,7 +773,7 @@
             _this.clickCell();
             return setTimeout((function() {
               return _this.selectElementContents(_this.div[0]);
-            }), 10);
+            }), 0);
           };
         })(this),
         mousedown: (function(_this) {
@@ -825,6 +825,7 @@
       range.selectNodeContents(el);
       sel = window.getSelection();
       sel.removeAllRanges();
+      console.log(sel, sel.addRange, range);
       if (range) {
         return sel != null ? typeof sel.addRange === "function" ? sel.addRange(range) : void 0 : void 0;
       }
