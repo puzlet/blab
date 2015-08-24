@@ -1,5 +1,6 @@
 #!vanilla
 
+console.log "---Blabr", $("html").attr("class")
 alert("Your browser may not be compatible with this web site.") if $("html").attr("class") is "ie"
 
 # Hack to process only once - not needed?
