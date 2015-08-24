@@ -96,8 +96,10 @@ class Widgets
   
   @register: (WidgetSet) ->
     console.log "Register", WidgetSet
-    for W in WidgetSet
-      console.log "reg widget", W, W.name
+    setTimeout (->
+      for W in WidgetSet
+        console.log "reg widget", W, W.name
+    ), 1000
     @Registry[Widget.name] = Widget for Widget in WidgetSet
   
   @widgets: {}

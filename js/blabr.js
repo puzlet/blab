@@ -154,15 +154,20 @@
     Widgets.Registry = {};
 
     Widgets.register = function(WidgetSet) {
-      var W, i, j, len, len1, results;
+      var i, len, results;
       console.log("Register", WidgetSet);
-      for (i = 0, len = WidgetSet.length; i < len; i++) {
-        W = WidgetSet[i];
-        console.log("reg widget", W, W.name);
-      }
+      setTimeout((function() {
+        var W, i, len, results;
+        results = [];
+        for (i = 0, len = WidgetSet.length; i < len; i++) {
+          W = WidgetSet[i];
+          results.push(console.log("reg widget", W, W.name));
+        }
+        return results;
+      }), 1000);
       results = [];
-      for (j = 0, len1 = WidgetSet.length; j < len1; j++) {
-        Widget = WidgetSet[j];
+      for (i = 0, len = WidgetSet.length; i < len; i++) {
+        Widget = WidgetSet[i];
         results.push(this.Registry[Widget.name] = Widget);
       }
       return results;
