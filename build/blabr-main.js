@@ -35,15 +35,14 @@
     };
 
     Widget.getWidget = function() {
-      var name;
-      name = Widget.getName(this);
-      console.log("getWidget", name);
+      var name, ref;
+      name = (ref = this.name) != null ? ref : Widget.getName(this);
       return Widgets.Registry[name];
     };
 
     Widget.getApi = function() {
       var name;
-      name = Widget.getName(this);
+      name = this.name;
       return "$blab.Widgets.Registry." + name;
     };
 
@@ -183,6 +182,7 @@
     Widgets.count = 0;
 
     Widgets.initialize = function() {
+      console.log("======= Widgets initialize");
       this.Layout = Layout;
       if (this.widgetEditor == null) {
         this.widgetEditor = new WidgetEditor(this.filename);

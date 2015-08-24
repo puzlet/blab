@@ -25,12 +25,12 @@ class Widget
   
   @getWidget: ->
     #console.log "Widget @", Widget.getName(@)  #/^function\s+([\w\$]+)\s*\(/.exec(@.toString())[1]  #Widget.getName(@)
-    name = Widget.getName(@)
-    console.log "getWidget", name
+    name = @name ? Widget.getName(@)
+    #console.log "getWidget", name
     Widgets.Registry[name]
   
   @getApi: ->
-    name = Widget.getName(@)
+    name = @name #? Widget.getName(@)
     "$blab.Widgets.Registry."+name
   
   @layoutPreamble: ->
@@ -122,6 +122,8 @@ class Widgets
   @count: 0
   
   @initialize: ->
+    
+    console.log "======= Widgets initialize"
     
     @Layout = Layout
     

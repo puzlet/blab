@@ -23,28 +23,29 @@ module.exports = function(grunt) {
         dest: 'js/<%= pkg.name %>.js'
       }
     },
-    uglify: {
-      options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-      },
-      build: {
-        src: 'js/<%= pkg.name %>.js',
-        dest: 'js/<%= pkg.name %>.min.js'
-      }
-    },
+    // uglify: {
+    //   options: {
+    //     banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+    //   },
+    //   build: {
+    //     src: 'js/<%= pkg.name %>.js',
+    //     dest: 'js/<%= pkg.name %>.min.js'
+    //   }
+    // },
     watch: {
       files: ['src/*.coffee'],
-      tasks: ['coffee', 'concat', 'uglify']
+      tasks: ['coffee', 'concat']
+//      tasks: ['coffee', 'concat', 'uglify']
     }
   });
   
   // Load the plugins.
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
+  //grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   
   // Default task(s).
-  grunt.registerTask('default', ['coffee', 'concat', 'uglify']);
-
+  grunt.registerTask('default', ['coffee', 'concat']);
+  //grunt.registerTask('default', ['coffee', 'concat', 'uglify']);
 };
