@@ -1583,7 +1583,7 @@ class Background
   
   constructor: (background) ->
     
-    if background
+    if background and screen.width>=1024
       $(document.body).css backgroundImage: "url(#{background})"
       $("#outer-container").addClass "outer-background"
       $("#outer-container").css
@@ -1803,7 +1803,7 @@ class App
     
     $pz.renderHtml = => @markdownEditor.process()
     
-    $(".footer").append("screen width: " + screen.width)
+    #$(".footer").append("screen width: " + screen.width)
     
   initEditors: ->
     #console.log "**** initEditors"

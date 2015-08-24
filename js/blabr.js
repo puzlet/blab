@@ -2266,7 +2266,7 @@
 
   Background = (function() {
     function Background(background) {
-      if (background) {
+      if (background && screen.width >= 1024) {
         $(document.body).css({
           backgroundImage: "url(" + background + ")"
         });
@@ -2641,12 +2641,11 @@
       })(this));
       this.settingsObj = new Settings;
       this.errors = new Errors;
-      $pz.renderHtml = (function(_this) {
+      return $pz.renderHtml = (function(_this) {
         return function() {
           return _this.markdownEditor.process();
         };
       })(this);
-      return $(".footer").append("screen width: " + screen.width);
     };
 
     App.prototype.initEditors = function() {
