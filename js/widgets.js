@@ -826,7 +826,7 @@
       sel = window.getSelection();
       sel.removeAllRanges();
       console.log(sel, sel.addRange, range);
-      if (range) {
+      if (range && typeof range === "object") {
         return sel != null ? typeof sel.addRange === "function" ? sel.addRange(range) : void 0 : void 0;
       }
     };

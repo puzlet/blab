@@ -558,7 +558,7 @@ class EditableCell
     sel = window.getSelection()
     sel.removeAllRanges()
     console.log sel, sel.addRange, range
-    sel?.addRange?(range) if range #and Object.keys(range).length isnt 0
+    sel?.addRange?(range) if range and typeof range is "object" #and Object.keys(range).length isnt 0
   
   click: (e) ->
     @div.focus()
