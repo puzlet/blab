@@ -96,12 +96,12 @@ class Widgets
   
   @register: (WidgetSet) ->
     console.log "Register", WidgetSet
-    setTimeout (->
-      for W in WidgetSet
-        console.log "reg widget", W, W.name, /^function\s+([\w\$]+)\s*\(/.exec( W.toString() )[ 1 ]
-    ), 1000
+    # setTimeout (->
+    #   for W in WidgetSet
+    #     console.log "reg widget", W, W.name, /^function\s+([\w\$]+)\s*\(/.exec( W.toString() )[ 1 ]
+    # ), 1000
     for Widget in WidgetSet
-      name = Widget.name ? /^function\s+([\w\$]+)\s*\(/.exec(W.toString())[1]
+      name = Widget.name ? /^function\s+([\w\$]+)\s*\(/.exec(Widget.toString())[1]
       @Registry[name] = Widget
   
   @widgets: {}

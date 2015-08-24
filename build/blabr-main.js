@@ -168,8 +168,8 @@
       results = [];
       for (i = 0, len = WidgetSet.length; i < len; i++) {
         Widget = WidgetSet[i];
-        name = (ref = Widget.name) != null ? ref : /^function\s+([\w\$]+)\s*\(/.exec(W.toString())[1];
-        results.push(this.Registry[Widget.name] = Widget);
+        name = (ref = Widget.name) != null ? ref : /^function\s+([\w\$]+)\s*\(/.exec(Widget.toString())[1];
+        results.push(this.Registry[name] = Widget);
       }
       return results;
     };
