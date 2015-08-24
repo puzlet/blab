@@ -17,11 +17,11 @@ class Widget
   @register: (W) -> Widgets.register W
   
   @getWidget: ->
-    name = @name ? "Slider"
+    name = @name ? @cName
     Widgets.Registry[name]
   
   @getApi: ->
-    name = @name ? "Slider"
+    name = @name ? @cName
     "$blab.Widgets.Registry."+name
   
   @layoutPreamble: ->
@@ -105,7 +105,7 @@ class Widgets
     #     console.log "reg widget", W, W.name, /^function\s+([\w\$]+)\s*\(/.exec( W.toString() )[ 1 ]
     # ), 1000
     for Widget in WidgetSet
-      name = Widget.name ? /^function\s+([\w\$]+)\s*\(/.exec(Widget.toString())[1]
+      name = Widget.name ? Widget.cName #/^function\s+([\w\$]+)\s*\(/.exec(Widget.toString())[1]
       console.log "Widget", name
       @Registry[name] = Widget
   

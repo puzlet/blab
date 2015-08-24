@@ -29,13 +29,13 @@
 
     Widget.getWidget = function() {
       var name, ref;
-      name = (ref = this.name) != null ? ref : "Slider";
+      name = (ref = this.name) != null ? ref : this.cName;
       return Widgets.Registry[name];
     };
 
     Widget.getApi = function() {
       var name, ref;
-      name = (ref = this.name) != null ? ref : "Slider";
+      name = (ref = this.name) != null ? ref : this.cName;
       return "$blab.Widgets.Registry." + name;
     };
 
@@ -163,7 +163,7 @@
       results = [];
       for (i = 0, len = WidgetSet.length; i < len; i++) {
         Widget = WidgetSet[i];
-        name = (ref = Widget.name) != null ? ref : /^function\s+([\w\$]+)\s*\(/.exec(Widget.toString())[1];
+        name = (ref = Widget.name) != null ? ref : Widget.cName;
         console.log("Widget", name);
         results.push(this.Registry[name] = Widget);
       }

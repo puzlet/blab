@@ -16,6 +16,8 @@
 
     Input.handle = "input";
 
+    Input.cName = "Input";
+
     Input.initVal = 0;
 
     Input.initSpec = function(id) {
@@ -128,6 +130,8 @@
     }
 
     Slider.handle = "slider";
+
+    Slider.cName = "Slider";
 
     Slider.initVal = 5;
 
@@ -267,6 +271,8 @@
     }
 
     Table.handle = "table";
+
+    Table.cName = "Table";
 
     Table.initSpec = function(id, v) {
       return "title: \"" + id + "\"\nheadings: []  # [\"Column 1\", \"Column 2\"]\nwidths: 100  #[100, 100]\npos: 1, order: 1";
@@ -1175,6 +1181,8 @@
     }
 
     Plot.handle = "plot";
+
+    Plot.cName = "Plot";
 
     Plot.initSpec = function(id) {
       return "title: \"" + id + "\"\nwidth: 300, height: 200\nxlabel: \"x\", ylabel: \"y\"\n# xaxis: {min: 0, max: 1}\n# yaxis: {min: 0, max: 1}\nseries: {lines: lineWidth: 1}\ncolors: [\"red\", \"blue\"]\ngrid: {backgroundColor: \"white\"}\npos: 1, order: 1";

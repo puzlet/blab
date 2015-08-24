@@ -5,6 +5,7 @@ Widget = $blab.Widget
 class Input extends Widget
   
   @handle: "input"
+  @cName: "Input"
   
   @initVal: 0
   
@@ -86,6 +87,7 @@ class Input extends Widget
 class Slider extends Widget
   
   @handle: "slider"
+  @cName: "Slider"
   
   @initVal: 5
   
@@ -186,6 +188,7 @@ class Slider extends Widget
 class Table extends Widget
   
   @handle: "table"
+  @cName: "Table"
   
   @initSpec: (id, v) ->
     """
@@ -807,6 +810,7 @@ class TableCellSelector
 class Plot extends Widget
   
   @handle: "plot"
+  @cName: "Plot"
   
   @initSpec: (id) -> """
     title: "#{id}"
