@@ -16,12 +16,17 @@ class Widget
   
   @register: (W) -> Widgets.register W
   
+  @getName: (W) ->
+    # For browsers that don't support W.name (e.g., IE).
+    W.name ? /^function\s+([\w\$]+)\s*\(/.exec(W.toString())[1]
+  
   @getWidget: ->
-    name = @name ? @cName
+    #console.log "Widget @", Widget.getName(@)  #/^function\s+([\w\$]+)\s*\(/.exec(@.toString())[1]  #Widget.getName(@)
+    name = Widget.getName(@)
     Widgets.Registry[name]
   
   @getApi: ->
-    name = @name ? @cName
+    name = Widget.getName(@)
     "$blab.Widgets.Registry."+name
   
   @layoutPreamble: ->

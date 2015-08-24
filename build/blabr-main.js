@@ -27,15 +27,20 @@
       return Widgets.register(W);
     };
 
+    Widget.getName = function(W) {
+      var ref;
+      return (ref = W.name) != null ? ref : /^function\s+([\w\$]+)\s*\(/.exec(W.toString())[1];
+    };
+
     Widget.getWidget = function() {
-      var name, ref;
-      name = (ref = this.name) != null ? ref : this.cName;
+      var name;
+      name = Widget.getName(this);
       return Widgets.Registry[name];
     };
 
     Widget.getApi = function() {
-      var name, ref;
-      name = (ref = this.name) != null ? ref : this.cName;
+      var name;
+      name = Widget.getName(this);
       return "$blab.Widgets.Registry." + name;
     };
 
