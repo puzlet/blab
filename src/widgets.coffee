@@ -533,7 +533,7 @@ class EditableCell
       focus: (e) =>
         @clickCell()
         #e.preventDefault()
-        setTimeout (=> @selectElementContents @div[0]), 0
+        setTimeout (=> @selectElementContents @div[0]), 10
       
       mousedown: (e) => $.event.trigger "clickInputWidget"
       #mouseup: (e) => e.stopPropagation()
