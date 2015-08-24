@@ -825,7 +825,9 @@
       range.selectNodeContents(el);
       sel = window.getSelection();
       sel.removeAllRanges();
-      return sel != null ? typeof sel.addRange === "function" ? sel.addRange(range) : void 0 : void 0;
+      if (range) {
+        return sel != null ? typeof sel.addRange === "function" ? sel.addRange(range) : void 0 : void 0;
+      }
     };
 
     EditableCell.prototype.click = function(e) {

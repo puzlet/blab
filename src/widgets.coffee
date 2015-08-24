@@ -557,7 +557,7 @@ class EditableCell
     range.selectNodeContents(el)
     sel = window.getSelection()
     sel.removeAllRanges()
-    sel?.addRange?(range)
+    sel?.addRange?(range) if range
   
   click: (e) ->
     @div.focus()
