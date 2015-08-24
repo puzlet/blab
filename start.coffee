@@ -1,5 +1,5 @@
 #!vanilla
 
 $blab.blabrApp = new $blab.AppClass
-$blab.Widget.register $blab.baseWidgets
+setTimeout (-> $blab.Widget.register $blab.baseWidgets), 1000
 
