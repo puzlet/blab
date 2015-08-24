@@ -16,14 +16,17 @@ class Widget
   
   @register: (W) -> Widgets.register W
   
-  @getWidget: -> Widgets.Registry[@name]
+  @getWidget: ->
+    name = @name ? "Slider"
+    Widgets.Registry[name]
   
-  @getApi: -> "$blab.Widgets.Registry."+@name
+  @getApi: ->
+    name = @name ? "Slider"
+    "$blab.Widgets.Registry."+name
   
   @layoutPreamble: ->
     W = @getWidget()
     api = @getApi()
-    console.log "W", @name, W
     "#{W.handle} = (id, spec) -> new #{api}(id, spec)"
   
   @computePreamble: ->

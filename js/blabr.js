@@ -28,18 +28,21 @@
     };
 
     Widget.getWidget = function() {
-      return Widgets.Registry[this.name];
+      var name, ref;
+      name = (ref = this.name) != null ? ref : "Slider";
+      return Widgets.Registry[name];
     };
 
     Widget.getApi = function() {
-      return "$blab.Widgets.Registry." + this.name;
+      var name, ref;
+      name = (ref = this.name) != null ? ref : "Slider";
+      return "$blab.Widgets.Registry." + name;
     };
 
     Widget.layoutPreamble = function() {
       var W, api;
       W = this.getWidget();
       api = this.getApi();
-      console.log("W", this.name, W);
       return W.handle + " = (id, spec) -> new " + api + "(id, spec)";
     };
 
