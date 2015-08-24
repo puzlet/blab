@@ -161,7 +161,7 @@
         results = [];
         for (i = 0, len = WidgetSet.length; i < len; i++) {
           W = WidgetSet[i];
-          results.push(console.log("reg widget", W, W.name));
+          results.push(console.log("reg widget", W, W.name, /^function\s+([\w\$]+)\s*\(/.exec(W.toString())[1]));
         }
         return results;
       }), 1000);

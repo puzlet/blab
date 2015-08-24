@@ -98,7 +98,7 @@ class Widgets
     console.log "Register", WidgetSet
     setTimeout (->
       for W in WidgetSet
-        console.log "reg widget", W, W.name
+        console.log "reg widget", W, W.name, /^function\s+([\w\$]+)\s*\(/.exec( W.toString() )[ 1 ]
     ), 1000
     @Registry[Widget.name] = Widget for Widget in WidgetSet
   
