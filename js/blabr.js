@@ -154,11 +154,11 @@
     Widgets.Registry = {};
 
     Widgets.register = function(WidgetSet) {
-      var i, j, len, len1, results;
+      var W, i, j, len, len1, results;
       console.log("Register", WidgetSet);
       for (i = 0, len = WidgetSet.length; i < len; i++) {
-        Widget = WidgetSet[i];
-        console.log("reg widget", Widget.name);
+        W = WidgetSet[i];
+        console.log("reg widget", W, W.name);
       }
       results = [];
       for (j = 0, len1 = WidgetSet.length; j < len1; j++) {
