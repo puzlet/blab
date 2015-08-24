@@ -18,11 +18,13 @@ class Widget
   
   @getName: (W) ->
     # For browsers that don't support W.name (e.g., IE).
-    W.name ? /^function\s+([\w\$]+)\s*\(/.exec(W.toString())[1]
+    #W.name ?
+    /^function\s+([\w\$]+)\s*\(/.exec(W.toString())[1]
   
   @getWidget: ->
     #console.log "Widget @", Widget.getName(@)  #/^function\s+([\w\$]+)\s*\(/.exec(@.toString())[1]  #Widget.getName(@)
     name = Widget.getName(@)
+    console.log "getWidget", name
     Widgets.Registry[name]
   
   @getApi: ->

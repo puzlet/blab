@@ -28,13 +28,13 @@
     };
 
     Widget.getName = function(W) {
-      var ref;
-      return (ref = W.name) != null ? ref : /^function\s+([\w\$]+)\s*\(/.exec(W.toString())[1];
+      return /^function\s+([\w\$]+)\s*\(/.exec(W.toString())[1];
     };
 
     Widget.getWidget = function() {
       var name;
       name = Widget.getName(this);
+      console.log("getWidget", name);
       return Widgets.Registry[name];
     };
 
