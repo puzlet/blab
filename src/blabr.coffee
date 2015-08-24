@@ -19,7 +19,9 @@ class Widget
   @getName: (W) ->
     # For browsers that don't support W.name (e.g., IE).
     #W.name ?
-    /^function\s+([\w\$]+)\s*\(/.exec(W.toString())[1]
+    name = /^function\s+([\w\$]+)\s*\(/.exec(W.toString())[1]
+    console.log "W/name", W, name
+    name
   
   @getWidget: ->
     #console.log "Widget @", Widget.getName(@)  #/^function\s+([\w\$]+)\s*\(/.exec(@.toString())[1]  #Widget.getName(@)

@@ -28,7 +28,10 @@
     };
 
     Widget.getName = function(W) {
-      return /^function\s+([\w\$]+)\s*\(/.exec(W.toString())[1];
+      var name;
+      name = /^function\s+([\w\$]+)\s*\(/.exec(W.toString())[1];
+      console.log("W/name", W, name);
+      return name;
     };
 
     Widget.getWidget = function() {
