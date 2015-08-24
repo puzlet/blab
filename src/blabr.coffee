@@ -102,6 +102,7 @@ class Widgets
     # ), 1000
     for Widget in WidgetSet
       name = Widget.name ? /^function\s+([\w\$]+)\s*\(/.exec(Widget.toString())[1]
+      console.log "Widget", name
       @Registry[name] = Widget
   
   @widgets: {}
