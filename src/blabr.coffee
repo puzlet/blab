@@ -1758,6 +1758,8 @@ class App
   
   constructor: ->
     new GoogleAnalytics
+    console.log "*** BROWSER", $("html").attr("class")
+    alert("Your browser may not be compatible with this web site.") if $("html").attr("class") is "ie12-"
     @loader = new Loader => @init()
   
   init: ->

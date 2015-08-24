@@ -2592,6 +2592,10 @@
   App = (function() {
     function App() {
       new GoogleAnalytics;
+      console.log("*** BROWSER", $("html").attr("class"));
+      if ($("html").attr("class") === "ie12-") {
+        alert("Your browser may not be compatible with this web site.");
+      }
       this.loader = new Loader((function(_this) {
         return function() {
           return _this.init();
