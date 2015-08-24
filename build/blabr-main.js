@@ -4,6 +4,10 @@
     bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
+  if ($("html").attr("class") === "ie") {
+    alert("Your browser may not be compatible with this web site.");
+  }
+
   if (typeof $blab !== "undefined" && $blab !== null ? $blab.layoutProcessed : void 0) {
     return;
   }
@@ -2593,9 +2597,6 @@
     function App() {
       new GoogleAnalytics;
       console.log("*** BROWSER", $("html").attr("class"));
-      if ($("html").attr("class") === "ie") {
-        alert("Your browser may not be compatible with this web site.");
-      }
       this.loader = new Loader((function(_this) {
         return function() {
           return _this.init();
