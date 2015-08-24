@@ -773,7 +773,7 @@
             _this.clickCell();
             return setTimeout((function() {
               return _this.selectElementContents(_this.div[0]);
-            }), 0);
+            }), 10);
           };
         })(this),
         mousedown: (function(_this) {
