@@ -2641,11 +2641,12 @@
       })(this));
       this.settingsObj = new Settings;
       this.errors = new Errors;
-      return $pz.renderHtml = (function(_this) {
+      $pz.renderHtml = (function(_this) {
         return function() {
           return _this.markdownEditor.process();
         };
       })(this);
+      return $(".footer").append("screen width: " + screen.width);
     };
 
     App.prototype.initEditors = function() {

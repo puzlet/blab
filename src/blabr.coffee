@@ -1582,7 +1582,7 @@ class BlabEvents
 class Background
   
   constructor: (background) ->
-      
+    
     if background
       $(document.body).css backgroundImage: "url(#{background})"
       $("#outer-container").addClass "outer-background"
@@ -1802,6 +1802,8 @@ class App
     @errors = new Errors
     
     $pz.renderHtml = => @markdownEditor.process()
+    
+    $(".footer").append("screen width: " + screen.width)
     
   initEditors: ->
     #console.log "**** initEditors"
