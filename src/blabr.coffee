@@ -23,6 +23,7 @@ class Widget
   @layoutPreamble: ->
     W = @getWidget()
     api = @getApi()
+    console.log "W", @name, W
     "#{W.handle} = (id, spec) -> new #{api}(id, spec)"
   
   @computePreamble: ->

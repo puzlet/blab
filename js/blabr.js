@@ -39,6 +39,7 @@
       var W, api;
       W = this.getWidget();
       api = this.getApi();
+      console.log("W", this.name, W);
       return W.handle + " = (id, spec) -> new " + api + "(id, spec)";
     };
 
