@@ -155,6 +155,7 @@
 
     Widgets.register = function(WidgetSet) {
       var i, len, results;
+      console.log("Register", WidgetSet);
       results = [];
       for (i = 0, len = WidgetSet.length; i < len; i++) {
         Widget = WidgetSet[i];

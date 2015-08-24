@@ -95,6 +95,7 @@ class Widgets
   @Registry: {}
   
   @register: (WidgetSet) ->
+    console.log "Register", WidgetSet
     @Registry[Widget.name] = Widget for Widget in WidgetSet
   
   @widgets: {}
