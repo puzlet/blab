@@ -1,7 +1,8 @@
 #!vanilla
 
 console.log "---Blabr", $("html").attr("class")
-alert("Your browser may not be compatible with this web site.") if $("html").attr("class") is "ie"
+ie11 = /rv:11.0/i.test(navigator.userAgent)  
+alert("IE not currently supported.") if $("html").attr("class") is "ie" or ie11
 
 # Hack to process only once - not needed?
 return if $blab?.layoutProcessed

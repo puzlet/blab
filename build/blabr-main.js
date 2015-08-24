@@ -1,13 +1,15 @@
 (function() {
-  var App, Background, BlabEvents, Buttons, Computation, ComputationButtons, ComputationEditor, Definitions, EditPageButton, Errors, GoogleAnalytics, Layout, Loader, MarkdownEditor, PopupEditorManager, Settings, TextEditor, Widget, WidgetEditor, Widgets, codeSections,
+  var App, Background, BlabEvents, Buttons, Computation, ComputationButtons, ComputationEditor, Definitions, EditPageButton, Errors, GoogleAnalytics, Layout, Loader, MarkdownEditor, PopupEditorManager, Settings, TextEditor, Widget, WidgetEditor, Widgets, codeSections, ie11,
     slice = [].slice,
     bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   console.log("---Blabr", $("html").attr("class"));
 
-  if ($("html").attr("class") === "ie") {
-    alert("Your browser may not be compatible with this web site.");
+  ie11 = /rv:11.0/i.test(navigator.userAgent);
+
+  if ($("html").attr("class") === "ie" || ie11) {
+    alert("IE not currently supported.");
   }
 
   if (typeof $blab !== "undefined" && $blab !== null ? $blab.layoutProcessed : void 0) {
