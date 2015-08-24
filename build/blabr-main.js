@@ -166,14 +166,14 @@
     Widgets.Registry = {};
 
     Widgets.register = function(WidgetSet) {
-      var i, len, name, ref, results;
+      var W, i, len, name, results;
       console.log("Register", WidgetSet);
       results = [];
       for (i = 0, len = WidgetSet.length; i < len; i++) {
-        Widget = WidgetSet[i];
-        name = (ref = Widget.name) != null ? ref : Widget.cName;
+        W = WidgetSet[i];
+        name = Widget.getName(W);
         console.log("Widget", name);
-        results.push(this.Registry[name] = Widget);
+        results.push(this.Registry[name] = W);
       }
       return results;
     };
