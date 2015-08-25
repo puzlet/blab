@@ -4,7 +4,7 @@
     bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-  console.log("---Blabr", $("html").attr("class"));
+  console.log("---Blabr", navigator.userAgent);
 
   $blab.isIe10 = /rv:10.0/i.test(navigator.userAgent);
 
