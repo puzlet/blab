@@ -112,6 +112,7 @@
         src: "img/play.png",
         css: {
           height: 60,
+          width: 60,
           cursor: "pointer"
         },
         click: (function(_this) {
