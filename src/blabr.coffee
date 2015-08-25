@@ -30,7 +30,7 @@ class Widget
     Widgets.Registry[name]
   
   @getApi: ->
-    name = @name #? Widget.getName(@)
+    name = @name ? Widget.getName(@)
     "$blab.Widgets.Registry."+name
   
   @layoutPreamble: ->
