@@ -1,7 +1,7 @@
 #!vanilla
 
 console.log "---Blabr", navigator.userAgent
-$blab.isIe10 = /rv:10.0/i.test(navigator.userAgent)
+$blab.isIe10 = /MSIE 10.0/i.test(navigator.userAgent)
 $blab.isIe11 = /rv:11.0/i.test(navigator.userAgent)
 $blab.isLteIe9 = $("html").attr("class") is "ie"
 $blab.isIe = $blab.isLteIe9 or $blab.isIe10 or $blab.isIe11
