@@ -1100,8 +1100,10 @@ class Definitions
       @allLoaded = false
     
     @resources.loadUnloaded =>
-      @setHeading()
       @coffee.compile()
+      
+    $(document).on "aceFilesLoaded", =>
+      @setHeading()
       
   setHeading: ->
     $("#defs-code-heading").html "Definitions <div id='defs-hint' class='code-hint'>Press shift-enter to run</div>"

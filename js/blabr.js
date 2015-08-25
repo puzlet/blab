@@ -1504,8 +1504,12 @@
       })(this));
       this.resources.loadUnloaded((function(_this) {
         return function() {
-          _this.setHeading();
           return _this.coffee.compile();
+        };
+      })(this));
+      $(document).on("aceFilesLoaded", (function(_this) {
+        return function() {
+          return _this.setHeading();
         };
       })(this));
     }
