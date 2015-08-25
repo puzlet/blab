@@ -6,7 +6,7 @@
 
   console.log("---Blabr", navigator.userAgent);
 
-  $blab.isIe10 = /rv:10.0/i.test(navigator.userAgent);
+  $blab.isIe10 = /MSIE 10.0/i.test(navigator.userAgent);
 
   $blab.isIe11 = /rv:11.0/i.test(navigator.userAgent);
 
