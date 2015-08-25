@@ -41,8 +41,8 @@
     };
 
     Widget.getApi = function() {
-      var name;
-      name = this.name;
+      var name, ref;
+      name = (ref = this.name) != null ? ref : Widget.getName(this);
       return "$blab.Widgets.Registry." + name;
     };
 
