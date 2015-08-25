@@ -10,9 +10,11 @@
 
   $blab.isIe11 = /rv:11.0/i.test(navigator.userAgent);
 
-  $blab.isIe = $("html").attr("class") === "ie" || $blab.isIe10 || $blab.isIe11;
+  $blab.isLteIe9 = $("html").attr("class") === "ie";
 
-  if ($blab.isIe) {
+  $blab.isIe = $blab.isLteIe9 || $blab.isIe10 || $blab.isIe11;
+
+  if ($blab.isLteIe9) {
     alert("This version of IE not currently supported.  Please try Chrome/Safari/Firefox/IE10+.");
   }
 
