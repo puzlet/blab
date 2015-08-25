@@ -1,8 +1,8 @@
 #!vanilla
 
 console.log "---Blabr", $("html").attr("class")
-ie11 = /rv:11.0/i.test(navigator.userAgent)  
-alert("IE not currently supported.") if $("html").attr("class") is "ie" or ie11
+$blab.isIe11 = /rv:11.0/i.test(navigator.userAgent)  
+alert("IE not currently supported.") if $("html").attr("class") is "ie" #or $blab.isIe11
 
 # Hack to process only once - not needed?
 return if $blab?.layoutProcessed

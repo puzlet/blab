@@ -826,7 +826,7 @@
       sel = window.getSelection();
       sel.removeAllRanges();
       console.log(sel, sel.addRange, range);
-      if (range && typeof range === "object") {
+      if (!$blab.isIe11) {
         return sel != null ? typeof sel.addRange === "function" ? sel.addRange(range) : void 0 : void 0;
       }
     };
