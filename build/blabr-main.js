@@ -404,7 +404,9 @@
       this.aceEditor = this.editor.editor;
       this.setViewPort(null);
       this.editor.onChange((function(_this) {
-        return function() {};
+        return function() {
+          return _this.showTip();
+        };
       })(this));
       this.aceEditor.setShowFoldWidgets(true);
       this.container = this.editor.container;
@@ -526,17 +528,24 @@
       })(this));
     };
 
+    WidgetEditor.prototype.showTip = function() {
+      var ref, ref1, ref2;
+      if (!((ref = this.del) != null ? ref.is(':empty') : void 0) && this.edited) {
+        return;
+      }
+      this.edited = true;
+      if ((ref1 = this.del) != null) {
+        ref1.css({
+          color: "#aaa"
+        });
+      }
+      return (ref2 = this.del) != null ? ref2.html("Press shift-return to update") : void 0;
+    };
+
     WidgetEditor.prototype.deleteButton = function() {
       var ref, ref1, widget;
       if ((ref = this.del) != null) {
         ref.empty();
-      }
-      if (!this.currentId) {
-        return;
-      }
-      widget = Widgets.widgets[this.currentId];
-      if (widget.used) {
-        return;
       }
       if (!((ref1 = this.del) != null ? ref1.length : void 0)) {
         this.del = $("<div>", {
@@ -548,6 +557,13 @@
           }
         });
         this.editor.editorContainer.append(this.del);
+      }
+      if (!this.currentId) {
+        return;
+      }
+      widget = Widgets.widgets[this.currentId];
+      if (widget.used) {
+        return;
       }
       this.delButton = $("<span>", {
         text: "Delete",

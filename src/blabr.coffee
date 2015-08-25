@@ -276,7 +276,7 @@ class WidgetEditor #extends PopupEditor
     @aceEditor = @editor.editor
     @setViewPort null
     # ZZZ init folding here?
-    @editor.onChange =>
+    @editor.onChange => @showTip()
     @aceEditor.setShowFoldWidgets true
     
     @container = @editor.container
@@ -370,14 +370,16 @@ class WidgetEditor #extends PopupEditor
     @parent.slideDown 400, =>
       @sliding = false
       @next()
+  
+  showTip: ->
+    return if not @del?.is(':empty') and @edited
+    @edited = true
+    @del?.css color: "#aaa"
+    @del?.html "Press shift-return to update"
     
   deleteButton: ->
     
     @del?.empty()
-    
-    return unless @currentId
-    widget = Widgets.widgets[@currentId]  # ZZZ make method
-    return if widget.used
     
     unless @del?.length
       @del = $ "<div>",
@@ -387,6 +389,10 @@ class WidgetEditor #extends PopupEditor
           top: 5
           right: 15
       @editor.editorContainer.append @del
+    
+    return unless @currentId
+    widget = Widgets.widgets[@currentId]  # ZZZ make method
+    return if widget.used
       
     @delButton = $ "<span>",
       text: "Delete"
