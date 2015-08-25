@@ -9,7 +9,7 @@
   $blab.isIe11 = /rv:11.0/i.test(navigator.userAgent);
 
   if ($("html").attr("class") === "ie") {
-    alert("IE not currently supported.");
+    alert("This version of IE not currently supported.  Please try Chrome/Safari/Firefox/IE10+.");
   }
 
   if (typeof $blab !== "undefined" && $blab !== null ? $blab.layoutProcessed : void 0) {
