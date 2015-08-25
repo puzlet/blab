@@ -30,7 +30,6 @@
     Widget.getName = function(W) {
       var name, ref;
       name = (ref = W.name) != null ? ref : /^function\s+([\w\$]+)\s*\(/.exec(W.toString())[1];
-      console.log("W/name", W, name);
       return name;
     };
 
