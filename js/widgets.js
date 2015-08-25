@@ -185,14 +185,14 @@
           };
         })(this),
         mouseup: (function(_this) {
-          return function(e) {
-            return e.stopPropagation();
-          };
+          return function(e) {};
         })(this)
       });
       this.outer.append(this.sliderContainer);
-      this.outer.mouseup(function() {
-        return clickEvent();
+      this.outer.mouseup(function(evt) {
+        if (!$(evt.target).hasClass("ui-slider-handle")) {
+          return clickEvent();
+        }
       });
       this.textContainer = $("<div>", {
         "class": "slider-text-container"

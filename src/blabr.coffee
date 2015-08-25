@@ -984,7 +984,8 @@ class Layout
       for col in row
         c = $ "<div>",
           class: col
-          mouseup: (evt) => @trigger "clickBox", {evt}
+          mouseup: (evt) =>
+            @trigger "clickBox", {evt}
         c.addClass "layout-box"
         @appendNum c, n
         n++
@@ -1015,7 +1016,9 @@ class Layout
         c = $ "<div>",
           id: boxId
           class: boxClass
-          mouseup: (evt) => @trigger "clickBox", {evt}  # Use mouseup instead of click so can control propagation.
+          mouseup: (evt) =>
+            return if $(evt.target).hasClass("ui-slider-handle")  # Hack to prevent slider mouseup triggering clickBox.
+            @trigger "clickBox", {evt}  # Use mouseup instead of click so can control propagation.
         c.addClass "layout-box"
         r.append c
         @appendNum c, n

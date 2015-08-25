@@ -1379,6 +1379,10 @@
             "class": boxClass,
             mouseup: (function(_this) {
               return function(evt) {
+                if ($(evt.target).hasClass("ui-slider-handle")) {
+                  return;
+                }
+                console.log("layout evt", evt.target);
                 return _this.trigger("clickBox", {
                   evt: evt
                 });

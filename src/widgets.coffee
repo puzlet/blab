@@ -131,13 +131,16 @@ class Slider extends Widget
     @sliderContainer = $ "<div>",
       class: "puzlet-slider"
       id: @domId()
-      mousedown: (e) => $.event.trigger "clickInputWidget"
+      mousedown: (e) =>
+        $.event.trigger "clickInputWidget" #unless $(evt.target).hasClass("ui-slider-handle")
       mouseup: (e) =>
-        e.stopPropagation() 
+#        e.preventDefault()
+#        e.stopPropagation() if $(evt.target).hasClass("ui-slider-handle")
       #click: => clickEvent()
     @outer.append @sliderContainer
         
-    @outer.mouseup -> clickEvent()
+    @outer.mouseup (evt) ->
+      clickEvent() unless $(evt.target).hasClass("ui-slider-handle")
     
     @textContainer = $ "<div>", class: "slider-text-container"
     @outer.append @textContainer
