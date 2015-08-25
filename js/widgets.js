@@ -826,7 +826,7 @@
       sel = window.getSelection();
       sel.removeAllRanges();
       console.log(sel, sel.addRange, range);
-      if (!$blab.isIe11) {
+      if (!$blab.isIe) {
         return sel != null ? typeof sel.addRange === "function" ? sel.addRange(range) : void 0 : void 0;
       }
     };
