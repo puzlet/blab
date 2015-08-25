@@ -1,6 +1,6 @@
 #!vanilla
 
-console.log "---Blabr", $("html").attr("class")
+console.log "---Blabr", navigator.userAgent
 $blab.isIe10 = /rv:10.0/i.test(navigator.userAgent)
 $blab.isIe11 = /rv:11.0/i.test(navigator.userAgent)
 $blab.isLteIe9 = $("html").attr("class") is "ie"
