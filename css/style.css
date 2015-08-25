@@ -46,7 +46,8 @@ h1 {
   margin-right: 0.8ex;
   margin-top: 3px;
   vertical-align: top;
-  text-decoration: none;
+  border: none;
+  outline: none;
 }
 
 #top-banner a {
