@@ -825,7 +825,6 @@
       range.selectNodeContents(el);
       sel = window.getSelection();
       sel.removeAllRanges();
-      console.log(sel, sel.addRange, range);
       if (!$blab.isIe) {
         return sel != null ? typeof sel.addRange === "function" ? sel.addRange(range) : void 0 : void 0;
       }

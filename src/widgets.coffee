@@ -557,7 +557,7 @@ class EditableCell
     range.selectNodeContents(el)
     sel = window.getSelection()
     sel.removeAllRanges()
-    console.log sel, sel.addRange, range
+    #console.log sel, sel.addRange, range
     sel?.addRange?(range) unless $blab.isIe #and Object.keys(range).length isnt 0
   
   click: (e) ->
