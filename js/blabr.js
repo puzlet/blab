@@ -1126,7 +1126,8 @@
       headings = $(":header");
       $blab.title = headings.length ? headings[0].innerHTML : "Puzlet";
       console.log("MarkdownEditor::setTitle", $blab.title);
-      if ($blab.title !== "Untitled") {
+      if ($blab.title !== "Untitled" && document.title !== $blab.title) {
+        $.event.trigger("changeBlabTitle");
         return document.title = $blab.title;
       }
     };
@@ -1382,7 +1383,6 @@
                 if ($(evt.target).hasClass("ui-slider-handle")) {
                   return;
                 }
-                console.log("layout evt", evt.target);
                 return _this.trigger("clickBox", {
                   evt: evt
                 });
@@ -1735,7 +1735,11 @@
               url: url,
               source: source
             });
+            console.log("%%%%%%%%%%% coffee", coffee);
             coffee.gistData = data;
+            if (coffee.location == null) {
+              coffee.location = {};
+            }
             coffee.location.inBlab = false;
             return _this.doLoad(coffee, callback);
           };
@@ -2601,7 +2605,7 @@
           return title;
         }
       };
-      this.track("blabEditorsInitialized", "blab", "view", title);
+      this.track("changeBlabTitle", "blab", "view", title);
       this.track("codeNodeChanged", "blab", "firstEdit", title, ((function(_this) {
         return function() {
           return !_this.codeChanged;
@@ -2722,11 +2726,6 @@
           return _this.computationEditor.initFocusBlur();
         };
       })(this)), 900);
-      this.markdownEditor.on("initialized", (function(_this) {
-        return function() {
-          return $.event.trigger("blabEditorsInitialized");
-        };
-      })(this));
       if ($blab.resources.getSource == null) {
         return this.editors.enable();
       }

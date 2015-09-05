@@ -824,7 +824,10 @@ class MarkdownEditor #extends PopupEditor
     headings = $ ":header"
     $blab.title = if headings.length then headings[0].innerHTML else "Puzlet"
     console.log "MarkdownEditor::setTitle", $blab.title
-    document.title = $blab.title unless $blab.title is "Untitled"
+    if $blab.title isnt "Untitled" and document.title isnt $blab.title
+      #console.log "%%%%%%%%%% changeBlabTitle"
+      $.event.trigger "changeBlabTitle"
+      document.title = $blab.title #unless $blab.title is "Untitled"
       
   setViewPort: (start) ->
     
@@ -1235,7 +1238,9 @@ class Definitions
       @gist gistId, (data) =>
         source = data.defs
         coffee = @resources.add {url: url, source: source}
+        console.log "%%%%%%%%%%% coffee", coffee
         coffee.gistData = data  # Hack to let Ace access gist description/author
+        coffee.location ?= {}  # Hack for FF
         coffee.location.inBlab = false  # Hack for gist save
         @doLoad coffee, callback
       return
@@ -1780,7 +1785,7 @@ class GoogleAnalytics
       id = $blab.github?.gist?.id
       title = if $blab.title is "Untitled" and not id then "---Home Page---" else $blab.title
       if id then "#{title} [#{id}]" else title
-    @track "blabEditorsInitialized", "blab", "view", title
+    @track "changeBlabTitle", "blab", "view", title
     @track "codeNodeChanged", "blab", "firstEdit", title, (=> not @codeChanged), (=> @codeChanged = true)
     @track "saveGitHub", "blab", "saveButton", title
     @track "createBlab", "blab", "createBlab", title
@@ -1863,8 +1868,9 @@ class App
     setTimeout (=> @computationEditor.initFocusBlur()), 900
     
     #setTimeout (-> console.log "*** TITLE", document.title), 2000
-    @markdownEditor.on "initialized", =>
-      $.event.trigger "blabEditorsInitialized"  # For google analytics
+    #@on "changeBlabTitle", =>
+    #  console.log "%%%%%%%%%% blabEditorsInitialized"
+    #  $.event.trigger "blabEditorsInitialized"  # For google analytics
       
     #-------------
     # This isn't working from buttons.
