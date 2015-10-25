@@ -589,7 +589,7 @@ class EditableCell
         @insert(@idx)
       else
         @noChange = true
-        @done(1)
+        @done(0)
       return
       
     if key is backspace

@@ -854,7 +854,7 @@
           this.insert(this.idx);
         } else {
           this.noChange = true;
-          this.done(1);
+          this.done(0);
         }
         return;
       }
