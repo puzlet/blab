@@ -1867,19 +1867,18 @@
     }
 
     Buttons.prototype.logo = function() {
-      var logo, logoDiv;
+      var logo, logoDiv, logoLink;
       logoDiv = $("<div>", {
-        id: "blabr-logo-footer",
-        click: (function(_this) {
-          return function() {
-            return _this.spec.guide();
-          };
-        })(this)
+        id: "blabr-logo-footer"
       });
+      logoLink = $("<a>", {
+        href: "//blabr.io"
+      });
+      logoDiv.append(logoLink);
       logo = $("<img>", {
         src: "img/blabr-logo.png"
       });
-      logoDiv.append(logo).append("Blabr");
+      logoLink.append(logo).append("Blabr");
       return this.append(logoDiv);
     };
 

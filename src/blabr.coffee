@@ -1357,10 +1357,13 @@ class Buttons
   logo: ->
     logoDiv = $ "<div>",
       id: "blabr-logo-footer"
-      click: => @spec.guide()
+      #click: => @spec.guide()
+    logoLink = $ "<a>",
+        href: "//blabr.io"
+    logoDiv.append logoLink
     logo = $ "<img>",
       src: "img/blabr-logo.png"
-    logoDiv.append(logo).append("Blabr")
+    logoLink.append(logo).append("Blabr")
     @append(logoDiv)
   
   startButtons: ->

@@ -431,6 +431,11 @@ div[data-file="layout.coffee"] {
   vertical-align: top;*/
 }
 
+#blabr-logo-footer a {
+  color: #555;
+  text-decoration: none;
+}
+
 #blabr-logo-footer img {
   height: 20px;
   width: 23px;
