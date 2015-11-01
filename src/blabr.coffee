@@ -1356,11 +1356,13 @@ class Buttons
   #  $("#top-banner").append(logoDiv)
   
   logo: ->
+    #console.log "***************BLAB", $blab
     logoDiv = $ "<div>",
       id: "blabr-logo-footer"
       #click: => @spec.guide()
     logoLink = $ "<a>",
-        href: "//blabr.io"
+        href: if $blab.isBare then "//blabr.io?" + $blab.github?.gist?.id else "//blabr.io"
+    logoLink.attr target: "_blank" if $blab.isBare
     logoDiv.append logoLink
     logo = $ "<img>",
       src: "img/blabr-logo.png"

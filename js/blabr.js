@@ -1870,13 +1870,19 @@
     }
 
     Buttons.prototype.logo = function() {
-      var logo, logoDiv, logoLink;
+      var logo, logoDiv, logoLink, ref, ref1;
+      console.log("***************BLAB", $blab);
       logoDiv = $("<div>", {
         id: "blabr-logo-footer"
       });
       logoLink = $("<a>", {
-        href: "//blabr.io"
+        href: $blab.isBare ? "//blabr.io?" + ((ref = $blab.github) != null ? (ref1 = ref.gist) != null ? ref1.id : void 0 : void 0) : "//blabr.io"
       });
+      if ($blab.isBare) {
+        logoLink.attr({
+          target: "_blank"
+        });
+      }
       logoDiv.append(logoLink);
       logo = $("<img>", {
         src: "img/blabr-logo.png"
