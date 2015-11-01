@@ -1830,6 +1830,9 @@
         }
         this.append("<hr>");
         this.logo();
+        if ($blab.isBare) {
+          return;
+        }
         this.docButton();
         this.sep();
         this.sourceButton();
@@ -2672,7 +2675,10 @@
       bare = getParameterByName("bare");
       $blab.isBare = bare === "1";
       if ($blab.isBare) {
-        return $(".footer").css({
+        $(".footer").css({
+          marginBottom: "0px"
+        });
+        return $("#buttons").css({
           marginBottom: "0px"
         });
       }

@@ -1319,6 +1319,7 @@ class Buttons
       #console.log "SETTINGS!", spec.getSettings()
       #$("#computation-code-wrapper").hide()
       @logo()
+      return if $blab.isBare
       @docButton()
       @sep()
       #@append "Powered by "
@@ -1814,14 +1815,15 @@ class App
   
   blabParams: ->
     getParameterByName = (name) ->
-        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]")
-        regex = new RegExp("[\\?&]" + name + "=([^&#]*)")
-        results = regex.exec(location.search)
-        if results is null then "" else decodeURIComponent(results[1].replace(/\+/g, " "))
+      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]")
+      regex = new RegExp("[\\?&]" + name + "=([^&#]*)")
+      results = regex.exec(location.search)
+      if results is null then "" else decodeURIComponent(results[1].replace(/\+/g, " "))
     bare = getParameterByName "bare"
     $blab.isBare = bare is "1"
     if $blab.isBare
       $(".footer").css marginBottom: "0px"
+      $("#buttons").css marginBottom: "0px"
   
   init: ->
     
