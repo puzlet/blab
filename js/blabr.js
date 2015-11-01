@@ -170,16 +170,16 @@
     Widgets.Registry = {};
 
     Widgets.register = function(WidgetSet) {
-      var W, i, len, name, results;
+      var W, i, len, name, results1;
       console.log("Register", WidgetSet);
-      results = [];
+      results1 = [];
       for (i = 0, len = WidgetSet.length; i < len; i++) {
         W = WidgetSet[i];
         name = Widget.getName(W);
         console.log("Widget", name);
-        results.push(this.Registry[name] = W);
+        results1.push(this.Registry[name] = W);
       }
-      return results;
+      return results1;
     };
 
     Widgets.widgets = {};
@@ -359,14 +359,14 @@
     };
 
     Widgets.setAllUnused = function() {
-      var id, ref, results, w;
+      var id, ref, results1, w;
       ref = this.widgets;
-      results = [];
+      results1 = [];
       for (id in ref) {
         w = ref[id];
-        results.push(w.setUsed(false));
+        results1.push(w.setUsed(false));
       }
-      return results;
+      return results1;
     };
 
     return Widgets;
@@ -630,14 +630,14 @@
     };
 
     WidgetEditor.prototype.trigger = function(evt, data) {
-      var i, len, observer, ref, results;
+      var i, len, observer, ref, results1;
       ref = this.observers[evt];
-      results = [];
+      results1 = [];
       for (i = 0, len = ref.length; i < len; i++) {
         observer = ref[i];
-        results.push(observer(data));
+        results1.push(observer(data));
       }
-      return results;
+      return results1;
     };
 
     return WidgetEditor;
@@ -815,14 +815,14 @@
       lines = code.split("\n");
       line = lines[this.currentLine];
       handles = (function() {
-        var ref, results;
+        var ref, results1;
         ref = Widgets.Registry;
-        results = [];
+        results1 = [];
         for (WidgetName in ref) {
           Widget = ref[WidgetName];
-          results.push(Widget.handle);
+          results1.push(Widget.handle);
         }
-        return results;
+        return results1;
       })();
       handlesStr = handles.join("|");
       widgetRegex = new RegExp("(" + handlesStr + ") \"([^\"]*)\"", "g");
@@ -851,14 +851,14 @@
     };
 
     ComputationEditor.prototype.trigger = function(evt, data) {
-      var i, len, observer, ref, results;
+      var i, len, observer, ref, results1;
       ref = this.observers[evt];
-      results = [];
+      results1 = [];
       for (i = 0, len = ref.length; i < len; i++) {
         observer = ref[i];
-        results.push(observer(data));
+        results1.push(observer(data));
       }
-      return results;
+      return results1;
     };
 
     return ComputationEditor;
@@ -1264,14 +1264,14 @@
     };
 
     MarkdownEditor.prototype.trigger = function(evt, data) {
-      var i, len, observer, ref, results;
+      var i, len, observer, ref, results1;
       ref = this.observers[evt];
-      results = [];
+      results1 = [];
       for (i = 0, len = ref.length; i < len; i++) {
         observer = ref[i];
-        results.push(observer(data));
+        results1.push(observer(data));
       }
-      return results;
+      return results1;
     };
 
     return MarkdownEditor;
@@ -1469,14 +1469,14 @@
     };
 
     Layout.trigger = function(evt, data) {
-      var i, len, observer, ref, results;
+      var i, len, observer, ref, results1;
       ref = this.observers[evt];
-      results = [];
+      results1 = [];
       for (i = 0, len = ref.length; i < len; i++) {
         observer = ref[i];
-        results.push(observer(data));
+        results1.push(observer(data));
       }
-      return results;
+      return results1;
     };
 
     return Layout;
@@ -1557,17 +1557,17 @@
       gist = this.use(id);
       return this.main({
         derived: function() {
-          var name, property, results;
-          results = [];
+          var name, property, results1;
+          results1 = [];
           for (name in gist) {
             property = gist[name];
             if (!(name === "loaded" || name === "isImport")) {
-              results.push(this[name] = property);
+              results1.push(this[name] = property);
             } else {
-              results.push(void 0);
+              results1.push(void 0);
             }
           }
-          return results;
+          return results1;
         }
       });
     };
@@ -2098,12 +2098,12 @@
       var name;
       this.container = $(this.containerSel);
       this.filenames = (function() {
-        var results;
-        results = [];
+        var results1;
+        results1 = [];
         for (name in this.errors) {
-          results.push(name);
+          results1.push(name);
         }
-        return results;
+        return results1;
       }).call(this);
       window.onerror = (function(_this) {
         return function(e, url, line) {
@@ -2130,33 +2130,33 @@
     }
 
     Errors.prototype.reset = function(filename) {
-      var e, name, ref, results;
+      var e, name, ref, results1;
       ref = this.errors;
-      results = [];
+      results1 = [];
       for (name in ref) {
         e = ref[name];
         if (filename === name) {
-          results.push(this.errors[name].error = null);
+          results1.push(this.errors[name].error = null);
         } else {
-          results.push(void 0);
+          results1.push(void 0);
         }
       }
-      return results;
+      return results1;
     };
 
     Errors.prototype.set = function(filename, error) {
-      var e, name, ref, results;
+      var e, name, ref, results1;
       ref = this.errors;
-      results = [];
+      results1 = [];
       for (name in ref) {
         e = ref[name];
         if (filename === name) {
-          results.push(this.errors[name].error = error ? error : null);
+          results1.push(this.errors[name].error = error ? error : null);
         } else {
-          results.push(void 0);
+          results1.push(void 0);
         }
       }
-      return results;
+      return results1;
     };
 
     Errors.prototype.disp = function() {
@@ -2306,13 +2306,13 @@
     };
 
     BlabEvents.prototype.unbind = function(events) {
-      var e, i, len, results;
-      results = [];
+      var e, i, len, results1;
+      results1 = [];
       for (i = 0, len = events.length; i < len; i++) {
         e = events[i];
-        results.push($(document).unbind(e));
+        results1.push($(document).unbind(e));
       }
-      return results;
+      return results1;
     };
 
     return BlabEvents;
@@ -2648,12 +2648,35 @@
     function App() {
       new GoogleAnalytics;
       console.log("*** BROWSER", $("html").attr("class"));
+      this.blabParams();
       this.loader = new Loader((function(_this) {
         return function() {
           return _this.init();
         };
       })(this));
     }
+
+    App.prototype.blabParams = function() {
+      var bare, getParameterByName;
+      getParameterByName = function(name) {
+        var regex, results;
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+        results = regex.exec(location.search);
+        if (results === null) {
+          return "";
+        } else {
+          return decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+      };
+      bare = getParameterByName("bare");
+      $blab.isBare = bare === "1";
+      if ($blab.isBare) {
+        return $(".footer").css({
+          marginBottom: "0px"
+        });
+      }
+    };
 
     App.prototype.init = function() {
       new BlabEvents;
@@ -2980,13 +3003,13 @@
       }
       append = (function(_this) {
         return function() {
-          var i, len, p, results;
-          results = [];
+          var i, len, p, results1;
+          results1 = [];
           for (i = 0, len = divs.length; i < len; i++) {
             p = divs[i];
-            results.push($($(p).attr(_this.posAttr)).append($(p)));
+            results1.push($($(p).attr(_this.posAttr)).append($(p)));
           }
-          return results;
+          return results1;
         };
       })(this);
       if (widgets.length) {

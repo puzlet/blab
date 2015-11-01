@@ -1809,7 +1809,19 @@ class App
   constructor: ->
     new GoogleAnalytics
     console.log "*** BROWSER", $("html").attr("class")
+    @blabParams()
     @loader = new Loader => @init()
+  
+  blabParams: ->
+    getParameterByName = (name) ->
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]")
+        regex = new RegExp("[\\?&]" + name + "=([^&#]*)")
+        results = regex.exec(location.search)
+        if results is null then "" else decodeURIComponent(results[1].replace(/\+/g, " "))
+    bare = getParameterByName "bare"
+    $blab.isBare = bare is "1"
+    if $blab.isBare
+      $(".footer").css marginBottom: "0px"
   
   init: ->
     
