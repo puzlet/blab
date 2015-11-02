@@ -1323,6 +1323,7 @@ class Buttons
     if @isBlab
       $("#top-banner").slideUp()
       showCode() if @settings?.showCodeOnLoad and not $blab.layoutPos
+      return if $blab.noLogo
       @append "<hr>"
       #console.log "SETTINGS!", spec.getSettings()
       #$("#computation-code-wrapper").hide()
@@ -1832,6 +1833,7 @@ class App
     bare = getParameterByName "bare"
     $blab.isBare = bare is "1"
     $blab.layoutPos = getParameterByName("pos")
+    $blab.noLogo = getParameterByName("logo") is "0"
     if $blab.isBare
       $(".footer").css marginBottom: "0px"
       $("#buttons").css marginBottom: "0px"

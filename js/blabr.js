@@ -1839,6 +1839,9 @@
         if (((ref3 = this.settings) != null ? ref3.showCodeOnLoad : void 0) && !$blab.layoutPos) {
           showCode();
         }
+        if ($blab.noLogo) {
+          return;
+        }
         this.append("<hr>");
         this.logo();
         if ($blab.isBare) {
@@ -2691,6 +2694,7 @@
       bare = getParameterByName("bare");
       $blab.isBare = bare === "1";
       $blab.layoutPos = getParameterByName("pos");
+      $blab.noLogo = getParameterByName("logo") === "0";
       if ($blab.isBare) {
         $(".footer").css({
           marginBottom: "0px"
