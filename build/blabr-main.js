@@ -1061,6 +1061,9 @@
       $(".rendered-markdown").remove();
       md = this.snippets(this.preProcess(this.resource.content));
       out = [];
+      if ($blab.layoutPos) {
+        this.text.hide();
+      }
       for (i = 0, len = md.length; i < len; i++) {
         m = md[i];
         if (m.pos === 0) {
@@ -1354,7 +1357,7 @@
     };
 
     Layout.renderFromArray = function() {
-      var boxClass, boxId, c, colNum, d, i, j, k, len, n, numCols, o, r, ref, ref1, rowIdx, widgets;
+      var boxClass, boxId, c, cNum, colNum, d, i, j, k, len, n, numCols, o, r, ref, ref1, rowIdx, widgets;
       if (!this.spec.length) {
         return;
       }
@@ -1373,8 +1376,16 @@
         });
         widgets.append(r);
         for (colNum = j = 1, ref1 = numCols; 1 <= ref1 ? j <= ref1 : j >= ref1; colNum = 1 <= ref1 ? ++j : --j) {
+          cNum = colNum;
+          if ($blab.layoutPos) {
+            cNum = 1;
+            if (n !== parseInt($blab.layoutPos)) {
+              n++;
+              continue;
+            }
+          }
           boxId = "widget-box-" + n;
-          boxClass = "box-" + numCols + "-" + colNum;
+          boxClass = "box-" + numCols + "-" + cNum;
           c = $("<div>", {
             id: boxId,
             "class": boxClass,
@@ -1814,7 +1825,7 @@
       showCode = function() {
         return $("#computation-code-wrapper").show();
       };
-      if (((ref = this.settings) != null ? ref.showCodeOnLoad : void 0) || ((this.isStart || this.isDemo) && (((ref1 = this.settings) != null ? ref1.showCodeOnLoad : void 0) == null))) {
+      if ((((ref = this.settings) != null ? ref.showCodeOnLoad : void 0) && !$blab.layoutPos) || ((this.isStart || this.isDemo) && (((ref1 = this.settings) != null ? ref1.showCodeOnLoad : void 0) == null))) {
         showCode();
       }
       if (this.isStart) {
@@ -1825,7 +1836,7 @@
       }
       if (this.isBlab) {
         $("#top-banner").slideUp();
-        if ((ref3 = this.settings) != null ? ref3.showCodeOnLoad : void 0) {
+        if (((ref3 = this.settings) != null ? ref3.showCodeOnLoad : void 0) && !$blab.layoutPos) {
           showCode();
         }
         this.append("<hr>");
@@ -1871,7 +1882,6 @@
 
     Buttons.prototype.logo = function() {
       var logo, logoDiv, logoLink, ref, ref1;
-      console.log("***************BLAB", $blab);
       logoDiv = $("<div>", {
         id: "blabr-logo-footer"
       });
@@ -2680,6 +2690,7 @@
       };
       bare = getParameterByName("bare");
       $blab.isBare = bare === "1";
+      $blab.layoutPos = getParameterByName("pos");
       if ($blab.isBare) {
         $(".footer").css({
           marginBottom: "0px"

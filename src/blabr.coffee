@@ -785,6 +785,7 @@ class MarkdownEditor #extends PopupEditor
 #    md = @snippets(@resource.content)
     
     out = []
+    @text.hide() if $blab.layoutPos
     for m in md
       if m.pos is 0
         @text.append m.html
@@ -1001,6 +1002,7 @@ class Layout
     @trigger "renderedWidgets"
     
   @renderFromArray: ->
+    #console.log "%%%%%%%%%%%%%%%%%%%%%%%% LAYOUT POS", $blab.layoutPos
     return unless @spec.length
     #console.log "RENDER LAYOUT", @spec
     n = 1
@@ -1014,8 +1016,14 @@ class Layout
       widgets.append r
       for colNum in [1..numCols]
         #col = if colNum is 1 then "left" else "right"  # ZZZ temporary
+        cNum = colNum
+        if $blab.layoutPos
+          cNum = 1
+          if n isnt parseInt($blab.layoutPos)
+            n++
+            continue
         boxId = "widget-box-#{n}"
-        boxClass = "box-#{numCols}-#{colNum}"
+        boxClass = "box-#{numCols}-#{cNum}"
         c = $ "<div>",
           id: boxId
           class: boxClass
@@ -1305,7 +1313,7 @@ class Buttons
     
     showCode = -> $("#computation-code-wrapper").show()
     
-    showCode() if @settings?.showCodeOnLoad or ((@isStart or @isDemo) and not @settings?.showCodeOnLoad?)
+    showCode() if (@settings?.showCodeOnLoad and not $blab.layoutPos) or ((@isStart or @isDemo) and not @settings?.showCodeOnLoad?)
     
     if @isStart
       showCode() if @settings?.showCodeOnLoad
@@ -1314,7 +1322,7 @@ class Buttons
       
     if @isBlab
       $("#top-banner").slideUp()
-      showCode() if @settings?.showCodeOnLoad
+      showCode() if @settings?.showCodeOnLoad and not $blab.layoutPos
       @append "<hr>"
       #console.log "SETTINGS!", spec.getSettings()
       #$("#computation-code-wrapper").hide()
@@ -1823,6 +1831,7 @@ class App
       if results is null then "" else decodeURIComponent(results[1].replace(/\+/g, " "))
     bare = getParameterByName "bare"
     $blab.isBare = bare is "1"
+    $blab.layoutPos = getParameterByName("pos")
     if $blab.isBare
       $(".footer").css marginBottom: "0px"
       $("#buttons").css marginBottom: "0px"
