@@ -1837,6 +1837,8 @@ class App
     if $blab.isBare
       $(".footer").css marginBottom: "0px"
       $("#buttons").css marginBottom: "0px"
+    if $blab.noLogo
+      $("#top-banner").hide()
   
   init: ->
     

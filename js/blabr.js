@@ -2699,9 +2699,12 @@
         $(".footer").css({
           marginBottom: "0px"
         });
-        return $("#buttons").css({
+        $("#buttons").css({
           marginBottom: "0px"
         });
+      }
+      if ($blab.noLogo) {
+        return $("#top-banner").hide();
       }
     };
 
