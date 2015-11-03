@@ -1876,7 +1876,7 @@ class App
       #console.log "=======codeNodeChanged", @changed
       return if @changed  # First code change only
       @changed = true
-      @buttons.makeEditable()
+#      @buttons.makeEditable()
     
     @settingsObj = new Settings
     @errors = new Errors

@@ -2744,8 +2744,7 @@
           if (_this.changed) {
             return;
           }
-          _this.changed = true;
-          return _this.buttons.makeEditable();
+          return _this.changed = true;
         };
       })(this));
       this.settingsObj = new Settings;
