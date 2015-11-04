@@ -21,7 +21,7 @@
     <script>
     console.log("-----window----", window.top, window.parent.frames.length);
     //console.log("window.frameElement", window.frameElement);
-    //if (window.frameElement) document.getElementById("top-banner").style.visibility = "hidden";
+    if (window.self !== window.top) document.getElementById("top-banner").style.visibility = "hidden";
     </script>
     
     <div id='outer-container'>
