@@ -1328,7 +1328,7 @@ class Buttons
       #console.log "SETTINGS!", spec.getSettings()
       #$("#computation-code-wrapper").hide()
       @logo()
-      return if $blab.isBare
+      return if $blab.isEmbedded or $blab.isBare
       @docButton()
       @sep()
       #@append "Powered by "
@@ -1370,8 +1370,8 @@ class Buttons
       id: "blabr-logo-footer"
       #click: => @spec.guide()
     logoLink = $ "<a>",
-        href: if $blab.isBare then "//blabr.io?" + $blab.github?.gist?.id else "//blabr.io"
-    logoLink.attr target: "_blank" if $blab.isBare
+        href: if $blab.isBare or $blab.isEmbedded then "//blabr.io?" + $blab.github?.gist?.id else "//blabr.io"
+    logoLink.attr target: "_blank" if $blab.isBare or $blab.isEmbedded
     logoDiv.append logoLink
     logo = $ "<img>",
       src: "img/blabr-logo.png"
@@ -1831,14 +1831,15 @@ class App
       results = regex.exec(location.search)
       if results is null then "" else decodeURIComponent(results[1].replace(/\+/g, " "))
     bare = getParameterByName "bare"
+    $blab.isEmbedded = window.self isnt window.top  # Use this instead of bare
     $blab.isBare = bare is "1"
     $blab.layoutPos = getParameterByName("pos")
     $blab.noLogo = getParameterByName("logo") is "0"
-    if $blab.isBare
+    if $blab.isEmbedded or $blab.isBare
       $(".footer").css marginBottom: "0px"
       $("#buttons").css marginBottom: "0px"
-    if $blab.noLogo
-      $("#top-banner").hide()
+    #if $blab.noLogo
+    #  $("#top-banner").hide()
   
   init: ->
     

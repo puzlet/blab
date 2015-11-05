@@ -511,7 +511,7 @@ class Table extends Widget
     
   store: ->
     @tablesFile.content = JSON.stringify($blab.tableData, null, 2)
-    $.event.trigger "codeNodeChanged" unless $blab?.isBare or $blab?.layoutPos # ZZZ should do via ace node set?
+    $.event.trigger "codeNodeChanged" unless $blab?.isBare or $blab.isEmbedded or $blab?.layoutPos # ZZZ should do via ace node set?
    
   format: (x) ->
     if x is 0 or Number.isInteger?(x) and Math.abs(x)<1e10
