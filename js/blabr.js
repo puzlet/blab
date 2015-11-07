@@ -1844,7 +1844,7 @@
         }
         this.append("<hr>");
         this.logo();
-        if ($blab.isEmbedded || $blab.isBare) {
+        if ($blab.isEmbedded) {
           return;
         }
         this.docButton();
@@ -1889,9 +1889,9 @@
         id: "blabr-logo-footer"
       });
       logoLink = $("<a>", {
-        href: $blab.isBare || $blab.isEmbedded ? "//blabr.io?" + ((ref = $blab.github) != null ? (ref1 = ref.gist) != null ? ref1.id : void 0 : void 0) : "//blabr.io"
+        href: $blab.isEmbedded ? "//blabr.io?" + ((ref = $blab.github) != null ? (ref1 = ref.gist) != null ? ref1.id : void 0 : void 0) : "//blabr.io"
       });
-      if ($blab.isBare || $blab.isEmbedded) {
+      if ($blab.isEmbedded) {
         logoLink.attr({
           target: "_blank"
         });
@@ -2692,11 +2692,11 @@
         }
       };
       bare = getParameterByName("bare");
-      $blab.isEmbedded = window.self !== window.top;
       $blab.isBare = bare === "1";
+      $blab.isEmbedded = $blab.isBare || window.self !== window.top;
       $blab.layoutPos = getParameterByName("pos");
-      $blab.noLogo = getParameterByName("logo") === "0";
-      if ($blab.isEmbedded || $blab.isBare) {
+      $blab.noLogo = (getParameterByName("logo") === "0") || $blab.layoutPos;
+      if ($blab.isEmbedded) {
         $(".footer").css({
           marginBottom: "0px"
         });

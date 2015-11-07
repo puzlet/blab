@@ -742,7 +742,7 @@
 
     Table.prototype.store = function() {
       this.tablesFile.content = JSON.stringify($blab.tableData, null, 2);
-      if (!((typeof $blab !== "undefined" && $blab !== null ? $blab.isBare : void 0) || $blab.isEmbedded || (typeof $blab !== "undefined" && $blab !== null ? $blab.layoutPos : void 0))) {
+      if (!($blab.isEmbedded || (typeof $blab !== "undefined" && $blab !== null ? $blab.layoutPos : void 0))) {
         return $.event.trigger("codeNodeChanged");
       }
     };
