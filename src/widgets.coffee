@@ -634,7 +634,8 @@ class EditableCell
       @val = val
       @callback val, changed, dir, colDir
     else
-      val = if v then parseFloat(v) else null # TODO: what if text cell?
+      val = if v then parseFloat(v) else null
+      val = v if isNaN(val)  # handle text cell
       changed = val isnt @val
       @val = val if changed
       @disp = @val

@@ -910,6 +910,9 @@
         return this.callback(val, changed, dir, colDir);
       } else {
         val = v ? parseFloat(v) : null;
+        if (isNaN(val)) {
+          val = v;
+        }
         changed = val !== this.val;
         if (changed) {
           this.val = val;
