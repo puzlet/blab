@@ -215,7 +215,8 @@ class Credits
       is developed by 
       <a href="//github.com/mvclark" target="_blank">Martin Clark</a> and 
       <a href="//github.com/garyballantyne" target="_blank">Gary Ballantyne</a> (Haulashore Limited) 
-      as part of the <a href='//github.com/puzlet' target='_blank'>Puzlet</a> project.<br>
+      as part of the <a href='//github.com/puzlet' target='_blank'>Puzlet</a> project.
+      <a href="//twitter.com/blabrnet" target="_blank">Follow us on Twitter</a>.<br>
       Thanks to: #{str}.
     """
 

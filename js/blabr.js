@@ -4566,7 +4566,7 @@
         }
         return results;
       }).call(this)).join(", ");
-      this.footer.append("<a href='//blabr.org' target='_blank'>Blabr</a> \nis developed by \n<a href=\"//github.com/mvclark\" target=\"_blank\">Martin Clark</a> and \n<a href=\"//github.com/garyballantyne\" target=\"_blank\">Gary Ballantyne</a> (Haulashore Limited) \nas part of the <a href='//github.com/puzlet' target='_blank'>Puzlet</a> project.<br>\nThanks to: " + str + ".");
+      this.footer.append("<a href='//blabr.org' target='_blank'>Blabr</a> \nis developed by \n<a href=\"//github.com/mvclark\" target=\"_blank\">Martin Clark</a> and \n<a href=\"//github.com/garyballantyne\" target=\"_blank\">Gary Ballantyne</a> (Haulashore Limited) \nas part of the <a href='//github.com/puzlet' target='_blank'>Puzlet</a> project.\n<a href=\"//twitter.com/blabrnet\" target=\"_blank\">Follow us on Twitter</a>.<br>\nThanks to: " + str + ".");
     }
 
     return Credits;
