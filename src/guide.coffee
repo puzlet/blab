@@ -212,7 +212,9 @@ class Credits
   
     @footer.append """
       <a href='//blabr.org' target='_blank'>Blabr</a> 
-      is developed by Martin Clark and Gary Ballantyne (Haulashore Limited) 
+      is developed by 
+      <a href="//github.com/mvclark" target="_blank">Martin Clark</a> and 
+      <a href="//github.com/garyballantyne" target="_blank">Gary Ballantyne</a> (Haulashore Limited) 
       as part of the <a href='//github.com/puzlet' target='_blank'>Puzlet</a> project.<br>
       Thanks to: #{str}.
     """
