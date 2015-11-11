@@ -1342,6 +1342,8 @@ class Buttons
       @sep()
       @commentsButton()
       @sep()
+      @embedButton()
+      @sep()
       b = @linkButton "Edit Page", => @makeEditable()
       b.css color: "green", fontWeight: "bold", textDecoration: "none"
       b.attr title: "Edit blab's layout, text, and widgets."
@@ -1406,6 +1408,8 @@ class Buttons
     @sep()
     @commentsButton()
     @sep()
+    @embedButton()
+    @sep()
     s = @linkButton "Settings", =>
       console.log "settings"
       @spec.editSettings()
@@ -1425,6 +1429,10 @@ class Buttons
   commentsButton: ->
     l = @linkButton "Comment", (->), $blab.github?.sourceLink() + "#comments"
     l.attr title: "Comment on this blab in GitHub Gist page."
+  
+  embedButton: ->
+    l = @linkButton "Embed", => @spec.embed()
+    l.attr title: "Embed this blab, or a single layout box, in your website."
     
   showForkButton: ->
     b = @forkButton = @linkButton "Fork", =>
@@ -1675,6 +1683,98 @@ class Settings
   #showAuthor: -> @spec.showAuthor
 
 
+class EmbedDialog
+  
+  constructor: ->
+    @dialog = $ "<div>",
+      id: "embed-dialog"
+      title: "Embed blab in your website"
+    
+    @dialog.dialog
+      autoOpen: false
+      height: 520
+      width: 500
+      modal: true
+      close: =>
+    
+    @layoutPos = 1
+    
+  show: ->
+    @content()
+    @dialog.dialog "open"
+  
+  content: ->
+    
+    @dialog.empty()
+    
+    id = $blab.github.gist.id
+    url = "//blabr.io?#{id}"
+    title = $blab.title
+    
+    width = $("#container").width() + 110  # 1070 ?
+    height = $("#container").height() + 50
+    
+    @dialog.append """
+    
+    <p>Copy-paste the HTML code into your web page.</p>
+    
+    <h3>Whole blab</h3>
+    <pre><code>&lt;iframe width=#{width} height=#{height}
+    src="#{url}"
+    style="border: 2px dotted gray;"&gt;
+    &lt;a href="#{url}"&gt;
+    #{title}
+    &lt;/a&gt;&lt;/iframe&gt;</code></pre>
+    <h3>Single layout box</h3>
+    """
+    
+    @layoutBoxField()
+    
+    box = $("#widget-box-#{@layoutPos}")
+    width = box.width() + 30
+    height = box.height() + 70
+    
+    @dialog.append """
+    <pre id="iframe-code-box"><code>&lt;iframe width=#{width} height=#{height}
+    src="#{url}&amp;pos=#{@layoutPos}"
+    scrolling="no" style="border: none;"&gt;
+    &lt;a href="#{url}"&gt;
+    #{title}
+    &lt;/a&gt;&lt;/iframe&gt;</code></pre>
+    """
+    
+  layoutBoxField: ->
+    
+    id = "embed-layout-box"
+    
+    label = $ "<label>",
+      "for": id
+      text: "Layout box"
+      css:
+        display: "block"
+        float: "left"
+        paddingRight: "10px"
+    
+    layoutBoxMenu = $ "<select>",
+      name: "layout-box"
+      id: id
+      value: @layoutPos
+      change: (evt) =>
+        @layoutPos = parseInt(layoutBoxMenu.val())
+        @content()
+      css:
+        marginBottom: "10px"
+        width: "50px"
+    
+    numBoxes = $(".layout-box").length
+    
+    for n in [1..numBoxes]
+      sel = if n is @layoutPos then " selected" else ""
+      layoutBoxMenu.append("<option value='#{n}' #{sel}>#{n}</option>")
+      
+    @dialog.append(label).append(layoutBoxMenu)
+
+
 class PopupEditorManager
   
   constructor: (@spec) ->
@@ -1850,6 +1950,7 @@ class App
     @computationEditor = new ComputationEditor
     @markdownEditor = new MarkdownEditor
     @definitions = @loader.definitions
+    @embedDialog = new EmbedDialog
     
     # TEST rendering md earlier
     #@markdownEditor.process() #if @widgetsRendered
@@ -1913,6 +2014,7 @@ class App
     return if @buttons
     @buttons = new Buttons
       guide: => $blab.blabrGuide.slideToggle()
+      embed: => @embedDialog.show()
       makeEditable: =>
         #console.log "---makeEditable", @editors
         @editors?.enable()

@@ -1,5 +1,5 @@
 (function() {
-  var App, Background, BlabEvents, Buttons, Computation, ComputationButtons, ComputationEditor, Definitions, EditPageButton, Errors, GoogleAnalytics, Layout, Loader, MarkdownEditor, PopupEditorManager, Settings, TextEditor, Widget, WidgetEditor, Widgets, codeSections,
+  var App, Background, BlabEvents, Buttons, Computation, ComputationButtons, ComputationEditor, Definitions, EditPageButton, EmbedDialog, Errors, GoogleAnalytics, Layout, Loader, MarkdownEditor, PopupEditorManager, Settings, TextEditor, Widget, WidgetEditor, Widgets, codeSections,
     slice = [].slice,
     bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -1857,6 +1857,8 @@
         this.sep();
         this.commentsButton();
         this.sep();
+        this.embedButton();
+        this.sep();
         b = this.linkButton("Edit Page", (function(_this) {
           return function() {
             return _this.makeEditable();
@@ -1933,6 +1935,8 @@
       this.sep();
       this.commentsButton();
       this.sep();
+      this.embedButton();
+      this.sep();
       s = this.linkButton("Settings", (function(_this) {
         return function() {
           console.log("settings");
@@ -1973,6 +1977,18 @@
       l = this.linkButton("Comment", (function() {}), ((ref = $blab.github) != null ? ref.sourceLink() : void 0) + "#comments");
       return l.attr({
         title: "Comment on this blab in GitHub Gist page."
+      });
+    };
+
+    Buttons.prototype.embedButton = function() {
+      var l;
+      l = this.linkButton("Embed", (function(_this) {
+        return function() {
+          return _this.spec.embed();
+        };
+      })(this));
+      return l.attr({
+        title: "Embed this blab, or a single layout box, in your website."
       });
     };
 
@@ -2396,6 +2412,84 @@
 
   })();
 
+  EmbedDialog = (function() {
+    function EmbedDialog() {
+      this.dialog = $("<div>", {
+        id: "embed-dialog",
+        title: "Embed blab in your website"
+      });
+      this.dialog.dialog({
+        autoOpen: false,
+        height: 520,
+        width: 500,
+        modal: true,
+        close: (function(_this) {
+          return function() {};
+        })(this)
+      });
+      this.layoutPos = 1;
+    }
+
+    EmbedDialog.prototype.show = function() {
+      this.content();
+      return this.dialog.dialog("open");
+    };
+
+    EmbedDialog.prototype.content = function() {
+      var box, height, id, title, url, width;
+      this.dialog.empty();
+      id = $blab.github.gist.id;
+      url = "//blabr.io?" + id;
+      title = $blab.title;
+      width = $("#container").width() + 110;
+      height = $("#container").height() + 50;
+      this.dialog.append("\n<p>Copy-paste the HTML code into your web page.</p>\n\n<h3>Whole blab</h3>\n<pre><code>&lt;iframe width=" + width + " height=" + height + "\nsrc=\"" + url + "\"\nstyle=\"border: 2px dotted gray;\"&gt;\n&lt;a href=\"" + url + "\"&gt;\n" + title + "\n&lt;/a&gt;&lt;/iframe&gt;</code></pre>\n<h3>Single layout box</h3>");
+      this.layoutBoxField();
+      box = $("#widget-box-" + this.layoutPos);
+      width = box.width() + 30;
+      height = box.height() + 70;
+      return this.dialog.append("<pre id=\"iframe-code-box\"><code>&lt;iframe width=" + width + " height=" + height + "\nsrc=\"" + url + "&amp;pos=" + this.layoutPos + "\"\nscrolling=\"no\" style=\"border: none;\"&gt;\n&lt;a href=\"" + url + "\"&gt;\n" + title + "\n&lt;/a&gt;&lt;/iframe&gt;</code></pre>");
+    };
+
+    EmbedDialog.prototype.layoutBoxField = function() {
+      var i, id, label, layoutBoxMenu, n, numBoxes, ref, sel;
+      id = "embed-layout-box";
+      label = $("<label>", {
+        "for": id,
+        text: "Layout box",
+        css: {
+          display: "block",
+          float: "left",
+          paddingRight: "10px"
+        }
+      });
+      layoutBoxMenu = $("<select>", {
+        name: "layout-box",
+        id: id,
+        value: this.layoutPos,
+        change: (function(_this) {
+          return function(evt) {
+            _this.layoutPos = parseInt(layoutBoxMenu.val());
+            return _this.content();
+          };
+        })(this),
+        css: {
+          marginBottom: "10px",
+          width: "50px"
+        }
+      });
+      numBoxes = $(".layout-box").length;
+      for (n = i = 1, ref = numBoxes; 1 <= ref ? i <= ref : i >= ref; n = 1 <= ref ? ++i : --i) {
+        sel = n === this.layoutPos ? " selected" : "";
+        layoutBoxMenu.append("<option value='" + n + "' " + sel + ">" + n + "</option>");
+      }
+      return this.dialog.append(label).append(layoutBoxMenu);
+    };
+
+    return EmbedDialog;
+
+  })();
+
   PopupEditorManager = (function() {
     function PopupEditorManager(spec1) {
       var ref;
@@ -2713,6 +2807,7 @@
       this.computationEditor = new ComputationEditor;
       this.markdownEditor = new MarkdownEditor;
       this.definitions = this.loader.definitions;
+      this.embedDialog = new EmbedDialog;
       this.on("aceFilesLoaded", (function(_this) {
         return function() {
           return _this.initEditors();
@@ -2788,6 +2883,11 @@
         guide: (function(_this) {
           return function() {
             return $blab.blabrGuide.slideToggle();
+          };
+        })(this),
+        embed: (function(_this) {
+          return function() {
+            return _this.embedDialog.show();
           };
         })(this),
         makeEditable: (function(_this) {
