@@ -276,19 +276,20 @@
       this.containerButton = containerButton;
       this.credits = credits;
       this.button = $("<button>", {
-        text: "About Blabr",
+        text: "Credits",
         click: (function(_this) {
           return function() {
-            return _this.footer.slideToggle(500);
+            return _this.credits.slideToggle(500);
           };
-        })(this)
+        })(this),
+        css: {
+          marginLeft: "10px"
+        }
       });
-      this.containerButton.append(this.button);
       this.footer = $("<div>", {
         "class": "guide-footer"
       });
       this.container.append(this.footer);
-      this.footer.hide();
       l = function(txt, url) {
         return "<a href='//" + url + "' target='_blank'>" + txt + "</a>";
       };
@@ -302,7 +303,12 @@
         }
         return results;
       }).call(this)).join(", ");
-      this.footer.append("<a href='//blabr.org' target='_blank'>Blabr</a> \nis developed by \n<a href=\"//github.com/mvclark\" target=\"_blank\">Martin Clark</a> and \n<a href=\"//github.com/garyballantyne\" target=\"_blank\">Gary Ballantyne</a> (Haulashore Limited) \nas part of the <a href='//github.com/puzlet' target='_blank'>Puzlet</a> project.\n<a href=\"//twitter.com/blabrnet\" target=\"_blank\">Follow us on Twitter</a>.<br>\nThanks to: " + str + ".");
+      this.footer.append("<div style=\"display: inline-block\">\n<a href='//blabr.org' target='_blank'>Blabr</a> \nis developed by \n<a href=\"//github.com/mvclark\" target=\"_blank\">Martin Clark</a> and \n<a href=\"//github.com/garyballantyne\" target=\"_blank\">Gary Ballantyne</a> (Haulashore Limited) \nas part of the <a href='//github.com/puzlet' target='_blank'>Puzlet</a> project.\n<a href=\"//twitter.com/blabrnet\" target=\"_blank\"><img src=\"img/TwitterLogo.png\" height=24 style=\"vertical-align: middle\"/>Follow us on Twitter</a>.\n</div>");
+      this.credits = $("<div>", {
+        html: "Thanks to: " + str + "."
+      });
+      this.footer.append(this.button).append(this.credits);
+      this.credits.hide();
     }
 
     return Credits;

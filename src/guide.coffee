@@ -199,26 +199,39 @@ class Credits
   constructor: (@container, @containerButton, @credits) ->
     
     @button = $ "<button>",
-      text: "About Blabr"
-      click: => @footer.slideToggle(500)
-    @containerButton.append(@button)
+      text: "Credits"
+#      text: "About Blabr"
+      click: => @credits.slideToggle(500)
+      css: marginLeft: "10px"
+    #@containerButton.append(@button)
     
     @footer = $ "<div>", class: "guide-footer"
     @container.append @footer
-    @footer.hide()
+    #@footer.hide()
   
     l = (txt, url) -> "<a href='//#{url}' target='_blank'>#{txt}</a>"
     str = (l(credit.name, credit.url) for credit in @credits).join(", ")
   
     @footer.append """
+      <div style="display: inline-block">
       <a href='//blabr.org' target='_blank'>Blabr</a> 
       is developed by 
       <a href="//github.com/mvclark" target="_blank">Martin Clark</a> and 
       <a href="//github.com/garyballantyne" target="_blank">Gary Ballantyne</a> (Haulashore Limited) 
       as part of the <a href='//github.com/puzlet' target='_blank'>Puzlet</a> project.
-      <a href="//twitter.com/blabrnet" target="_blank">Follow us on Twitter</a>.<br>
-      Thanks to: #{str}.
+      <a href="//twitter.com/blabrnet" target="_blank"><img src="img/TwitterLogo.png" height=24 style="vertical-align: middle"/>Follow us on Twitter</a>.
+      </div>
     """
+    
+    @credits = $ "<div>",
+      #css: display: "inline-block"
+      html: "Thanks to: #{str}."
+    
+    @footer.append(@button).append(@credits)
+    @credits.hide()
+    
+    #@footer.append "<br>Thanks to: #{str}."
+    
 
 
 $blab.demoListHtml = (spec) ->
