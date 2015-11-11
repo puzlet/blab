@@ -2442,7 +2442,7 @@
       url = "//blabr.io?" + id;
       title = $blab.title;
       width = $("#container").width() + 110;
-      height = $("#container").height() + 50;
+      height = $("#container").height() + 60;
       this.dialog.append("\n<p>Copy-paste the HTML code into your web page.</p>\n\n<h3>Whole blab</h3>\n<pre><code>&lt;iframe width=" + width + " height=" + height + "\nsrc=\"" + url + "\"\nstyle=\"border: 2px dotted gray;\"&gt;\n&lt;a href=\"" + url + "\"&gt;\n" + title + "\n&lt;/a&gt;&lt;/iframe&gt;</code></pre>\n<h3>Single layout box</h3>");
       this.layoutBoxField();
       box = $("#widget-box-" + this.layoutPos);

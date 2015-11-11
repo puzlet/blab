@@ -1712,7 +1712,7 @@ class EmbedDialog
     title = $blab.title
     
     width = $("#container").width() + 110  # 1070 ?
-    height = $("#container").height() + 50
+    height = $("#container").height() + 60
     
     @dialog.append """
     
