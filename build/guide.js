@@ -44,7 +44,7 @@
     examples: [
       {
         text: "Mystery Curve",
-        img: "//blabr.org/img/mystery-curve.png",
+        img: "//blabr.github.io/img/mystery-curve.png",
         id: "4bd90a0b619bff7707b3"
       }, {
         text: "Basic Properties of Mars as a Planetary Body",
@@ -56,11 +56,11 @@
         id: "d6927773b95652943582"
       }, {
         text: "Star Trek's solitons are real",
-        img: "//blabr.org/img/solitons.png",
+        img: "//blabr.github.io/img/solitons.png",
         id: "2a55efd937f9d3e87d29"
       }, {
         text: "A toy problem for compressive sensing",
-        img: "//blabr.org/img/cs-intro.png",
+        img: "//blabr.github.io/img/cs-intro.png",
         id: "e8a066234715f21c21fd"
       }
     ],
@@ -303,7 +303,7 @@
         }
         return results;
       }).call(this)).join(", ");
-      this.footer.append("<div style=\"display: inline-block\">\n<a href='//blabr.org' target='_blank'>Blabr</a> \nis developed by \n<a href=\"//github.com/mvclark\" target=\"_blank\">Martin Clark</a> and \n<a href=\"//github.com/garyballantyne\" target=\"_blank\">Gary Ballantyne</a> (Haulashore Limited) \nas part of the <a href='//github.com/puzlet' target='_blank'>Puzlet</a> project.\n<a href=\"//twitter.com/blabrnet\" target=\"_blank\"><img src=\"img/TwitterLogo.png\" height=24 style=\"vertical-align: middle\"/>Follow us on Twitter</a>.\n</div>");
+      this.footer.append("<div style=\"display: inline-block\">\n<a href='//blabr.github.io' target='_blank'>Blabr</a> \nis developed by \n<a href=\"//github.com/mvclark\" target=\"_blank\">Martin Clark</a> and \n<a href=\"//github.com/garyballantyne\" target=\"_blank\">Gary Ballantyne</a> (Haulashore Limited) \nas part of the <a href='//github.com/puzlet' target='_blank'>Puzlet</a> project.\n<a href=\"//twitter.com/blabrnet\" target=\"_blank\"><img src=\"img/TwitterLogo.png\" height=24 style=\"vertical-align: middle\"/>Follow us on Twitter</a>.\n</div>");
       this.credits = $("<div>", {
         html: "Thanks to: " + str + "."
       });

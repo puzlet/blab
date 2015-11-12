@@ -31,7 +31,7 @@ content =
   examples: [
     {
       text: "Mystery Curve"
-      img: "//blabr.org/img/mystery-curve.png"
+      img: "//blabr.github.io/img/mystery-curve.png"
       id: "4bd90a0b619bff7707b3"
     }
     {
@@ -46,12 +46,12 @@ content =
     }
     {
       text: "Star Trek's solitons are real"
-      img: "//blabr.org/img/solitons.png"
+      img: "//blabr.github.io/img/solitons.png"
       id: "2a55efd937f9d3e87d29"
     }
     {
       text: "A toy problem for compressive sensing"
-      img: "//blabr.org/img/cs-intro.png"
+      img: "//blabr.github.io/img/cs-intro.png"
       id: "e8a066234715f21c21fd"
     }
   ]
@@ -214,7 +214,7 @@ class Credits
   
     @footer.append """
       <div style="display: inline-block">
-      <a href='//blabr.org' target='_blank'>Blabr</a> 
+      <a href='//blabr.github.io' target='_blank'>Blabr</a> 
       is developed by 
       <a href="//github.com/mvclark" target="_blank">Martin Clark</a> and 
       <a href="//github.com/garyballantyne" target="_blank">Gary Ballantyne</a> (Haulashore Limited) 
