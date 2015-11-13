@@ -2374,7 +2374,7 @@
 
   Background = (function() {
     function Background(background) {
-      if (background && screen.width >= 1024) {
+      if (background && screen.width >= 1024 && !$blab.isEmbedded) {
         $(document.body).css({
           backgroundImage: "url(" + background + ")"
         });

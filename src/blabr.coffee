@@ -1663,7 +1663,7 @@ class Background
   
   constructor: (background) ->
     
-    if background and screen.width>=1024
+    if background and screen.width>=1024 and not $blab.isEmbedded
       $(document.body).css backgroundImage: "url(#{background})"
       $("#outer-container").addClass "outer-background"
       $("#outer-container").css
