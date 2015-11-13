@@ -151,9 +151,9 @@ class Guide
       <div class="guide-col">
         <h3>Examples</h3>
         #{str}
+        <a href="//blabr.org" target="_blank">More blabs<a>
       </div>
     """
-    #         <a href="//blabr.org" target="_blank">More blabs<a>
     
   references: ->
   
@@ -214,7 +214,7 @@ class Credits
   
     @footer.append """
       <div style="display: inline-block">
-      <a href='//blabr.github.io' target='_blank'>Blabr</a> 
+      <a href='//blabr.org' target='_blank'>Blabr</a> 
       is developed by 
       <a href="//github.com/mvclark" target="_blank">Martin Clark</a> and 
       <a href="//github.com/garyballantyne" target="_blank">Gary Ballantyne</a> (Haulashore Limited) 

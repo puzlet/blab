@@ -4471,7 +4471,7 @@
         example = ref[i];
         str += "<div class=\"gist\">\n<a href='//blabr.io?" + example.id + "' target=\"_blank\">\n<img src='" + example.img + "'>\n<p>" + example.text + "</p>\n</a>\n</div>";
       }
-      return this.append("<div class=\"guide-col\">\n  <h3>Examples</h3>\n  " + str + "\n</div>");
+      return this.append("<div class=\"guide-col\">\n  <h3>Examples</h3>\n  " + str + "\n  <a href=\"//blabr.org\" target=\"_blank\">More blabs<a>\n</div>");
     };
 
     Guide.prototype.references = function() {
@@ -4567,7 +4567,7 @@
         }
         return results;
       }).call(this)).join(", ");
-      this.footer.append("<div style=\"display: inline-block\">\n<a href='//blabr.github.io' target='_blank'>Blabr</a> \nis developed by \n<a href=\"//github.com/mvclark\" target=\"_blank\">Martin Clark</a> and \n<a href=\"//github.com/garyballantyne\" target=\"_blank\">Gary Ballantyne</a> (Haulashore Limited) \nas part of the <a href='//github.com/puzlet' target='_blank'>Puzlet</a> project.\n<a href=\"//twitter.com/blabrnet\" target=\"_blank\"><img src=\"img/TwitterLogo.png\" height=24 style=\"vertical-align: middle\"/>Follow us on Twitter</a>.\n</div>");
+      this.footer.append("<div style=\"display: inline-block\">\n<a href='//blabr.org' target='_blank'>Blabr</a> \nis developed by \n<a href=\"//github.com/mvclark\" target=\"_blank\">Martin Clark</a> and \n<a href=\"//github.com/garyballantyne\" target=\"_blank\">Gary Ballantyne</a> (Haulashore Limited) \nas part of the <a href='//github.com/puzlet' target='_blank'>Puzlet</a> project.\n<a href=\"//twitter.com/blabrnet\" target=\"_blank\"><img src=\"img/TwitterLogo.png\" height=24 style=\"vertical-align: middle\"/>Follow us on Twitter</a>.\n</div>");
       this.credits = $("<div>", {
         html: "Thanks to: " + str + "."
       });
