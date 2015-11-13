@@ -1343,10 +1343,15 @@ class Buttons
       @commentsButton()
       @sep()
       @embedButton()
+      
       @sep()
       b = @linkButton "Edit Page", => @makeEditable()
       b.css color: "green", fontWeight: "bold", textDecoration: "none"
       b.attr title: "Edit blab's layout, text, and widgets."
+      
+      @sep()
+      @moreBlabs()
+      
       @author() if @settings?.showAuthor
         
     if @isDemo
@@ -1439,6 +1444,11 @@ class Buttons
       forceNew = true
       $blab.github?.save(forceNew)
     b.attr title: "Create your own version of this blab."
+    
+  moreBlabs: ->
+    b = @linkButton "More Blabs...", (->), "//blabr.org"
+    b.css color: "blue", fontWeight: "bold", textDecoration: "none"
+    b.attr title: "See more blabs on blabr.org."
   
   author: ->
     owner = $blab.github?.gist?.gistOwner

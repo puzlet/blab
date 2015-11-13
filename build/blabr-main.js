@@ -1872,6 +1872,8 @@
         b.attr({
           title: "Edit blab's layout, text, and widgets."
         });
+        this.sep();
+        this.moreBlabs();
         if ((ref4 = this.settings) != null ? ref4.showAuthor : void 0) {
           this.author();
         }
@@ -2003,6 +2005,19 @@
       })(this));
       return b.attr({
         title: "Create your own version of this blab."
+      });
+    };
+
+    Buttons.prototype.moreBlabs = function() {
+      var b;
+      b = this.linkButton("More Blabs...", (function() {}), "//blabr.org");
+      b.css({
+        color: "blue",
+        fontWeight: "bold",
+        textDecoration: "none"
+      });
+      return b.attr({
+        title: "See more blabs on blabr.org."
       });
     };
 
