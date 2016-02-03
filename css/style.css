@@ -596,6 +596,7 @@ div[data-file="layout.coffee"] {
 
 .math>span {
   border-left-color: transparent;
+  border-right-color: transparent;
 }
 
 /********* Unused *********/
