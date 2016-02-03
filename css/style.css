@@ -592,6 +592,12 @@ div[data-file="layout.coffee"] {
 }
 */
 
+/********* Fix vertical lines for MathJax 2.4 *********/
+
+.math>span {
+  border-left-color: transparent;
+}
+
 /********* Unused *********/
 
 .green_demo-button {
