@@ -566,6 +566,32 @@ div[data-file="layout.coffee"] {
   font-weight: bold;
 }
 
+/********* typed.js *********/
+
+/*
+.typed-cursor{
+    opacity: 1;
+    -webkit-animation: blink 0.7s infinite;
+    -moz-animation: blink 0.7s infinite;
+    animation: blink 0.7s infinite;
+}
+@keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-webkit-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-moz-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+*/
+
 /********* Unused *********/
 
 .green_demo-button {
@@ -617,3 +643,4 @@ div[data-file="layout.coffee"] {
   right: 45px;
   width: 50px;
 }
+

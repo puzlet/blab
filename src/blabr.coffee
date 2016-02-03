@@ -1837,7 +1837,7 @@ class PopupEditorManager
     @showLayoutEditor(widget: widget, id: null, clicked: false)  # Why id null?
   
   showMarkdownEditor: (start) ->
-    console.log "showMarkdownEditor", @layoutEnabled
+    #console.log "showMarkdownEditor", @layoutEnabled
     return unless @layoutEnabled
     @clickedOnComponent = true
     setTimeout (=> @clickedOnComponent = false), 300

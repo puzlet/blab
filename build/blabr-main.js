@@ -2615,7 +2615,6 @@
     };
 
     PopupEditorManager.prototype.showMarkdownEditor = function(start) {
-      console.log("showMarkdownEditor", this.layoutEnabled);
       if (!this.layoutEnabled) {
         return;
       }
