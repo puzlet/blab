@@ -35,13 +35,14 @@ class $blab.Lecture
     @stepIdx = 0
     
     @clear()
+    @init()
     @content()
     
     @steps.push ->
       $("#buttons").show()
       $("#computation-code-wrapper").show()
     
-    setTimeout (=> @doStep()), 100
+    setTimeout (=> @doStep()), 100  #100
   
   box: (params = {pos: 0, order: null}) ->
     pos = params?.pos ? 0
@@ -76,7 +77,7 @@ class $blab.Lecture
     
     # TO FIX: math rendered after typed
     
-    container = options.container ? $("#main-markdown")
+    container = options?.container ? $("#main-markdown")
     
     div = $ "<div>", class: "lecture-content"
     div.css(options.css) if options?.css
@@ -95,6 +96,21 @@ class $blab.Lecture
     else
       div.html html
       $.event.trigger "htmlOutputUpdated"
+      
+  audio: (id) ->
+    audio = document.getElementById(id) #$ "#x-squared"
+    #console.log "audio", audio
+    #intro.currentTime = 1;
+    #intro.duration = 0.5;
+    audio.play()
+    #setTimeout(function() {intro.pause()}, 1000)
+    #setTimeout(function() {intro.play()}, 2000)
+    #var n = 0;
+    #audio[0].onended = function() {
+    #  document.getElementById("text").innerHTML = "Other text.";
+    #  n++;
+    #  if (n<2) sam.play();
+    #};
 
 class LectureMath
   

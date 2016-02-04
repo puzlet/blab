@@ -38,6 +38,7 @@
       this.steps = [];
       this.stepIdx = 0;
       this.clear();
+      this.init();
       this.content();
       this.steps.push(function() {
         $("#buttons").show();
@@ -95,7 +96,7 @@
 
     Lecture.prototype.html = function(html, options) {
       var container, div, ref, ref1, typed;
-      container = (ref = options.container) != null ? ref : $("#main-markdown");
+      container = (ref = options != null ? options.container : void 0) != null ? ref : $("#main-markdown");
       div = $("<div>", {
         "class": "lecture-content"
       });
@@ -118,6 +119,12 @@
         div.html(html);
         return $.event.trigger("htmlOutputUpdated");
       }
+    };
+
+    Lecture.prototype.audio = function(id) {
+      var audio;
+      audio = document.getElementById(id);
+      return audio.play();
     };
 
     return Lecture;
