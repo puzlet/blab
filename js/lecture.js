@@ -3,7 +3,7 @@
 
   $(document).on("layoutCompiled", function(evt, data) {
     var button, lecture;
-    if (!$blab.lecture) {
+    if (!($blab.lecture || $blab.lecture2)) {
       return;
     }
     button = $("#start-lecture-button");
@@ -19,17 +19,152 @@
       }
     });
     $("#defs-code-heading").after(button);
-    button.click(function(evt) {
-      return lecture = $blab.lecture();
-    });
-    return $("body").keypress((function(_this) {
-      return function(evt) {
-        if (evt.target.tagName === "BODY") {
-          return lecture != null ? lecture.doStep() : void 0;
-        }
-      };
-    })(this));
+    if ($blab.lecture) {
+      button.click(function(evt) {
+        return lecture = $blab.lecture();
+      });
+      $("body").keydown((function(_this) {
+        return function(evt) {
+          if (evt.target.tagName === "BODY") {
+            return lecture != null ? lecture.doStep() : void 0;
+          }
+        };
+      })(this));
+    }
+    if ($blab.lecture2) {
+      button.click(function(evt) {
+        return lecture = $blab.lecture2();
+      });
+      return $("body").keydown((function(_this) {
+        return function(evt) {
+          if (evt.target.tagName !== "BODY") {
+            return;
+          }
+          if (evt.keyCode === 37) {
+            return lecture != null ? lecture.back() : void 0;
+          } else {
+            console.log(evt.keyCode);
+            return lecture != null ? lecture.doStep() : void 0;
+          }
+        };
+      })(this));
+    }
   });
+
+  $blab.Lecture2 = (function() {
+    function Lecture2() {
+      $("#computation-code-wrapper").hide();
+      $("#buttons").hide();
+      this.steps = [];
+      this.stepIdx = -1;
+      this.clear();
+      this.init();
+      this.content();
+      setTimeout(((function(_this) {
+        return function() {
+          return _this.doStep();
+        };
+      })(this)), 100);
+    }
+
+    Lecture2.prototype.init = function() {
+      $("[id|=lecture]").hide();
+      $(".puzlet-slider").parent().hide();
+      return $(".puzlet-plot").parent().hide();
+    };
+
+    Lecture2.prototype.finish = function() {
+      $("[id|=lecture]").show();
+      $(".puzlet-slider").parent().show();
+      return $(".puzlet-plot").parent().show();
+    };
+
+    Lecture2.prototype.clear = function() {
+      return this.container = $("#main-markdown");
+    };
+
+    Lecture2.prototype.content = function() {};
+
+    Lecture2.prototype.step = function(obj, action) {
+      if (typeof obj === "string") {
+        obj = $("#" + obj);
+      }
+      if (obj.hasClass("puzlet-slider") || obj.hasClass("puzlet-plot")) {
+        obj = obj.parent();
+      }
+      console.log("OBJ", obj.data(), obj);
+      if (action == null) {
+        action = function(o) {
+          return {
+            f: function() {
+              return o.show();
+            },
+            b: function() {
+              return o.hide();
+            }
+          };
+        };
+      }
+      if (action === "fade") {
+        action = function(o) {
+          return {
+            f: function() {
+              return o.fadeIn();
+            },
+            b: function() {
+              return o.fadeOut();
+            }
+          };
+        };
+      }
+      this.steps = this.steps.concat({
+        obj: obj,
+        action: action
+      });
+      return console.log("steps", this.steps);
+    };
+
+    Lecture2.prototype.doStep = function() {
+      var action, audio, audioId, obj, step;
+      if (this.stepIdx < this.steps.length) {
+        this.stepIdx++;
+      }
+      if (this.stepIdx >= 0 && this.stepIdx < this.steps.length) {
+        step = this.steps[this.stepIdx];
+        obj = step.obj;
+        action = step.action;
+        action(obj).f();
+        audioId = obj.data().audio;
+        if (audioId) {
+          audio = document.getElementById(audioId);
+          audio.play();
+        }
+      } else {
+        this.finish();
+        $("#buttons").show();
+        $("#computation-code-wrapper").show();
+      }
+      return console.log("stepIdx", this.stepIdx);
+    };
+
+    Lecture2.prototype.back = function() {
+      var action, obj, step;
+      console.log("BACK STEP");
+      if (this.stepIdx >= 0 && this.stepIdx < this.steps.length) {
+        step = this.steps[this.stepIdx];
+        obj = step.obj;
+        action = step.action;
+        action(obj).b();
+      }
+      if (this.stepIdx >= 0) {
+        this.stepIdx--;
+      }
+      return console.log("stepIdx", this.stepIdx);
+    };
+
+    return Lecture2;
+
+  })();
 
   $blab.Lecture = (function() {
     function Lecture() {

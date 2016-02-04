@@ -1,6 +1,6 @@
 $(document).on "layoutCompiled", (evt, data) ->
   
-  return unless $blab.lecture
+  return unless $blab.lecture or $blab.lecture2
   
   button = $ "#start-lecture-button"
   lecture = null
@@ -14,13 +14,141 @@ $(document).on "layoutCompiled", (evt, data) ->
   
   $("#defs-code-heading").after button
   
-  button.click (evt) ->
-    lecture = $blab.lecture()
+  if $blab.lecture
+    button.click (evt) ->
+      lecture = $blab.lecture()
     
-  # TODO: clear event
-  $("body").keypress (evt) =>
-    lecture?.doStep() if evt.target.tagName is "BODY" #and evt.keyCode is 32
+    # TODO: clear event
+    $("body").keydown (evt) =>
+      lecture?.doStep() if evt.target.tagName is "BODY" #and evt.keyCode is 32
+    
+    #$("body").keydown (evt) =>
+    #  console.log evt
+  
+  if $blab.lecture2
+    button.click (evt) ->
+      lecture = $blab.lecture2()
+      
+    # TODO: clear event
+    $("body").keydown (evt) =>
+      return unless evt.target.tagName is "BODY"
+      if evt.keyCode is 37
+        lecture?.back()
+      else
+        console.log evt.keyCode
+        lecture?.doStep() #and evt.keyCode is 32  
+    
 
+class $blab.Lecture2
+  
+  constructor: ->
+    
+    $("#computation-code-wrapper").hide()
+    $("#buttons").hide()
+    
+    @steps = []
+    @stepIdx = -1
+    
+    @clear()
+    @init()
+    @content()
+    
+    #@steps.push =>
+    #  @finish()
+    #  $("#buttons").show()
+    #  $("#computation-code-wrapper").show()
+      
+    setTimeout (=> @doStep()), 100  #100
+    
+  init: ->
+    # Can override in lecture blab.
+    $("[id|=lecture]").hide()
+    $(".puzlet-slider").parent().hide()
+    $(".puzlet-plot").parent().hide()
+    # ZZZ same for table, plot2, etc.
+    #$("#slider-k").siblings().andSelf().css(opacity: 0.2)  
+    #$("#plot-plot").siblings().andSelf().css(opacity: 0.2)
+    
+  finish: ->
+    $("[id|=lecture]").show()
+    $(".puzlet-slider").parent().show()
+    $(".puzlet-plot").parent().show()
+    # ZZZ same for table, plot2, etc.
+  
+  clear: ->
+    @container = $ "#main-markdown"  # ZZZ no need to be property
+    #@container.empty()
+    #$(".layout-box").hide()
+    #$(".lecture-content").remove()
+    
+    #@box(pos: 1).hide()
+    #@box(pos: 2).hide()
+    
+  content: ->
+    
+    
+  step: (obj, action) ->
+    
+    # option to pass array/obj for first arg.  then can do multiple transitions.
+    
+    if typeof obj is "string"
+      obj = $("#"+obj)
+    
+    # Use parent object for specified widgets
+    if obj.hasClass("puzlet-slider") or obj.hasClass("puzlet-plot")
+      # ZZZ do for table, plot2, etc.  way to detect any widget?
+      obj = obj.parent()
+    
+    #console.log("slider", $("#slider-k").hasClass("puzlet-slider"))
+    #console.log("slider", $("#plot-plot").hasClass("puzlet-plot"))
+    
+    console.log "OBJ", obj.data(), obj
+    
+    action ?= (o) ->
+      f: -> o.show()
+      b: -> o.hide()
+      
+    if action is "fade"
+      action = (o) ->
+        f: -> o.fadeIn()
+        b: -> o.fadeOut()
+      
+    @steps = @steps.concat {obj, action}
+    console.log "steps", @steps
+    
+  doStep: ->
+    if @stepIdx<@steps.length
+      @stepIdx++
+    if @stepIdx>=0 and @stepIdx<@steps.length
+      step = @steps[@stepIdx]
+      obj = step.obj
+      action = step.action
+      action(obj).f()
+      audioId = obj.data().audio
+      if audioId
+        audio = document.getElementById(audioId)
+        audio.play()
+        
+    else
+      @finish()
+      $("#buttons").show()
+      $("#computation-code-wrapper").show()
+    console.log "stepIdx", @stepIdx
+    
+  back: ->
+    console.log "BACK STEP"
+    if @stepIdx>=0 and @stepIdx<@steps.length
+      step = @steps[@stepIdx]
+      obj = step.obj
+      action = step.action
+      action(obj).b()
+      #@steps[@stepIdx].action.b(obj)
+    if @stepIdx>=0
+      @stepIdx--
+    console.log "stepIdx", @stepIdx
+  
+
+#-------------------- OLD LECTURE CLASS ----------------------#
 
 class $blab.Lecture
   
