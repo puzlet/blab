@@ -1,11 +1,14 @@
 (function() {
-  var LectureMath;
+  var LectureMath, Widgets;
+
+  Widgets = null;
 
   $(document).on("layoutCompiled", function(evt, data) {
     var button, lecture, setupAudio;
     if (!($blab.lecture || $blab.lecture2)) {
       return;
     }
+    Widgets = $blab.Widgets;
     button = $("#start-lecture-button");
     lecture = null;
     if (button.length) {
@@ -167,11 +170,13 @@
       return this.stepIdx = -1;
     };
 
-    Lecture2.prototype.step = function(obj, action, replaceObj) {
+    Lecture2.prototype.step = function(obj, action, opt) {
+      var domId, origObj, origVal;
       if (typeof obj === "string") {
         obj = $("#" + obj);
       }
       if (obj.hasClass("puzlet-slider") || obj.hasClass("puzlet-plot")) {
+        origObj = obj;
         obj = obj.parent();
       }
       console.log("OBJ", obj.data(), obj);
@@ -203,17 +208,34 @@
         action = function(o) {
           return {
             f: function() {
-              return replaceObj.fadeOut(300, function() {
+              return opt.fadeOut(300, function() {
                 return o.fadeIn();
               });
             },
             b: function() {
               return o.fadeOut(300, function() {
-                return replaceObj.fadeIn();
+                return opt.fadeIn();
               });
             }
           };
         };
+      }
+      if (action === "slide") {
+        domId = origObj.attr("id");
+        origVal = Widgets.widgets[domId].getVal();
+        action = (function(_this) {
+          return function(o) {
+            console.log("origVal", origVal);
+            return {
+              f: function() {
+                return _this.slider(origObj, opt);
+              },
+              b: function() {
+                return _this.slider(origObj, [origVal]);
+              }
+            };
+          };
+        })(this);
       }
       this.steps = this.steps.concat({
         obj: obj,
@@ -271,6 +293,32 @@
           return this.guide.hide();
         }
       }
+    };
+
+    Lecture2.prototype.slider = function(obj, vals, cb) {
+      var delay, domId, idx, setSlider;
+      delay = 200;
+      idx = 0;
+      domId = obj.attr("id");
+      setSlider = (function(_this) {
+        return function(cb) {
+          var v;
+          console.log("setSlider");
+          v = vals[idx];
+          obj.slider('option', 'value', v);
+          Widgets.widgets[domId].setVal(v);
+          Widgets.compute();
+          idx++;
+          if (idx < vals.length) {
+            return setTimeout((function() {
+              return setSlider(cb);
+            }), delay);
+          } else {
+            return typeof cb === "function" ? cb() : void 0;
+          }
+        };
+      })(this);
+      return setSlider(cb);
     };
 
     return Lecture2;

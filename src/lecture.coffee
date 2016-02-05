@@ -1,6 +1,10 @@
+Widgets = null
+
 $(document).on "layoutCompiled", (evt, data) ->
   
   return unless $blab.lecture or $blab.lecture2
+  
+  Widgets = $blab.Widgets
   
   button = $ "#start-lecture-button"
   lecture = null
@@ -178,7 +182,7 @@ class $blab.Lecture2
     @stepIdx = -1
     
     
-  step: (obj, action, replaceObj) ->
+  step: (obj, action, opt) ->
     
     # option to pass array/obj for first arg.  then can do multiple transitions.
     
@@ -188,6 +192,7 @@ class $blab.Lecture2
     # Use parent object for specified widgets
     if obj.hasClass("puzlet-slider") or obj.hasClass("puzlet-plot")
       # ZZZ do for table, plot2, etc.  way to detect any widget?
+      origObj = obj
       obj = obj.parent()
     
     #console.log("slider", $("#slider-k").hasClass("puzlet-slider"))
@@ -207,11 +212,22 @@ class $blab.Lecture2
     # ZZZ options for replace
     if action is "replace"
       action = (o) ->
-        f: -> replaceObj.fadeOut(300, -> o.fadeIn())
-        b: -> o.fadeOut(300, -> replaceObj.fadeIn())
+        f: -> opt.fadeOut(300, -> o.fadeIn())
+        b: -> o.fadeOut(300, -> opt.fadeIn())
         #f: -> replaceObj.hide(0, -> o.show())
         #b: -> o.hide(0, -> replaceObj.show()) 
           #replaceObj.show(0, -> o.hide())
+          
+    if action is "slide"
+        #id = "k"  # ZZZ temp
+        #id = origObj.attr "id"
+        domId = origObj.attr "id"
+        origVal = Widgets.widgets[domId].getVal()
+        action = (o) =>
+          console.log "origVal", origVal
+          #console.log "**** action id", id
+          f: => @slider origObj, opt
+          b: => @slider origObj, [origVal]  # ZZZ should be original val?
       
     @steps = @steps.concat {obj, action}
     console.log "steps", @steps
@@ -270,6 +286,29 @@ class $blab.Lecture2
       @guide.hide() if @guide.is(":visible")
       #alert "BACK TO START"
       #@reset()
+      
+  slider: (obj, vals, cb) ->
+    delay = 200
+    idx = 0
+    domId = obj.attr "id"
+    #$.event.trigger "clickInputWidget"
+    setSlider = (cb) =>
+      console.log "setSlider"
+      v = vals[idx]
+      
+      #console.log "****** id, domId", id, domId
+      obj.slider 'option', 'value', v
+#      $("#"+domId).slider 'option', 'value', v
+      Widgets.widgets[domId].setVal v
+      Widgets.compute()
+      idx++
+      if idx < vals.length
+        setTimeout (-> setSlider(cb)), delay
+      else
+        cb?()
+      
+    setSlider(cb)
+    #setTimeout (-> setSlider(cb)), 0
   
 
 #-------------------- OLD LECTURE CLASS ----------------------#
