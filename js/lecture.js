@@ -68,6 +68,7 @@
     }
 
     Lecture2.prototype.init = function() {
+      console.log("******** OBJECTS", $("[id|=lecture]").css("display"));
       $("[id|=lecture]").hide();
       $(".puzlet-slider").parent().hide();
       return $(".puzlet-plot").parent().hide();
@@ -75,6 +76,7 @@
 
     Lecture2.prototype.finish = function() {
       $("[id|=lecture]").show();
+      $(".hide[id|=lecture]").hide();
       $(".puzlet-slider").parent().show();
       return $(".puzlet-plot").parent().show();
     };
@@ -135,7 +137,7 @@
         action = step.action;
         action(obj).f();
         audioId = obj.data().audio;
-        if (audioId) {
+        if (audioId && this.enableAudio) {
           audio = document.getElementById(audioId);
           audio.play();
         }

@@ -37,7 +37,12 @@ $(document).on "layoutCompiled", (evt, data) ->
       else
         console.log evt.keyCode
         lecture?.doStep() #and evt.keyCode is 32  
-    
+
+
+# TODO
+# lecture button should appear only once all audio loaded.
+# load audio in defs section?  search for data-audio attributes?  do via lecture.coffee?
+# way to have math builds - elements that don't show in initital presentation.
 
 class $blab.Lecture2
   
@@ -61,6 +66,7 @@ class $blab.Lecture2
     setTimeout (=> @doStep()), 100  #100
     
   init: ->
+    console.log "******** OBJECTS", $("[id|=lecture]").css("display")
     # Can override in lecture blab.
     $("[id|=lecture]").hide()
     $(".puzlet-slider").parent().hide()
@@ -71,6 +77,9 @@ class $blab.Lecture2
     
   finish: ->
     $("[id|=lecture]").show()
+    $(".hide[id|=lecture]").hide()
+    
+    #$("[id|=lecture]:not[display=none]").show()
     $(".puzlet-slider").parent().show()
     $(".puzlet-plot").parent().show()
     # ZZZ same for table, plot2, etc.
@@ -125,7 +134,7 @@ class $blab.Lecture2
       action = step.action
       action(obj).f()
       audioId = obj.data().audio
-      if audioId
+      if audioId and @enableAudio
         audio = document.getElementById(audioId)
         audio.play()
         

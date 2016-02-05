@@ -566,6 +566,12 @@ div[data-file="layout.coffee"] {
   font-weight: bold;
 }
 
+/********* lecture *********/
+
+.hide {
+  display: none;
+}
+
 /********* typed.js *********/
 
 /*
