@@ -40,11 +40,11 @@ $(document).on "layoutCompiled", (evt, data) ->
           $(document.body).append "<audio id='#{id}' src='#{server}/#{id}.mp3'></audio>\n"
     
     lecture = $blab.lecture2()
-    setupAudio()
+    #setupAudio()
     
     button.click (evt) ->
       lecture = $blab.lecture2()
-      setupAudio()
+      #setupAudio()
       lecture.start()  # Wait until audio loaded?
       
     # TODO: clear event
@@ -86,8 +86,17 @@ class $blab.Lecture2
     @stepIdx = -1
     
     @content()
-  
     
+  # ZZZ TEMP
+  setupAudio: ->
+    server = @audioServer
+    audio = $("[data-audio]")
+    for a in audio
+      id = $(a).data "audio"
+      unless $("audio#{id}").length
+        $(document.body).append "<audio id='#{id}' src='#{server}/#{id}.mp3'></audio>\n"
+    
+  
   setupGuide: ->
     
     @guide = $ "#demo-guide"
@@ -248,8 +257,12 @@ class $blab.Lecture2
           #console.log "**** action id", id
           f: => @slider origObj, spec.vals
           b: => @slider origObj, [origVal]  # ZZZ should be original val?
+          
+    audio = spec.audio
+    if audio and not $("audio#{audio}").length
+      $(document.body).append "<audio id='#{audio}' src='#{@audioServer}/#{audio}.mp3'></audio>\n"
       
-    @steps = @steps.concat {obj, action}
+    @steps = @steps.concat {obj, action, audio}
     console.log "steps", @steps
     
     obj
@@ -262,7 +275,8 @@ class $blab.Lecture2
       obj = step.obj
       action = step.action
       action(obj).f()
-      audioId = obj.data().audio
+      audioId = step.audio
+      #audioId = obj.data().audio
       if audioId and @enableAudio
         audio = document.getElementById(audioId)
         audio.play()

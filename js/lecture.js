@@ -52,10 +52,8 @@
         return results;
       };
       lecture = $blab.lecture2();
-      setupAudio();
       button.click(function(evt) {
         lecture = $blab.lecture2();
-        setupAudio();
         return lecture.start();
       });
       return $("body").keydown((function(_this) {
@@ -89,6 +87,23 @@
       this.stepIdx = -1;
       this.content();
     }
+
+    Lecture2.prototype.setupAudio = function() {
+      var a, audio, i, id, len, results, server;
+      server = this.audioServer;
+      audio = $("[data-audio]");
+      results = [];
+      for (i = 0, len = audio.length; i < len; i++) {
+        a = audio[i];
+        id = $(a).data("audio");
+        if (!$("audio" + id).length) {
+          results.push($(document.body).append("<audio id='" + id + "' src='" + server + "/" + id + ".mp3'></audio>\n"));
+        } else {
+          results.push(void 0);
+        }
+      }
+      return results;
+    };
 
     Lecture2.prototype.setupGuide = function() {
       this.guide = $("#demo-guide");
@@ -180,7 +195,7 @@
     };
 
     Lecture2.prototype.step = function(obj, spec) {
-      var action, domId, origObj, origVal, rObj;
+      var action, audio, domId, origObj, origVal, rObj;
       if (spec == null) {
         spec = {};
       }
@@ -251,9 +266,14 @@
           };
         })(this);
       }
+      audio = spec.audio;
+      if (audio && !$("audio" + audio).length) {
+        $(document.body).append("<audio id='" + audio + "' src='" + this.audioServer + "/" + audio + ".mp3'></audio>\n");
+      }
       this.steps = this.steps.concat({
         obj: obj,
-        action: action
+        action: action,
+        audio: audio
       });
       console.log("steps", this.steps);
       return obj;
@@ -269,7 +289,7 @@
         obj = step.obj;
         action = step.action;
         action(obj).f();
-        audioId = obj.data().audio;
+        audioId = step.audio;
         if (audioId && this.enableAudio) {
           audio = document.getElementById(audioId);
           audio.play();
