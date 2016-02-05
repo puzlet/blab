@@ -2,7 +2,7 @@
   var LectureMath;
 
   $(document).on("layoutCompiled", function(evt, data) {
-    var button, lecture;
+    var button, lecture, setupAudio;
     if (!($blab.lecture || $blab.lecture2)) {
       return;
     }
@@ -32,8 +32,28 @@
       })(this));
     }
     if ($blab.lecture2) {
+      setupAudio = function() {
+        var a, audio, i, id, len, results, server;
+        server = lecture.audioServer;
+        audio = $("[data-audio]");
+        results = [];
+        for (i = 0, len = audio.length; i < len; i++) {
+          a = audio[i];
+          id = $(a).data("audio");
+          if (!$("audio" + id).length) {
+            results.push($(document.body).append("<audio id='" + id + "' src='" + server + "/" + id + ".mp3'></audio>\n"));
+          } else {
+            results.push(void 0);
+          }
+        }
+        return results;
+      };
+      lecture = $blab.lecture2();
+      setupAudio();
       button.click(function(evt) {
-        return lecture = $blab.lecture2();
+        lecture = $blab.lecture2();
+        setupAudio();
+        return lecture.start();
       });
       return $("body").keydown((function(_this) {
         return function(evt) {
@@ -52,7 +72,9 @@
   });
 
   $blab.Lecture2 = (function() {
-    function Lecture2() {
+    function Lecture2() {}
+
+    Lecture2.prototype.start = function() {
       $("#computation-code-wrapper").hide();
       $("#buttons").hide();
       this.steps = [];
@@ -60,12 +82,12 @@
       this.clear();
       this.init();
       this.content();
-      setTimeout(((function(_this) {
+      return setTimeout(((function(_this) {
         return function() {
           return _this.doStep();
         };
       })(this)), 100);
-    }
+    };
 
     Lecture2.prototype.init = function() {
       console.log("******** OBJECTS", $("[id|=lecture]").css("display"));

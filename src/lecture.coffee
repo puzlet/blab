@@ -26,8 +26,22 @@ $(document).on "layoutCompiled", (evt, data) ->
     #  console.log evt
   
   if $blab.lecture2
+    
+    setupAudio = ->
+      server = lecture.audioServer
+      audio = $("[data-audio]")
+      for a in audio
+        id = $(a).data "audio"
+        unless $("audio#{id}").length
+          $(document.body).append "<audio id='#{id}' src='#{server}/#{id}.mp3'></audio>\n"
+    
+    lecture = $blab.lecture2()
+    setupAudio()
+    
     button.click (evt) ->
       lecture = $blab.lecture2()
+      setupAudio()
+      lecture.start()  # Wait until audio loaded?
       
     # TODO: clear event
     $("body").keydown (evt) =>
@@ -36,7 +50,9 @@ $(document).on "layoutCompiled", (evt, data) ->
         lecture?.back()
       else
         console.log evt.keyCode
-        lecture?.doStep() #and evt.keyCode is 32  
+        lecture?.doStep() #and evt.keyCode is 32
+        
+
 
 
 # TODO
@@ -44,9 +60,15 @@ $(document).on "layoutCompiled", (evt, data) ->
 # load audio in defs section?  search for data-audio attributes?  do via lecture.coffee?
 # way to have math builds - elements that don't show in initital presentation.
 
+# * yellow popup text boxes - placed anywhere.
+# * similarly, balloon pointer boxes.  point at text/widget etc., and explain it.
+# * a generic pointer (scripted) for audio/voiceovers.
+
 class $blab.Lecture2
   
   constructor: ->
+  
+  start: ->
     
     $("#computation-code-wrapper").hide()
     $("#buttons").hide()
