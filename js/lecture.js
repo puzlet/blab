@@ -18,7 +18,7 @@
         marginBottom: "10px"
       }
     });
-    $("#defs-code-heading").after(button);
+    $("#widgets-container").after(button);
     if ($blab.lecture) {
       button.click(function(evt) {
         return lecture = $blab.lecture();
@@ -60,8 +60,16 @@
           if (evt.target.tagName !== "BODY") {
             return;
           }
+          if (!lecture) {
+            return;
+          }
           if (evt.keyCode === 37) {
             return lecture != null ? lecture.back() : void 0;
+          } else if (evt.keyCode === 27) {
+            if (lecture != null) {
+              lecture.reset();
+            }
+            return lecture = null;
           } else {
             console.log(evt.keyCode);
             return lecture != null ? lecture.doStep() : void 0;
@@ -72,11 +80,27 @@
   });
 
   $blab.Lecture2 = (function() {
-    function Lecture2() {}
+    function Lecture2() {
+      this.setupGuide();
+    }
+
+    Lecture2.prototype.setupGuide = function() {
+      this.guide = $("#demo-guide");
+      this.guide.draggable();
+      this.guide.css({
+        top: 20,
+        left: $("body").width() - 200,
+        background: typeof background !== "undefined" && background !== null ? background : "#ff9",
+        textAlign: "center",
+        width: 150
+      });
+      return this.guide.hide();
+    };
 
     Lecture2.prototype.start = function() {
       $("#computation-code-wrapper").hide();
       $("#buttons").hide();
+      $("#start-lecture-button").hide();
       this.steps = [];
       this.stepIdx = -1;
       this.clear();
@@ -100,7 +124,8 @@
       $("[id|=lecture]").show();
       $(".hide[id|=lecture]").hide();
       $(".puzlet-slider").parent().show();
-      return $(".puzlet-plot").parent().show();
+      $(".puzlet-plot").parent().show();
+      return this.stepIdx = -1;
     };
 
     Lecture2.prototype.clear = function() {
@@ -108,6 +133,17 @@
     };
 
     Lecture2.prototype.content = function() {};
+
+    Lecture2.prototype.reset = function() {
+      $("[id|=lecture]").show();
+      $(".hide[id|=lecture]").hide();
+      $(".puzlet-slider").parent().show();
+      $(".puzlet-plot").parent().show();
+      $("#computation-code-wrapper").show();
+      $("#buttons").show();
+      $("#start-lecture-button").show();
+      return this.stepIdx = -1;
+    };
 
     Lecture2.prototype.step = function(obj, action, replaceObj) {
       if (typeof obj === "string") {
@@ -180,10 +216,12 @@
           audio = document.getElementById(audioId);
           audio.play();
         }
+      }
+      if (this.stepIdx >= this.steps.length) {
+        this.guide.html("At end of lecture.<br>Press <b>Esc</b> to exit.");
+        this.guide.show();
       } else {
-        this.finish();
-        $("#buttons").show();
-        $("#computation-code-wrapper").show();
+        this.guide.hide();
       }
       return console.log("stepIdx", this.stepIdx);
     };
@@ -200,7 +238,13 @@
       if (this.stepIdx >= 0) {
         this.stepIdx--;
       }
-      return console.log("stepIdx", this.stepIdx);
+      console.log("stepIdx", this.stepIdx);
+      if (this.stepIdx < 0) {
+        this.guide.html("At start of lecture.<br>Press <b>Esc</b> to exit.");
+        return this.guide.show();
+      } else {
+        return this.guide.hide();
+      }
     };
 
     return Lecture2;

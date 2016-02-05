@@ -12,7 +12,7 @@ $(document).on "layoutCompiled", (evt, data) ->
     text: "Start lecture"
     css: marginBottom: "10px"
   
-  $("#defs-code-heading").after button
+  $("#widgets-container").after button
   
   if $blab.lecture
     button.click (evt) ->
@@ -46,8 +46,12 @@ $(document).on "layoutCompiled", (evt, data) ->
     # TODO: clear event
     $("body").keydown (evt) =>
       return unless evt.target.tagName is "BODY"
+      return unless lecture
       if evt.keyCode is 37
         lecture?.back()
+      else if evt.keyCode is 27  # Escape
+        lecture?.reset()
+        lecture = null  # ZZZ better way?
       else
         console.log evt.keyCode
         lecture?.doStep() #and evt.keyCode is 32
@@ -67,11 +71,29 @@ $(document).on "layoutCompiled", (evt, data) ->
 class $blab.Lecture2
   
   constructor: ->
+    
+    @setupGuide()
+  
+    
+  setupGuide: ->
+    
+    @guide = $ "#demo-guide"
+    @guide.draggable()
+    
+    @guide.css
+      top: 20
+      left: ($("body").width() - 200)
+      background: background ? "#ff9"
+      textAlign: "center"
+      width: 150
+    
+    @guide.hide()
   
   start: ->
     
     $("#computation-code-wrapper").hide()
     $("#buttons").hide()
+    $("#start-lecture-button").hide()
     
     @steps = []
     @stepIdx = -1
@@ -97,6 +119,7 @@ class $blab.Lecture2
     #$("#slider-k").siblings().andSelf().css(opacity: 0.2)  
     #$("#plot-plot").siblings().andSelf().css(opacity: 0.2)
     
+  # ZZZ UNUSED?
   finish: ->
     $("[id|=lecture]").show()
     $(".hide[id|=lecture]").hide()
@@ -104,6 +127,9 @@ class $blab.Lecture2
     #$("[id|=lecture]:not[display=none]").show()
     $(".puzlet-slider").parent().show()
     $(".puzlet-plot").parent().show()
+    
+    @stepIdx = -1
+    
     # ZZZ same for table, plot2, etc.
   
   clear: ->
@@ -116,6 +142,21 @@ class $blab.Lecture2
     #@box(pos: 2).hide()
     
   content: ->
+  
+  reset: ->
+    
+    $("[id|=lecture]").show()
+    $(".hide[id|=lecture]").hide()
+    
+    #$("[id|=lecture]:not[display=none]").show()
+    $(".puzlet-slider").parent().show()
+    $(".puzlet-plot").parent().show()
+    
+    $("#computation-code-wrapper").show()
+    $("#buttons").show()
+    $("#start-lecture-button").show()
+    
+    @stepIdx = -1
     
     
   step: (obj, action, replaceObj) ->
@@ -143,7 +184,8 @@ class $blab.Lecture2
       action = (o) ->
         f: -> o.fadeIn()
         b: -> o.fadeOut()
-        
+    
+    # ZZZ options for replace
     if action is "replace"
       action = (o) ->
         f: -> replaceObj.fadeOut(300, -> o.fadeIn())
@@ -169,11 +211,18 @@ class $blab.Lecture2
       if audioId and @enableAudio
         audio = document.getElementById(audioId)
         audio.play()
-        
+      
+    if @stepIdx>=@steps.length
+      @guide.html "At end of lecture.<br>Press <b>Esc</b> to exit."
+      @guide.show()
     else
-      @finish()
-      $("#buttons").show()
-      $("#computation-code-wrapper").show()
+      @guide.hide()
+      #alert "AT END"
+        
+    #else
+    #  @finish()
+    #  $("#buttons").show()
+    #  $("#computation-code-wrapper").show()
     console.log "stepIdx", @stepIdx
     
   back: ->
@@ -187,6 +236,13 @@ class $blab.Lecture2
     if @stepIdx>=0
       @stepIdx--
     console.log "stepIdx", @stepIdx
+    if @stepIdx<0
+      @guide.html "At start of lecture.<br>Press <b>Esc</b> to exit."
+      @guide.show()
+    else
+      @guide.hide()
+      #alert "BACK TO START"
+      #@reset()
   
 
 #-------------------- OLD LECTURE CLASS ----------------------#
