@@ -286,7 +286,11 @@ class $blab.Lecture2
       @guide.hide() if @guide.is(":visible")
       #alert "BACK TO START"
       #@reset()
-      
+  
+  # TODO: move slide/step logic here - consolidate
+  slide: (obj, vals) ->
+    @step obj, "slide", vals
+  
   slider: (obj, vals, cb) ->
     delay = 200
     idx = 0

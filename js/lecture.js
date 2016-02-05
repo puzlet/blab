@@ -295,6 +295,10 @@
       }
     };
 
+    Lecture2.prototype.slide = function(obj, vals) {
+      return this.step(obj, "slide", vals);
+    };
+
     Lecture2.prototype.slider = function(obj, vals, cb) {
       var delay, domId, idx, setSlider;
       delay = 200;
