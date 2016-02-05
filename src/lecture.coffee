@@ -146,8 +146,10 @@ class $blab.Lecture2
         
     if action is "replace"
       action = (o) ->
-        f: -> replaceObj.hide(0, -> o.show())
-        b: -> o.hide(0, -> replaceObj.show()) 
+        f: -> replaceObj.fadeOut(300, -> o.fadeIn())
+        b: -> o.fadeOut(300, -> replaceObj.fadeIn())
+        #f: -> replaceObj.hide(0, -> o.show())
+        #b: -> o.hide(0, -> replaceObj.show()) 
           #replaceObj.show(0, -> o.hide())
       
     @steps = @steps.concat {obj, action}

@@ -145,13 +145,13 @@
         action = function(o) {
           return {
             f: function() {
-              return replaceObj.hide(0, function() {
-                return o.show();
+              return replaceObj.fadeOut(300, function() {
+                return o.fadeIn();
               });
             },
             b: function() {
-              return o.hide(0, function() {
-                return replaceObj.show();
+              return o.fadeOut(300, function() {
+                return replaceObj.fadeIn();
               });
             }
           };
