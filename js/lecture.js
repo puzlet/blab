@@ -87,7 +87,7 @@
 
     Lecture2.prototype.content = function() {};
 
-    Lecture2.prototype.step = function(obj, action) {
+    Lecture2.prototype.step = function(obj, action, replaceObj) {
       if (typeof obj === "string") {
         obj = $("#" + obj);
       }
@@ -119,11 +119,28 @@
           };
         };
       }
+      if (action === "replace") {
+        action = function(o) {
+          return {
+            f: function() {
+              return replaceObj.hide(0, function() {
+                return o.show();
+              });
+            },
+            b: function() {
+              return o.hide(0, function() {
+                return replaceObj.show();
+              });
+            }
+          };
+        };
+      }
       this.steps = this.steps.concat({
         obj: obj,
         action: action
       });
-      return console.log("steps", this.steps);
+      console.log("steps", this.steps);
+      return obj;
     };
 
     Lecture2.prototype.doStep = function() {

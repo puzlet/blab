@@ -96,7 +96,7 @@ class $blab.Lecture2
   content: ->
     
     
-  step: (obj, action) ->
+  step: (obj, action, replaceObj) ->
     
     # option to pass array/obj for first arg.  then can do multiple transitions.
     
@@ -116,14 +116,22 @@ class $blab.Lecture2
     action ?= (o) ->
       f: -> o.show()
       b: -> o.hide()
-      
+    
     if action is "fade"
       action = (o) ->
         f: -> o.fadeIn()
         b: -> o.fadeOut()
+        
+    if action is "replace"
+      action = (o) ->
+        f: -> replaceObj.hide(0, -> o.show())
+        b: -> o.hide(0, -> replaceObj.show()) 
+          #replaceObj.show(0, -> o.hide())
       
     @steps = @steps.concat {obj, action}
     console.log "steps", @steps
+    
+    obj
     
   doStep: ->
     if @stepIdx<@steps.length
