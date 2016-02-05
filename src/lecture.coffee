@@ -72,11 +72,20 @@ $(document).on "layoutCompiled", (evt, data) ->
 # * similarly, balloon pointer boxes.  point at text/widget etc., and explain it.
 # * a generic pointer (scripted) for audio/voiceovers.
 
+# Audio should be tied to transitions, rather than ion html.  But then how will load all?
+# Answer: once layout done, run lecture constructor.  Will not run init method (or whatever it's called).
+# This will find all audio.
+
 class $blab.Lecture2
   
   constructor: ->
     
     @setupGuide()
+    
+    @steps = []
+    @stepIdx = -1
+    
+    @content()
   
     
   setupGuide: ->
@@ -110,8 +119,14 @@ class $blab.Lecture2
     #  @finish()
     #  $("#buttons").show()
     #  $("#computation-code-wrapper").show()
-      
-    setTimeout (=> @doStep()), 100  #100
+    
+    setTimeout (=> @kickoff()), 100  #100
+    #setTimeout (=> @doStep()), 100  #100
+    
+  kickoff: ->
+    @clear()
+    @init()
+    @doStep()
     
   init: ->
     console.log "******** OBJECTS", $("[id|=lecture]").css("display")
@@ -182,7 +197,8 @@ class $blab.Lecture2
     @stepIdx = -1
     
     
-  step: (obj, action, opt) ->
+  step: (obj, spec={}) ->
+    # was: action, opt
     
     # option to pass array/obj for first arg.  then can do multiple transitions.
     
@@ -200,6 +216,8 @@ class $blab.Lecture2
     
     console.log "OBJ", obj.data(), obj
     
+    action = spec.action
+    
     action ?= (o) ->
       f: -> o.show()
       b: -> o.hide()
@@ -210,10 +228,12 @@ class $blab.Lecture2
         b: -> o.fadeOut()
     
     # ZZZ options for replace
-    if action is "replace"
+    if spec.replace
+      rObj = spec.replace
+#    if action is "replace"
       action = (o) ->
-        f: -> opt.fadeOut(300, -> o.fadeIn())
-        b: -> o.fadeOut(300, -> opt.fadeIn())
+        f: -> rObj.fadeOut(300, -> o.fadeIn())
+        b: -> o.fadeOut(300, -> rObj.fadeIn())
         #f: -> replaceObj.hide(0, -> o.show())
         #b: -> o.hide(0, -> replaceObj.show()) 
           #replaceObj.show(0, -> o.hide())
@@ -226,7 +246,7 @@ class $blab.Lecture2
         action = (o) =>
           console.log "origVal", origVal
           #console.log "**** action id", id
-          f: => @slider origObj, opt
+          f: => @slider origObj, spec.vals
           b: => @slider origObj, [origVal]  # ZZZ should be original val?
       
     @steps = @steps.concat {obj, action}
@@ -288,8 +308,9 @@ class $blab.Lecture2
       #@reset()
   
   # TODO: move slide/step logic here - consolidate
-  slide: (obj, vals) ->
-    @step obj, "slide", vals
+  slide: (obj, spec) ->
+    spec.action = "slide"
+    @step obj, spec
   
   slider: (obj, vals, cb) ->
     delay = 200

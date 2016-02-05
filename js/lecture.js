@@ -85,6 +85,9 @@
   $blab.Lecture2 = (function() {
     function Lecture2() {
       this.setupGuide();
+      this.steps = [];
+      this.stepIdx = -1;
+      this.content();
     }
 
     Lecture2.prototype.setupGuide = function() {
@@ -111,9 +114,15 @@
       this.content();
       return setTimeout(((function(_this) {
         return function() {
-          return _this.doStep();
+          return _this.kickoff();
         };
       })(this)), 100);
+    };
+
+    Lecture2.prototype.kickoff = function() {
+      this.clear();
+      this.init();
+      return this.doStep();
     };
 
     Lecture2.prototype.init = function() {
@@ -170,8 +179,11 @@
       return this.stepIdx = -1;
     };
 
-    Lecture2.prototype.step = function(obj, action, opt) {
-      var domId, origObj, origVal;
+    Lecture2.prototype.step = function(obj, spec) {
+      var action, domId, origObj, origVal, rObj;
+      if (spec == null) {
+        spec = {};
+      }
       if (typeof obj === "string") {
         obj = $("#" + obj);
       }
@@ -180,6 +192,7 @@
         obj = obj.parent();
       }
       console.log("OBJ", obj.data(), obj);
+      action = spec.action;
       if (action == null) {
         action = function(o) {
           return {
@@ -204,17 +217,18 @@
           };
         };
       }
-      if (action === "replace") {
+      if (spec.replace) {
+        rObj = spec.replace;
         action = function(o) {
           return {
             f: function() {
-              return opt.fadeOut(300, function() {
+              return rObj.fadeOut(300, function() {
                 return o.fadeIn();
               });
             },
             b: function() {
               return o.fadeOut(300, function() {
-                return opt.fadeIn();
+                return rObj.fadeIn();
               });
             }
           };
@@ -228,7 +242,7 @@
             console.log("origVal", origVal);
             return {
               f: function() {
-                return _this.slider(origObj, opt);
+                return _this.slider(origObj, spec.vals);
               },
               b: function() {
                 return _this.slider(origObj, [origVal]);
@@ -295,8 +309,9 @@
       }
     };
 
-    Lecture2.prototype.slide = function(obj, vals) {
-      return this.step(obj, "slide", vals);
+    Lecture2.prototype.slide = function(obj, spec) {
+      spec.action = "slide";
+      return this.step(obj, spec);
     };
 
     Lecture2.prototype.slider = function(obj, vals, cb) {
