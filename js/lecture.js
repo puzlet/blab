@@ -88,7 +88,7 @@
       this.guide = $("#demo-guide");
       this.guide.draggable();
       this.guide.css({
-        top: 20,
+        top: 30,
         left: $("body").width() - 200,
         background: typeof background !== "undefined" && background !== null ? background : "#ff9",
         textAlign: "center",
@@ -114,10 +114,31 @@
     };
 
     Lecture2.prototype.init = function() {
+      var hide, show;
       console.log("******** OBJECTS", $("[id|=lecture]").css("display"));
       $("[id|=lecture]").hide();
       $(".puzlet-slider").parent().hide();
-      return $(".puzlet-plot").parent().hide();
+      $(".puzlet-plot").parent().hide();
+      this.guide.html("<b>&#8592; &#8594;</b> to navigate<br>\n<b>Esc</b> to exit");
+      show = (function(_this) {
+        return function() {
+          _this.guide.show();
+          return setTimeout((function() {
+            return hide();
+          }), 5000);
+        };
+      })(this);
+      hide = (function(_this) {
+        return function() {
+          _this.guide.hide();
+          return _this.guide.css({
+            textAlign: "center"
+          });
+        };
+      })(this);
+      return setTimeout((function() {
+        return show();
+      }), 1000);
     };
 
     Lecture2.prototype.finish = function() {
@@ -135,6 +156,7 @@
     Lecture2.prototype.content = function() {};
 
     Lecture2.prototype.reset = function() {
+      this.guide.hide();
       $("[id|=lecture]").show();
       $(".hide[id|=lecture]").hide();
       $(".puzlet-slider").parent().show();
@@ -218,10 +240,12 @@
         }
       }
       if (this.stepIdx >= this.steps.length) {
-        this.guide.html("At end of lecture.<br>Press <b>Esc</b> to exit.");
+        this.guide.html("<b>End of lecture</b><br>\n<b>&#8592; &#8594;</b> to navigate<br>\n<b>Esc</b> to exit");
         this.guide.show();
       } else {
-        this.guide.hide();
+        if (this.guide.is(":visible")) {
+          this.guide.hide();
+        }
       }
       return console.log("stepIdx", this.stepIdx);
     };
@@ -240,10 +264,12 @@
       }
       console.log("stepIdx", this.stepIdx);
       if (this.stepIdx < 0) {
-        this.guide.html("At start of lecture.<br>Press <b>Esc</b> to exit.");
+        this.guide.html("<b>Start of lecture</b><br>\n<b>&#8592; &#8594;</b> to navigate<br>\n<b>Esc</b> to exit");
         return this.guide.show();
       } else {
-        return this.guide.hide();
+        if (this.guide.is(":visible")) {
+          return this.guide.hide();
+        }
       }
     };
 

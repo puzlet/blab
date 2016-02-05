@@ -81,7 +81,7 @@ class $blab.Lecture2
     @guide.draggable()
     
     @guide.css
-      top: 20
+      top: 30
       left: ($("body").width() - 200)
       background: background ? "#ff9"
       textAlign: "center"
@@ -119,6 +119,23 @@ class $blab.Lecture2
     #$("#slider-k").siblings().andSelf().css(opacity: 0.2)  
     #$("#plot-plot").siblings().andSelf().css(opacity: 0.2)
     
+    @guide.html """
+      <b>&#8592; &#8594;</b> to navigate<br>
+      <b>Esc</b> to exit
+    """
+    #@guide.css textAlign: "left"
+    
+    show = =>
+      @guide.show()
+      setTimeout (-> hide()), 5000
+      
+    hide = =>
+      @guide.hide()
+      @guide.css textAlign: "center"
+    
+    setTimeout (-> show()), 1000 #.delay(3000).hide()
+    
+    
   # ZZZ UNUSED?
   finish: ->
     $("[id|=lecture]").show()
@@ -144,6 +161,8 @@ class $blab.Lecture2
   content: ->
   
   reset: ->
+    
+    @guide.hide()
     
     $("[id|=lecture]").show()
     $(".hide[id|=lecture]").hide()
@@ -213,10 +232,14 @@ class $blab.Lecture2
         audio.play()
       
     if @stepIdx>=@steps.length
-      @guide.html "At end of lecture.<br>Press <b>Esc</b> to exit."
+      @guide.html """
+        <b>End of lecture</b><br>
+        <b>&#8592; &#8594;</b> to navigate<br>
+        <b>Esc</b> to exit
+      """
       @guide.show()
     else
-      @guide.hide()
+      @guide.hide() if @guide.is(":visible")
       #alert "AT END"
         
     #else
@@ -237,10 +260,14 @@ class $blab.Lecture2
       @stepIdx--
     console.log "stepIdx", @stepIdx
     if @stepIdx<0
-      @guide.html "At start of lecture.<br>Press <b>Esc</b> to exit."
+      @guide.html """
+        <b>Start of lecture</b><br>
+        <b>&#8592; &#8594;</b> to navigate<br>
+        <b>Esc</b> to exit
+      """
       @guide.show()
     else
-      @guide.hide()
+      @guide.hide() if @guide.is(":visible")
       #alert "BACK TO START"
       #@reset()
   
