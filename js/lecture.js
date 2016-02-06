@@ -390,12 +390,12 @@
           cell = t.editableCells[col][idx];
           dir = idx < vals.length - 1 ? 1 : 0;
           cell.div.text(v);
-          bg = cell.div.css("background");
-          cell.div.css({
+          bg = cell.div.parent().css("background");
+          cell.div.parent().css({
             background: "#ccc"
           });
           setTimeout((function() {
-            cell.div.css({
+            cell.div.parent().css({
               background: bg
             });
             return cell.done();

@@ -377,11 +377,11 @@ class $blab.Lecture2
       cell = t.editableCells[col][idx]  # 0 needs to be arg.
       dir = if idx<vals.length-1 then 1 else 0
       cell.div.text v
-      bg = cell.div.css "background"
-      cell.div.css background: "#ccc"
+      bg = cell.div.parent().css "background"
+      cell.div.parent().css background: "#ccc"
       #cell.div.click()
       setTimeout (->
-        cell.div.css background: bg
+        cell.div.parent().css background: bg
         cell.done()
       ), 200
       #cell.div.blur()
