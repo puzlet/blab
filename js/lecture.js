@@ -146,6 +146,7 @@
       $("[id|=lecture]").hide();
       $(".puzlet-slider").parent().hide();
       $(".puzlet-plot").parent().hide();
+      $(".widget").hide();
       this.guide.html("<b>&#8592; &#8594;</b> to navigate<br>\n<b>Esc</b> to exit");
       show = (function(_this) {
         return function() {
@@ -173,6 +174,7 @@
       $(".hide[id|=lecture]").hide();
       $(".puzlet-slider").parent().show();
       $(".puzlet-plot").parent().show();
+      $(".widget").show();
       return this.stepIdx = -1;
     };
 
@@ -188,6 +190,7 @@
       $(".hide[id|=lecture]").hide();
       $(".puzlet-slider").parent().show();
       $(".puzlet-plot").parent().show();
+      $(".widget").show();
       $("#computation-code-wrapper").show();
       $("#buttons").show();
       $("#start-lecture-button").show();
@@ -262,6 +265,19 @@
               b: function() {
                 return _this.slider(origObj, [origVal]);
               }
+            };
+          };
+        })(this);
+      }
+      if (action === "table") {
+        domId = obj.attr("id");
+        action = (function(_this) {
+          return function(o) {
+            return {
+              f: function() {
+                return _this.tablePopulate(obj, spec.col, spec.vals, function() {});
+              },
+              b: function() {}
             };
           };
         })(this);
@@ -358,6 +374,54 @@
         };
       })(this);
       return setSlider(cb);
+    };
+
+    Lecture2.prototype.tablePopulate = function(obj, col, vals, cb) {
+      var delay, domId, idx, setTable;
+      delay = 1000;
+      idx = 0;
+      domId = obj.attr("id");
+      setTable = (function(_this) {
+        return function(cb) {
+          var bg, cell, cells, dir, t, v;
+          v = vals[idx];
+          t = Widgets.widgets[domId];
+          console.log("***t/col/vals/idx", t, col, vals, idx);
+          cell = t.editableCells[col][idx];
+          dir = idx < vals.length - 1 ? 1 : 0;
+          cell.div.text(v);
+          bg = cell.div.css("background");
+          cell.div.css({
+            background: "#ccc"
+          });
+          setTimeout((function() {
+            cell.div.css({
+              background: bg
+            });
+            return cell.done();
+          }), 200);
+          idx++;
+          if (idx < vals.length) {
+            return setTimeout((function() {
+              return setTable(cb);
+            }), delay);
+          } else {
+            console.log("cells", $('.editable-table-cell'));
+            cells = $('.editable-table-cell');
+            setTimeout((function() {
+              $(cells[2]).blur();
+              return $("#container").click();
+            }), 1000);
+            return typeof cb === "function" ? cb() : void 0;
+          }
+        };
+      })(this);
+      return setTable(cb);
+    };
+
+    Lecture2.prototype.table = function(obj, spec) {
+      spec.action = "table";
+      return this.step(obj, spec);
     };
 
     return Lecture2;

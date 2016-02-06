@@ -87,7 +87,7 @@ class $blab.Lecture2
     
     @content()
     
-  # ZZZ TEMP
+  # ZZZ TEMP - not used
   setupAudio: ->
     server = @audioServer
     audio = $("[data-audio]")
@@ -143,6 +143,7 @@ class $blab.Lecture2
     $("[id|=lecture]").hide()
     $(".puzlet-slider").parent().hide()
     $(".puzlet-plot").parent().hide()
+    $(".widget").hide()
     # ZZZ same for table, plot2, etc.
     #$("#slider-k").siblings().andSelf().css(opacity: 0.2)  
     #$("#plot-plot").siblings().andSelf().css(opacity: 0.2)
@@ -172,6 +173,7 @@ class $blab.Lecture2
     #$("[id|=lecture]:not[display=none]").show()
     $(".puzlet-slider").parent().show()
     $(".puzlet-plot").parent().show()
+    $(".widget").show()
     
     @stepIdx = -1
     
@@ -198,6 +200,7 @@ class $blab.Lecture2
     #$("[id|=lecture]:not[display=none]").show()
     $(".puzlet-slider").parent().show()
     $(".puzlet-plot").parent().show()
+    $(".widget").show()
     
     $("#computation-code-wrapper").show()
     $("#buttons").show()
@@ -215,7 +218,7 @@ class $blab.Lecture2
       obj = $("#"+obj)
     
     # Use parent object for specified widgets
-    if obj.hasClass("puzlet-slider") or obj.hasClass("puzlet-plot")
+    if obj.hasClass("puzlet-slider") or obj.hasClass("puzlet-plot") #or obj.hasClass("widget")
       # ZZZ do for table, plot2, etc.  way to detect any widget?
       origObj = obj
       obj = obj.parent()
@@ -248,15 +251,28 @@ class $blab.Lecture2
           #replaceObj.show(0, -> o.hide())
           
     if action is "slide"
-        #id = "k"  # ZZZ temp
-        #id = origObj.attr "id"
-        domId = origObj.attr "id"
-        origVal = Widgets.widgets[domId].getVal()
-        action = (o) =>
-          console.log "origVal", origVal
-          #console.log "**** action id", id
-          f: => @slider origObj, spec.vals
-          b: => @slider origObj, [origVal]  # ZZZ should be original val?
+      #id = "k"  # ZZZ temp
+      #id = origObj.attr "id"
+      domId = origObj.attr "id"
+      origVal = Widgets.widgets[domId].getVal()
+      action = (o) =>
+        console.log "origVal", origVal
+        #console.log "**** action id", id
+        f: => @slider origObj, spec.vals
+        b: => @slider origObj, [origVal]  # ZZZ should be original val?
+          
+    if action is "table"
+      domId = obj.attr "id"
+      action = (o) =>
+        #console.log "origVal", origVal
+        #console.log "**** action id", id
+        f: => @tablePopulate obj, spec.col, spec.vals, -> 
+          #setTimeout (-> $(document.body).click()), 1000
+          #console.log "******* table done"
+        #  -> console.log "CAPTION", $("caption")
+          #(-> setTimeout (-> obj.click()), 1000)
+        #(-> obj.blur())
+        b: => #no reverse action yet
           
     audio = spec.audio
     if audio and not $("audio#{audio}").length
@@ -345,9 +361,59 @@ class $blab.Lecture2
         setTimeout (-> setSlider(cb)), delay
       else
         cb?()
-      
+        
     setSlider(cb)
     #setTimeout (-> setSlider(cb)), 0
+        
+  tablePopulate: (obj, col, vals, cb) ->
+    delay = 1000
+    idx = 0
+    domId = obj.attr "id"
+    setTable = (cb) =>
+      v = vals[idx]
+      #domId = $blab.Widget.createDomId "table-", id
+      t = Widgets.widgets[domId]
+      console.log "***t/col/vals/idx", t, col, vals, idx
+      cell = t.editableCells[col][idx]  # 0 needs to be arg.
+      dir = if idx<vals.length-1 then 1 else 0
+      cell.div.text v
+      bg = cell.div.css "background"
+      cell.div.css background: "#ccc"
+      #cell.div.click()
+      setTimeout (->
+        cell.div.css background: bg
+        cell.done()
+      ), 200
+      #cell.div.blur()
+      
+      #changed = true
+      #dir = 0
+      #colDir = 0
+      #cell.callback v, changed, dir, colDir
+      
+      
+#     cell.enterVal(v, dir)
+      #cell.div.blur()
+      idx++
+      if idx < vals.length
+        setTimeout (-> setTable(cb)), delay
+      else
+        console.log("cells", $('.editable-table-cell'))
+        cells = $('.editable-table-cell')
+        setTimeout (->
+          $(cells[2]).blur()
+          $("#container").click()
+          #$(cells[0]).focus()
+          #$(document.body).focus()
+        ), 1000
+        cb?()
+        
+    setTable(cb)
+      
+        
+  table: (obj, spec) ->
+    spec.action = "table"
+    @step obj, spec
   
 
 #-------------------- OLD LECTURE CLASS ----------------------#
