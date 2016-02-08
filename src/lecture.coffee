@@ -1,5 +1,14 @@
 Widgets = null
 
+# Dynamic styles
+$blab.style = (id, css) ->
+  s = $ "style##{id}"
+  unless s.length
+    s = $ "<style>", id: id
+    s.appendTo "head"
+  s.html "\n#{css}\n"
+
+
 $(document).on "layoutCompiled", (evt, data) ->
   
   return unless $blab.lecture or $blab.lecture2

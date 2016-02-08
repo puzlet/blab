@@ -3,6 +3,18 @@
 
   Widgets = null;
 
+  $blab.style = function(id, css) {
+    var s;
+    s = $("style#" + id);
+    if (!s.length) {
+      s = $("<style>", {
+        id: id
+      });
+      s.appendTo("head");
+    }
+    return s.html("\n" + css + "\n");
+  };
+
   $(document).on("layoutCompiled", function(evt, data) {
     var button, lecture, setupAudio;
     if (!($blab.lecture || $blab.lecture2)) {
