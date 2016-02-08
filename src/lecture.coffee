@@ -82,6 +82,7 @@ class $blab.Lecture2
     
     @setupGuide()
     @progress = new Progress()
+    @pointer = new Pointer()
     
     @steps = []
     @stepIdx = -1
@@ -195,6 +196,7 @@ class $blab.Lecture2
     
     @guide.hide()
     @progress.clear()
+    @pointer.hide()
     
     $("[id|=lecture]").show()
     $(".hide[id|=lecture]").hide()
@@ -279,7 +281,9 @@ class $blab.Lecture2
     if audio and not $("audio#{audio}").length
       $(document.body).append "<audio id='#{audio}' src='#{@audioServer}/#{audio}.mp3'></audio>\n"
       
-    @steps = @steps.concat {obj, action, audio}
+    pointer = spec.pointer
+      
+    @steps = @steps.concat {obj, action, audio, pointer}
     console.log "steps", @steps
     
     obj
@@ -300,6 +304,11 @@ class $blab.Lecture2
       if audioId and @enableAudio
         audio = document.getElementById(audioId)
         audio.play()
+      pointer = step.pointer
+      if pointer
+        @pointer.setPosition pointer
+      else
+        @pointer.hide()
       
     if @stepIdx>=@steps.length
       @guide.html """
@@ -308,6 +317,7 @@ class $blab.Lecture2
         <b>Esc</b> to exit
       """
       @guide.show()
+      @pointer.hide()
     else
       @guide.hide() if @guide.is(":visible")
       #alert "AT END"
@@ -330,6 +340,8 @@ class $blab.Lecture2
       @stepIdx--
       
     @progress.draw @stepIdx+1, @steps.length
+    
+    @pointer.hide()
     
     console.log "stepIdx", @stepIdx
     if @stepIdx<0
@@ -447,10 +459,44 @@ class Progress
   circle: (filled = false)->
     circle = $ "<div>", class: "step-circle" + (if filled then " step-circle-filled" else "")
     @div.append circle
-    
-    
-    
-    
-    
 
+
+class Pointer
+  
+  constructor: ->
+    
+    @container = $ "#container"
+    
+    @pointer = $ "<img>",
+      class: "lecture-pointer"
+      src: "img/pointer.png"
+    
+    @pointer.hide()
+    @pointer.css(left: 500, top: 500)
+    
+    @container.append @pointer
+    
+    $(document.body).click (evt) =>
+      offset = @container.offset()
+      console.log "container(x, y)", (evt.clientX - offset.left), (evt.clientY)
+      # 267, 166
+      # 251, 160
+  
+  show: ->
+    @pointer.show()
+    
+  hide: ->
+    @pointer.hide()
+    
+  setPosition: (coords) ->
+    
+    @show()
+    
+    adjust = {left: 13, top: 45} 
+    
+    @pointer.animate
+      left: coords[0] - adjust.left
+      top: coords[1] - adjust.top
+    
+    
 

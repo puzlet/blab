@@ -1,5 +1,5 @@
 (function() {
-  var Progress, Widgets;
+  var Pointer, Progress, Widgets;
 
   Widgets = null;
 
@@ -84,6 +84,7 @@
     function Lecture2() {
       this.setupGuide();
       this.progress = new Progress();
+      this.pointer = new Pointer();
       this.steps = [];
       this.stepIdx = -1;
       this.content();
@@ -188,6 +189,7 @@
     Lecture2.prototype.reset = function() {
       this.guide.hide();
       this.progress.clear();
+      this.pointer.hide();
       $("[id|=lecture]").show();
       $(".hide[id|=lecture]").hide();
       $(".puzlet-slider").parent().show();
@@ -200,7 +202,7 @@
     };
 
     Lecture2.prototype.step = function(obj, spec) {
-      var action, audio, domId, origObj, origVal, rObj;
+      var action, audio, domId, origObj, origVal, pointer, rObj;
       if (spec == null) {
         spec = {};
       }
@@ -288,17 +290,19 @@
       if (audio && !$("audio" + audio).length) {
         $(document.body).append("<audio id='" + audio + "' src='" + this.audioServer + "/" + audio + ".mp3'></audio>\n");
       }
+      pointer = spec.pointer;
       this.steps = this.steps.concat({
         obj: obj,
         action: action,
-        audio: audio
+        audio: audio,
+        pointer: pointer
       });
       console.log("steps", this.steps);
       return obj;
     };
 
     Lecture2.prototype.doStep = function() {
-      var action, audio, audioId, obj, step;
+      var action, audio, audioId, obj, pointer, step;
       if (this.stepIdx < this.steps.length) {
         this.stepIdx++;
       }
@@ -313,10 +317,17 @@
           audio = document.getElementById(audioId);
           audio.play();
         }
+        pointer = step.pointer;
+        if (pointer) {
+          this.pointer.setPosition(pointer);
+        } else {
+          this.pointer.hide();
+        }
       }
       if (this.stepIdx >= this.steps.length) {
         this.guide.html("<b>End of lecture</b><br>\n<b>&#8592; &#8594;</b> to navigate<br>\n<b>Esc</b> to exit");
         this.guide.show();
+        this.pointer.hide();
       } else {
         if (this.guide.is(":visible")) {
           this.guide.hide();
@@ -338,6 +349,7 @@
         this.stepIdx--;
       }
       this.progress.draw(this.stepIdx + 1, this.steps.length);
+      this.pointer.hide();
       console.log("stepIdx", this.stepIdx);
       if (this.stepIdx < 0) {
         this.guide.html("<b>Start of lecture</b><br>\n<b>&#8592; &#8594;</b> to navigate<br>\n<b>Esc</b> to exit");
@@ -474,6 +486,53 @@
     };
 
     return Progress;
+
+  })();
+
+  Pointer = (function() {
+    function Pointer() {
+      this.container = $("#container");
+      this.pointer = $("<img>", {
+        "class": "lecture-pointer",
+        src: "img/pointer.png"
+      });
+      this.pointer.hide();
+      this.pointer.css({
+        left: 500,
+        top: 500
+      });
+      this.container.append(this.pointer);
+      $(document.body).click((function(_this) {
+        return function(evt) {
+          var offset;
+          offset = _this.container.offset();
+          return console.log("container(x, y)", evt.clientX - offset.left, evt.clientY);
+        };
+      })(this));
+    }
+
+    Pointer.prototype.show = function() {
+      return this.pointer.show();
+    };
+
+    Pointer.prototype.hide = function() {
+      return this.pointer.hide();
+    };
+
+    Pointer.prototype.setPosition = function(coords) {
+      var adjust;
+      this.show();
+      adjust = {
+        left: 13,
+        top: 45
+      };
+      return this.pointer.animate({
+        left: coords[0] - adjust.left,
+        top: coords[1] - adjust.top
+      });
+    };
+
+    return Pointer;
 
   })();
 

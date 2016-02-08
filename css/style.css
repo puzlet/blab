@@ -64,6 +64,7 @@ h1 {
 }
 
 #container {
+  position: relative;
 	width: 960px;
 	margin: 0 auto;
 	margin-top: 40px; /* if NO background */
@@ -598,6 +599,15 @@ div[data-file="layout.coffee"] {
  
  .step-circle-filled {
    background: #555;
+ }
+ 
+ .lecture-pointer {
+   position: absolute;
+   top: 0;
+   left: 0;
+   height: 50px;
+   z-index: 100;
+   opacity: 0.8;
  }
 
 /********* typed.js *********/
