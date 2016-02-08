@@ -81,6 +81,7 @@ class $blab.Lecture2
   constructor: ->
     
     @setupGuide()
+    @progress = new Progress()
     
     @steps = []
     @stepIdx = -1
@@ -193,6 +194,7 @@ class $blab.Lecture2
   reset: ->
     
     @guide.hide()
+    @progress.clear()
     
     $("[id|=lecture]").show()
     $(".hide[id|=lecture]").hide()
@@ -206,8 +208,7 @@ class $blab.Lecture2
     $("#buttons").show()
     $("#start-lecture-button").show()
     
-    @stepIdx = -1
-    
+    @stepIdx = -1    
     
   step: (obj, spec={}) ->
     # was: action, opt
@@ -245,7 +246,7 @@ class $blab.Lecture2
 #    if action is "replace"
       action = (o) ->
         f: -> rObj.fadeOut(300, -> o.fadeIn())
-        b: -> o.fadeOut(300, -> rObj.fadeIn())
+        b: -> o.hide(0, -> rObj.show())
         #f: -> replaceObj.hide(0, -> o.show())
         #b: -> o.hide(0, -> replaceObj.show()) 
           #replaceObj.show(0, -> o.hide())
@@ -286,6 +287,9 @@ class $blab.Lecture2
   doStep: ->
     if @stepIdx<@steps.length
       @stepIdx++
+      
+    @progress.draw @stepIdx+1, @steps.length
+    
     if @stepIdx>=0 and @stepIdx<@steps.length
       step = @steps[@stepIdx]
       obj = step.obj
@@ -324,6 +328,9 @@ class $blab.Lecture2
       #@steps[@stepIdx].action.b(obj)
     if @stepIdx>=0
       @stepIdx--
+      
+    @progress.draw @stepIdx+1, @steps.length
+    
     console.log "stepIdx", @stepIdx
     if @stepIdx<0
       @guide.html """
@@ -414,127 +421,36 @@ class $blab.Lecture2
   table: (obj, spec) ->
     spec.action = "table"
     @step obj, spec
-  
 
-#-------------------- OLD LECTURE CLASS ----------------------#
 
-class $blab.Lecture
-  
-  #@used: false
+class Progress
   
   constructor: ->
     
-    $("#computation-code-wrapper").hide()
-    $("#buttons").hide()
+    @container = $ document.body
     
-    @steps = []
-    @stepIdx = 0
+    @wrapper = $ "<div>", class: "progress-outer"
+    @container.append @wrapper
     
+    @div = $ "<div>", class: "progress-inner"
+    @wrapper.append @div
+    
+  draw: (@currentStep, @numSteps) ->
     @clear()
-    @init()
-    @content()
-    
-    @steps.push ->
-      $("#buttons").show()
-      $("#computation-code-wrapper").show()
-    
-    setTimeout (=> @doStep()), 100  #100
-  
-  box: (params = {pos: 0, order: null}) ->
-    pos = params?.pos ? 0
-    order = params?.order
-    if pos is 0
-      $ "#main-markdown"
-    else
-      if order
-        $ "#widget-box-#{pos} .order-#{order}"
-      else
-        $ "#widget-box-#{pos}"
-  
+    for step in [1..@numSteps]
+      fill = step is @currentStep
+      @circle(fill)
+      
   clear: ->
-    @container = $ "#main-markdown"  # ZZZ no need to be property
-    @container.empty()
-    $(".layout-box").hide()
-    $(".lecture-content").remove()
-    #@box(pos: 1).hide()
-    #@box(pos: 2).hide()
+    @div.empty()
   
-  math: (math) ->
-    new LectureMath @container, math
-  
-  step: (step) ->
-    @steps = @steps.concat step
+  circle: (filled = false)->
+    circle = $ "<div>", class: "step-circle" + (if filled then " step-circle-filled" else "")
+    @div.append circle
     
-  doStep: ->
-    @steps[@stepIdx]() if @stepIdx<@steps.length
-    @stepIdx++
-  
-  html: (html, options) ->
     
-    # TO FIX: math rendered after typed
     
-    container = options?.container ? $("#main-markdown")
     
-    div = $ "<div>", class: "lecture-content"
-    div.css(options.css) if options?.css
-    container.append div
     
-    typed = options?.typed ? true
-    
-    if typed
-      div.typed
-        strings: [html]
-        typeSpeed: 10
-        contentType: "html"
-        showCursor: false
-        onStringTyped: ->
-          $.event.trigger "htmlOutputUpdated"
-    else
-      div.html html
-      $.event.trigger "htmlOutputUpdated"
-      
-  audio: (id) ->
-    audio = document.getElementById(id) #$ "#x-squared"
-    #console.log "audio", audio
-    #intro.currentTime = 1;
-    #intro.duration = 0.5;
-    audio.play()
-    #setTimeout(function() {intro.pause()}, 1000)
-    #setTimeout(function() {intro.play()}, 2000)
-    #var n = 0;
-    #audio[0].onended = function() {
-    #  document.getElementById("text").innerHTML = "Other text.";
-    #  n++;
-    #  if (n<2) sam.play();
-    #};
 
-class LectureMath
-  
-  constructor: (@container, @math) ->
-    @div = $ "<div>",
-      class: "lecture-content"
-      css: fontSize: "24pt"
-      html: "$ $"
-    @container.append @div
-    
-    watch = true
-    $(document).on "mathjaxProcessed", =>
-      return unless watch
-      @render()
-      watch = false
-      
-    $.event.trigger "htmlOutputUpdated"
-    
-    #div.fadeOut(0).delay(100).fadeIn(100)
-    
-  set: (@math) ->
-    @render()
-    
-  append: (math) ->
-    @math = @math + math
-    @render()
-    
-  render: ->
-    @div.html "$#{@math}$"  # ZZZ after rendered above?
-    $.event.trigger "htmlOutputUpdated"
 

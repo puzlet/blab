@@ -1,5 +1,5 @@
 (function() {
-  var LectureMath, Widgets;
+  var Progress, Widgets;
 
   Widgets = null;
 
@@ -83,6 +83,7 @@
   $blab.Lecture2 = (function() {
     function Lecture2() {
       this.setupGuide();
+      this.progress = new Progress();
       this.steps = [];
       this.stepIdx = -1;
       this.content();
@@ -186,6 +187,7 @@
 
     Lecture2.prototype.reset = function() {
       this.guide.hide();
+      this.progress.clear();
       $("[id|=lecture]").show();
       $(".hide[id|=lecture]").hide();
       $(".puzlet-slider").parent().show();
@@ -245,8 +247,8 @@
               });
             },
             b: function() {
-              return o.fadeOut(300, function() {
-                return rObj.fadeIn();
+              return o.hide(0, function() {
+                return rObj.show();
               });
             }
           };
@@ -300,6 +302,7 @@
       if (this.stepIdx < this.steps.length) {
         this.stepIdx++;
       }
+      this.progress.draw(this.stepIdx + 1, this.steps.length);
       if (this.stepIdx >= 0 && this.stepIdx < this.steps.length) {
         step = this.steps[this.stepIdx];
         obj = step.obj;
@@ -334,6 +337,7 @@
       if (this.stepIdx >= 0) {
         this.stepIdx--;
       }
+      this.progress.draw(this.stepIdx + 1, this.steps.length);
       console.log("stepIdx", this.stepIdx);
       if (this.stepIdx < 0) {
         this.guide.html("<b>Start of lecture</b><br>\n<b>&#8592; &#8594;</b> to navigate<br>\n<b>Esc</b> to exit");
@@ -428,148 +432,48 @@
 
   })();
 
-  $blab.Lecture = (function() {
-    function Lecture() {
-      $("#computation-code-wrapper").hide();
-      $("#buttons").hide();
-      this.steps = [];
-      this.stepIdx = 0;
-      this.clear();
-      this.init();
-      this.content();
-      this.steps.push(function() {
-        $("#buttons").show();
-        return $("#computation-code-wrapper").show();
+  Progress = (function() {
+    function Progress() {
+      this.container = $(document.body);
+      this.wrapper = $("<div>", {
+        "class": "progress-outer"
       });
-      setTimeout(((function(_this) {
-        return function() {
-          return _this.doStep();
-        };
-      })(this)), 100);
-    }
-
-    Lecture.prototype.box = function(params) {
-      var order, pos, ref;
-      if (params == null) {
-        params = {
-          pos: 0,
-          order: null
-        };
-      }
-      pos = (ref = params != null ? params.pos : void 0) != null ? ref : 0;
-      order = params != null ? params.order : void 0;
-      if (pos === 0) {
-        return $("#main-markdown");
-      } else {
-        if (order) {
-          return $("#widget-box-" + pos + " .order-" + order);
-        } else {
-          return $("#widget-box-" + pos);
-        }
-      }
-    };
-
-    Lecture.prototype.clear = function() {
-      this.container = $("#main-markdown");
-      this.container.empty();
-      $(".layout-box").hide();
-      return $(".lecture-content").remove();
-    };
-
-    Lecture.prototype.math = function(math) {
-      return new LectureMath(this.container, math);
-    };
-
-    Lecture.prototype.step = function(step) {
-      return this.steps = this.steps.concat(step);
-    };
-
-    Lecture.prototype.doStep = function() {
-      if (this.stepIdx < this.steps.length) {
-        this.steps[this.stepIdx]();
-      }
-      return this.stepIdx++;
-    };
-
-    Lecture.prototype.html = function(html, options) {
-      var container, div, ref, ref1, typed;
-      container = (ref = options != null ? options.container : void 0) != null ? ref : $("#main-markdown");
-      div = $("<div>", {
-        "class": "lecture-content"
-      });
-      if (options != null ? options.css : void 0) {
-        div.css(options.css);
-      }
-      container.append(div);
-      typed = (ref1 = options != null ? options.typed : void 0) != null ? ref1 : true;
-      if (typed) {
-        return div.typed({
-          strings: [html],
-          typeSpeed: 10,
-          contentType: "html",
-          showCursor: false,
-          onStringTyped: function() {
-            return $.event.trigger("htmlOutputUpdated");
-          }
-        });
-      } else {
-        div.html(html);
-        return $.event.trigger("htmlOutputUpdated");
-      }
-    };
-
-    Lecture.prototype.audio = function(id) {
-      var audio;
-      audio = document.getElementById(id);
-      return audio.play();
-    };
-
-    return Lecture;
-
-  })();
-
-  LectureMath = (function() {
-    function LectureMath(container1, math1) {
-      var watch;
-      this.container = container1;
-      this.math = math1;
+      this.container.append(this.wrapper);
       this.div = $("<div>", {
-        "class": "lecture-content",
-        css: {
-          fontSize: "24pt"
-        },
-        html: "$ $"
+        "class": "progress-inner"
       });
-      this.container.append(this.div);
-      watch = true;
-      $(document).on("mathjaxProcessed", (function(_this) {
-        return function() {
-          if (!watch) {
-            return;
-          }
-          _this.render();
-          return watch = false;
-        };
-      })(this));
-      $.event.trigger("htmlOutputUpdated");
+      this.wrapper.append(this.div);
     }
 
-    LectureMath.prototype.set = function(math1) {
-      this.math = math1;
-      return this.render();
+    Progress.prototype.draw = function(currentStep, numSteps) {
+      var fill, i, ref, results, step;
+      this.currentStep = currentStep;
+      this.numSteps = numSteps;
+      this.clear();
+      results = [];
+      for (step = i = 1, ref = this.numSteps; 1 <= ref ? i <= ref : i >= ref; step = 1 <= ref ? ++i : --i) {
+        fill = step === this.currentStep;
+        results.push(this.circle(fill));
+      }
+      return results;
     };
 
-    LectureMath.prototype.append = function(math) {
-      this.math = this.math + math;
-      return this.render();
+    Progress.prototype.clear = function() {
+      return this.div.empty();
     };
 
-    LectureMath.prototype.render = function() {
-      this.div.html("$" + this.math + "$");
-      return $.event.trigger("htmlOutputUpdated");
+    Progress.prototype.circle = function(filled) {
+      var circle;
+      if (filled == null) {
+        filled = false;
+      }
+      circle = $("<div>", {
+        "class": "step-circle" + (filled ? " step-circle-filled" : "")
+      });
+      return this.div.append(circle);
     };
 
-    return LectureMath;
+    return Progress;
 
   })();
 
