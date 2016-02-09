@@ -158,6 +158,8 @@
       var hide, show;
       console.log("******** OBJECTS", $("[id|=lecture]").css("display"));
       $("[id|=lecture]").hide();
+      $(".blab-input").parent().hide();
+      $(".blab-menu").parent().hide();
       $(".puzlet-slider").parent().hide();
       $(".puzlet-plot").parent().hide();
       $(".widget").hide();
@@ -186,6 +188,8 @@
     Lecture2.prototype.finish = function() {
       $("[id|=lecture]").show();
       $(".hide[id|=lecture]").hide();
+      $(".blab-input").parent().show();
+      $(".blab-menu").parent().show();
       $(".puzlet-slider").parent().show();
       $(".puzlet-plot").parent().show();
       $(".widget").show();
@@ -204,6 +208,8 @@
       this.pointer.hide();
       $("[id|=lecture]").show();
       $(".hide[id|=lecture]").hide();
+      $(".blab-input").parent().show();
+      $(".blab-menu").parent().show();
       $(".puzlet-slider").parent().show();
       $(".puzlet-plot").parent().show();
       $(".widget").show();
@@ -221,7 +227,7 @@
       if (typeof obj === "string") {
         obj = $("#" + obj);
       }
-      if (obj.hasClass("puzlet-slider") || obj.hasClass("puzlet-plot")) {
+      if (obj.hasClass("blab-input") || obj.hasClass("blab-menu") || obj.hasClass("puzlet-slider") || obj.hasClass("puzlet-plot")) {
         origObj = obj;
         obj = obj.parent();
       }
@@ -267,6 +273,23 @@
             }
           };
         };
+      }
+      if (action === "menu") {
+        domId = origObj.attr("id");
+        origVal = Widgets.widgets[domId].getVal();
+        action = (function(_this) {
+          return function(o) {
+            console.log("origVal", origVal);
+            return {
+              f: function() {
+                return _this.setMenu(origObj, spec.val);
+              },
+              b: function() {
+                return _this.setMenu(origObj, origVal);
+              }
+            };
+          };
+        })(this);
       }
       if (action === "slide") {
         domId = origObj.attr("id");
@@ -373,9 +396,14 @@
       }
     };
 
-    Lecture2.prototype.slide = function(obj, spec) {
-      spec.action = "slide";
-      return this.step(obj, spec);
+    Lecture2.prototype.setMenu = function(obj, val, cb) {
+      var domId;
+      console.log("**** SET MENU", obj, val);
+      domId = obj.attr("id");
+      Widgets.widgets[domId].setVal(val);
+      Widgets.widgets[domId].menu.val(val).trigger("change");
+      Widgets.compute();
+      return typeof cb === "function" ? cb() : void 0;
     };
 
     Lecture2.prototype.slider = function(obj, vals, cb) {
@@ -447,8 +475,18 @@
       return setTable(cb);
     };
 
+    Lecture2.prototype.slide = function(obj, spec) {
+      spec.action = "slide";
+      return this.step(obj, spec);
+    };
+
     Lecture2.prototype.table = function(obj, spec) {
       spec.action = "table";
+      return this.step(obj, spec);
+    };
+
+    Lecture2.prototype.menu = function(obj, spec) {
+      spec.action = "menu";
       return this.step(obj, spec);
     };
 

@@ -152,6 +152,8 @@ class $blab.Lecture2
     console.log "******** OBJECTS", $("[id|=lecture]").css("display")
     # Can override in lecture blab.
     $("[id|=lecture]").hide()
+    $(".blab-input").parent().hide()
+    $(".blab-menu").parent().hide()
     $(".puzlet-slider").parent().hide()
     $(".puzlet-plot").parent().hide()
     $(".widget").hide()
@@ -182,6 +184,8 @@ class $blab.Lecture2
     $(".hide[id|=lecture]").hide()
     
     #$("[id|=lecture]:not[display=none]").show()
+    $(".blab-input").parent().show()
+    $(".blab-menu").parent().show()
     $(".puzlet-slider").parent().show()
     $(".puzlet-plot").parent().show()
     $(".widget").show()
@@ -211,6 +215,8 @@ class $blab.Lecture2
     $(".hide[id|=lecture]").hide()
     
     #$("[id|=lecture]:not[display=none]").show()
+    $(".blab-input").parent().show()
+    $(".blab-menu").parent().show()
     $(".puzlet-slider").parent().show()
     $(".puzlet-plot").parent().show()
     $(".widget").show()
@@ -230,7 +236,7 @@ class $blab.Lecture2
       obj = $("#"+obj)
     
     # Use parent object for specified widgets
-    if obj.hasClass("puzlet-slider") or obj.hasClass("puzlet-plot") #or obj.hasClass("widget")
+    if obj.hasClass("blab-input") or obj.hasClass("blab-menu") or obj.hasClass("puzlet-slider") or obj.hasClass("puzlet-plot") #or obj.hasClass("widget")
       # ZZZ do for table, plot2, etc.  way to detect any widget?
       origObj = obj
       obj = obj.parent()
@@ -261,7 +267,16 @@ class $blab.Lecture2
         #f: -> replaceObj.hide(0, -> o.show())
         #b: -> o.hide(0, -> replaceObj.show()) 
           #replaceObj.show(0, -> o.hide())
-          
+    
+    if action is "menu"
+      # ZZZ DUP code
+      domId = origObj.attr "id"
+      origVal = Widgets.widgets[domId].getVal()
+      action = (o) =>
+        console.log "origVal", origVal
+        f: => @setMenu origObj, spec.val
+        b: => @setMenu origObj, origVal  # ZZZ should be original val?
+    
     if action is "slide"
       #id = "k"  # ZZZ temp
       #id = origObj.attr "id"
@@ -365,10 +380,14 @@ class $blab.Lecture2
       #alert "BACK TO START"
       #@reset()
   
-  # TODO: move slide/step logic here - consolidate
-  slide: (obj, spec) ->
-    spec.action = "slide"
-    @step obj, spec
+  setMenu: (obj, val, cb) ->
+    console.log "**** SET MENU", obj, val
+    domId = obj.attr "id"
+    #obj.slider 'option', 'value', v  # ZZZ
+    Widgets.widgets[domId].setVal val
+    Widgets.widgets[domId].menu.val(val).trigger "change"
+    Widgets.compute()
+    cb?()
   
   slider: (obj, vals, cb) ->
     delay = 200
@@ -437,10 +456,18 @@ class $blab.Lecture2
         cb?()
         
     setTable(cb)
-      
-        
+    
+  # TODO: move slide/step logic here - consolidate
+  slide: (obj, spec) ->
+    spec.action = "slide"
+    @step obj, spec
+  
   table: (obj, spec) ->
     spec.action = "table"
+    @step obj, spec
+    
+  menu: (obj, spec) ->
+    spec.action = "menu"
     @step obj, spec
 
 

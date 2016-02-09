@@ -1,5 +1,5 @@
 (function() {
-  var AxesLabels, EditableCell, Input, Plot, Slider, Table, TableCellSelector, Widget,
+  var AxesLabels, EditableCell, Input, Menu, Plot, Slider, Table, TableCellSelector, Widget,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty,
     slice = [].slice,
@@ -117,6 +117,128 @@
     };
 
     return Input;
+
+  })(Widget);
+
+  Menu = (function(superClass) {
+    extend(Menu, superClass);
+
+    function Menu() {
+      return Menu.__super__.constructor.apply(this, arguments);
+    }
+
+    Menu.handle = "menu";
+
+    Menu.initVal = 1;
+
+    Menu.initSpec = function(id) {
+      return "init: " + Menu.initVal + "\nprompt: \"" + id + ":\"\noptions: [\n  {text: \"Option 1\", value: 1}\n  {text: \"Option 2\", value: 2}\n],\nalign: \"left\"\npos: 1, order: 1";
+    };
+
+    Menu.compute = function() {
+      var id, ref, v;
+      id = arguments[0], v = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+      return (ref = this.getVal.apply(this, [id].concat(slice.call(v)))) != null ? ref : this.initVal;
+    };
+
+    Menu.prototype.create = function(spec) {
+      var clickEvent, j, len, o, option, ref, ref1, ref2;
+      this.spec = spec;
+      ref = this.spec, this.init = ref.init, this.prompt = ref.prompt, this.options = ref.options, this.align = ref.align;
+      this.menuContainer = $("#" + this.domId());
+      if (this.menuContainer.length) {
+        this.outer = this.menuContainer.parent();
+        if ((ref1 = this.outer) != null) {
+          ref1.remove();
+        }
+      }
+      clickEvent = (function(_this) {
+        return function() {
+          return _this.select();
+        };
+      })(this);
+      this.outer = $("<div>", {
+        "class": "menu-container"
+      });
+      this.promptContainer = $("<div>", {
+        "class": "menu-prompt-container"
+      });
+      this.outer.append(this.promptContainer);
+      this.menuPrompt = $("<div>", {
+        "class": "menu-prompt"
+      });
+      this.promptContainer.append(this.menuPrompt);
+      this.menuPrompt.append(this.prompt);
+      this.menuContainer = $("<div>", {
+        "class": "blab-menu",
+        id: this.domId(),
+        mouseup: (function(_this) {
+          return function(e) {
+            return e.stopPropagation();
+          };
+        })(this)
+      });
+      this.outer.append(this.menuContainer);
+      this.outer.mouseup(function() {
+        return clickEvent();
+      });
+      this.textContainer = $("<div>", {
+        "class": "menu-text-container"
+      });
+      this.outer.append(this.textContainer);
+      this.textDiv = $("<div>", {
+        "class": "menu-text"
+      });
+      this.textContainer.append(this.textDiv);
+      this.appendToCanvas(this.outer);
+      this.menu = $("<select>", {
+        value: this.init,
+        change: (function(_this) {
+          return function() {
+            var v, val;
+            v = _this.menu.val();
+            val = v ? parseFloat(v) : null;
+            if (isNaN(val)) {
+              val = v;
+            }
+            _this.setVal(val);
+            return _this.computeAll();
+          };
+        })(this)
+      });
+      ref2 = this.options;
+      for (j = 0, len = ref2.length; j < len; j++) {
+        option = ref2[j];
+        o = $("<option>", {
+          text: option.text,
+          value: option.value,
+          selected: option.value === this.init
+        });
+        this.menu.append(o);
+      }
+      if (this.align) {
+        this.menu.css({
+          textAlign: this.align
+        });
+      }
+      this.menuContainer.append(this.menu);
+      return this.setVal(this.init);
+    };
+
+    Menu.prototype.initialize = function() {
+      return this.setVal(this.init);
+    };
+
+    Menu.prototype.setVal = function(v) {
+      return this.value = v;
+    };
+
+    Menu.prototype.getVal = function() {
+      this.setUsed();
+      return this.value;
+    };
+
+    return Menu;
 
   })(Widget);
 
@@ -1367,6 +1489,6 @@
 
   })();
 
-  $blab.baseWidgets = [Input, Slider, Table, Plot];
+  $blab.baseWidgets = [Input, Menu, Slider, Table, Plot];
 
 }).call(this);
