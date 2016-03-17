@@ -118,6 +118,7 @@ class Widgets
     #     console.log "reg widget", W, W.name, /^function\s+([\w\$]+)\s*\(/.exec( W.toString() )[ 1 ]
     # ), 1000
     for W in WidgetSet
+      $blab.resources.fetch(W.cssUrl) if W.cssUrl
       name = Widget.getName(W) #Widget.name ? Widget.cName #/^function\s+([\w\$]+)\s*\(/.exec(Widget.toString())[1]
       console.log "Widget", name
       @Registry[name] = W

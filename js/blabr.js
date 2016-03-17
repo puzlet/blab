@@ -175,6 +175,9 @@
       results1 = [];
       for (i = 0, len = WidgetSet.length; i < len; i++) {
         W = WidgetSet[i];
+        if (W.cssUrl) {
+          $blab.resources.fetch(W.cssUrl);
+        }
         name = Widget.getName(W);
         console.log("Widget", name);
         results1.push(this.Registry[name] = W);
