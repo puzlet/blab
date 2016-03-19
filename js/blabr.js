@@ -66,10 +66,24 @@
     };
 
     Widget.fetch = function() {
-      var W, id, v;
+      var W, id, v, w;
       id = arguments[0], v = 2 <= arguments.length ? slice.call(arguments, 1) : [];
       W = this.getWidget();
-      return Widgets.fetch.apply(Widgets, [W, id].concat(slice.call(v)));
+      w = Widgets.fetch.apply(Widgets, [W, id].concat(slice.call(v)));
+      if (w != null) {
+        w.setUsed();
+      }
+      return w;
+    };
+
+    Widget.compute = function() {
+      var id, ref, v;
+      id = arguments[0], v = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+      if (this.source) {
+        return (ref = this.getVal.apply(this, [id].concat(slice.call(v)))) != null ? ref : this.initVal;
+      } else {
+        return this.setVal.apply(this, [id].concat(slice.call(v)));
+      }
     };
 
     Widget.getVal = function() {
@@ -122,9 +136,36 @@
       }
     }
 
+    Widget.prototype.initialize = function() {
+      return this.setVal(this.initVal);
+    };
+
+    Widget.prototype.setVal = function(v) {
+      return this.value = v;
+    };
+
+    Widget.prototype.getVal = function() {
+      return this.value;
+    };
+
     Widget.prototype.appendToCanvas = function(mainContainer) {
+      var domId, events;
       this.mainContainer = mainContainer;
-      return Widgets.append(this.domId(), this, this.mainContainer);
+      Widgets.append(this.domId(), this, this.mainContainer);
+      domId = this.domId();
+      if (!$("#" + domId).length) {
+        this.mainContainer.attr({
+          id: domId
+        });
+      }
+      events = $._data(this.mainContainer.get(0), "events");
+      if (!(events != null ? events.mouseup : void 0)) {
+        return this.mainContainer.mouseup((function(_this) {
+          return function() {
+            return _this.select();
+          };
+        })(this));
+      }
     };
 
     Widget.prototype.domId = function() {
@@ -216,6 +257,7 @@
           }
           _this.widgetEditor.init(resource);
           _this.precode();
+          _this.removeAllFromCanvas();
           return _this.widgets = {};
         };
       })(this));
@@ -368,6 +410,20 @@
       for (id in ref) {
         w = ref[id];
         results1.push(w.setUsed(false));
+      }
+      return results1;
+    };
+
+    Widgets.removeAllFromCanvas = function() {
+      var id, ref, ref1, results1, w;
+      ref = this.widgets;
+      results1 = [];
+      for (id in ref) {
+        w = ref[id];
+        if (typeof w.destroy === "function") {
+          w.destroy();
+        }
+        results1.push((ref1 = w.mainContainer) != null ? ref1.remove() : void 0);
       }
       return results1;
     };
@@ -565,7 +621,7 @@
         return;
       }
       widget = Widgets.widgets[this.currentId];
-      if (widget.used) {
+      if (widget != null ? widget.used : void 0) {
         return;
       }
       this.delButton = $("<span>", {

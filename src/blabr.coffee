@@ -49,8 +49,17 @@ class Widget
   
   @fetch: (id, v...) ->
     W = @getWidget()
-    Widgets.fetch(W, id, v...)
-    
+    w = Widgets.fetch(W, id, v...)
+    w?.setUsed()
+    w
+  
+  @compute: (id, v...) ->
+    # Default compute method.  Can override in subclass.
+    if @source
+      @getVal(id, v...) ? @initVal
+    else
+      @setVal(id, v...)
+  
   @getVal: (id, v...) ->
     @fetch(id, v...)?.getVal()
     
@@ -82,11 +91,28 @@ class Widget
     else
       @spec = @p1
       @id = @spec.id
-      
-    @create?(@spec)
     
+    @create?(@spec)
+  
+  initialize: ->
+    # Override in subclass.
+    @setVal @initVal
+  
+  setVal: (v) ->
+    # Override in subclass.
+    @value = v
+  
+  getVal: ->
+    # Override in subclass.
+    @value
+  
   appendToCanvas: (@mainContainer) ->
     Widgets.append @domId(), this, @mainContainer
+    domId = @domId()
+    @mainContainer.attr(id: domId) unless $("#"+domId).length
+    events = $._data(@mainContainer.get(0), "events")
+    unless events?.mouseup
+      @mainContainer.mouseup => @select()
   
   domId: ->
     Widget.createDomId @constructor.domIdPrefix(), @id
@@ -151,6 +177,7 @@ class Widgets
       @widgetEditor.init(resource)
       #@Layout.render()
       @precode()
+      @removeAllFromCanvas()
       @widgets = {}
     
     $(document).on "compiledCoffeeScript", (evt, data) =>
@@ -241,6 +268,11 @@ class Widgets
     
   @setAllUnused: ->
     w.setUsed false for id, w of @widgets
+    
+  @removeAllFromCanvas: ->
+    for id, w of @widgets
+      w.destroy?()
+      w.mainContainer?.remove()
 
 
 class WidgetEditor #extends PopupEditor
@@ -393,7 +425,7 @@ class WidgetEditor #extends PopupEditor
     
     return unless @currentId
     widget = Widgets.widgets[@currentId]  # ZZZ make method
-    return if widget.used
+    return if widget?.used
       
     @delButton = $ "<span>",
       text: "Delete"

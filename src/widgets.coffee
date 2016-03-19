@@ -934,6 +934,8 @@ class Plot extends Widget
     
     @plot = $("#"+@domId())
     @plot.remove() if @plot.length
+    # ZZZ remove outer, too?
+    
     @plot = $ "<div>",
       id: @domId()
       class: "puzlet-plot"
