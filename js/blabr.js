@@ -1,5 +1,5 @@
 (function() {
-  var App, Background, BlabEvents, Buttons, Computation, ComputationButtons, ComputationEditor, Definitions, EditPageButton, EmbedDialog, Errors, GoogleAnalytics, Layout, Loader, MarkdownEditor, PopupEditorManager, Settings, TextEditor, Widget, WidgetEditor, Widgets, codeSections,
+  var App, Background, BlabEvents, Buttons, Computation, ComputationButtons, ComputationEditor, Definitions, DefinitionsEditor, EditPageButton, EmbedDialog, Errors, GoogleAnalytics, Layout, Loader, MarkdownEditor, PopupEditorManager, Settings, TextEditor, Widget, WidgetEditor, Widgets, codeSections,
     slice = [].slice,
     bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -1597,11 +1597,6 @@
           return _this.coffee.compile();
         };
       })(this));
-      $(document).on("aceFilesLoaded", (function(_this) {
-        return function() {
-          return _this.setHeading();
-        };
-      })(this));
     }
 
     Definitions.prototype.main = function(defs) {
@@ -1844,7 +1839,21 @@
       })(this));
     };
 
-    Definitions.prototype.initEditor = function() {
+    return Definitions;
+
+  })();
+
+  DefinitionsEditor = (function() {
+    function DefinitionsEditor(coffee1) {
+      this.coffee = coffee1;
+      $(document).on("aceFilesLoaded", (function(_this) {
+        return function() {
+          return _this.setHeading();
+        };
+      })(this));
+    }
+
+    DefinitionsEditor.prototype.init = function() {
       var ref, ref1;
       this.editor = (ref = this.coffee.containers) != null ? (ref1 = ref.fileNodes) != null ? ref1[0].editor : void 0 : void 0;
       this.aceEditor = this.editor.editor;
@@ -1860,13 +1869,13 @@
       })(this));
     };
 
-    Definitions.prototype.setHeading = function() {
+    DefinitionsEditor.prototype.setHeading = function() {
       $("#defs-code-heading").html("Definitions <div id='defs-hint' class='code-hint'>Press shift-enter to run</div>");
       this.hint = $("#defs-hint");
       return this.hint.hide();
     };
 
-    return Definitions;
+    return DefinitionsEditor;
 
   })();
 
@@ -2880,6 +2889,7 @@
       this.computationEditor = new ComputationEditor;
       this.markdownEditor = new MarkdownEditor;
       this.definitions = this.loader.definitions;
+      this.definitionsEditor = new DefinitionsEditor(this.definitions.coffee);
       this.embedDialog = new EmbedDialog;
       this.on("aceFilesLoaded", (function(_this) {
         return function() {
@@ -2924,7 +2934,7 @@
 
     App.prototype.initEditors = function() {
       this.markdownEditor.process();
-      this.definitions.initEditor();
+      this.definitionsEditor.init();
       this.editors = new PopupEditorManager({
         widgetEditor: this.widgetEditor,
         markdownEditor: this.markdownEditor

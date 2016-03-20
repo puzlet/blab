@@ -1154,9 +1154,6 @@ class Definitions
     
     @resources.loadUnloaded =>
       @coffee.compile()
-      
-    $(document).on "aceFilesLoaded", =>
-      @setHeading()
   
   main: (defs) ->
     # Main defs.coffee
@@ -1313,8 +1310,16 @@ class Definitions
       owner = data.owner.login
       callback?({defs, description, owner})
     )
+
+
+class DefinitionsEditor
   
-  initEditor: ->
+  constructor: (@coffee) ->
+    
+    $(document).on "aceFilesLoaded", =>
+      @setHeading()
+    
+  init: ->
     @editor = @coffee.containers?.fileNodes?[0].editor
     @aceEditor = @editor.editor
     @aceEditor.on "focus", => @hint.fadeIn()
@@ -1990,6 +1995,7 @@ class App
     @computationEditor = new ComputationEditor
     @markdownEditor = new MarkdownEditor
     @definitions = @loader.definitions
+    @definitionsEditor = new DefinitionsEditor @definitions.coffee
     @embedDialog = new EmbedDialog
     
     # TEST rendering md earlier
@@ -2030,7 +2036,8 @@ class App
   initEditors: ->
     #console.log "**** initEditors"
     @markdownEditor.process()
-    @definitions.initEditor()
+    @definitionsEditor.init()
+#    @definitions.initEditor()
     
     @editors = new PopupEditorManager {@widgetEditor, @markdownEditor}
     
