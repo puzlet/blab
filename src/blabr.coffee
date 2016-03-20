@@ -1157,12 +1157,7 @@ class Definitions
       
     $(document).on "aceFilesLoaded", =>
       @setHeading()
-      
-  setHeading: ->
-    $("#defs-code-heading").html "Definitions <div id='defs-hint' class='code-hint'>Press shift-enter to run</div>"
-    @hint = $ "#defs-hint"
-    @hint.hide()
-    
+  
   main: (defs) ->
     # Main defs.coffee
     
@@ -1254,15 +1249,6 @@ class Definitions
       d.push name unless name is "loaded" or name is "derived"
     list = d.join ", "
     "{#{list}} = $blab.defs"
-    
-  initEditor: ->
-    #console.log "defs containers", @coffee.containers
-    @editor = @coffee.containers?.fileNodes?[0].editor
-    #return unless @editor
-    @aceEditor = @editor.editor
-    
-    @aceEditor.on "focus", => @hint.fadeIn()
-    @aceEditor.on "blur", => @hint.fadeOut()
   
   loadCoffee: (url, callback) ->
     
@@ -1327,6 +1313,17 @@ class Definitions
       owner = data.owner.login
       callback?({defs, description, owner})
     )
+  
+  initEditor: ->
+    @editor = @coffee.containers?.fileNodes?[0].editor
+    @aceEditor = @editor.editor
+    @aceEditor.on "focus", => @hint.fadeIn()
+    @aceEditor.on "blur", => @hint.fadeOut()
+  
+  setHeading: ->
+    $("#defs-code-heading").html "Definitions <div id='defs-hint' class='code-hint'>Press shift-enter to run</div>"
+    @hint = $ "#defs-hint"
+    @hint.hide()
 
 
 class Buttons

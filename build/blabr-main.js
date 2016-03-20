@@ -1604,12 +1604,6 @@
       })(this));
     }
 
-    Definitions.prototype.setHeading = function() {
-      $("#defs-code-heading").html("Definitions <div id='defs-hint' class='code-hint'>Press shift-enter to run</div>");
-      this.hint = $("#defs-hint");
-      return this.hint.hide();
-    };
-
     Definitions.prototype.main = function(defs) {
       if (typeof defs === "string") {
         this.directDefs(defs);
@@ -1762,22 +1756,6 @@
       return "{" + list + "} = $blab.defs";
     };
 
-    Definitions.prototype.initEditor = function() {
-      var ref, ref1;
-      this.editor = (ref = this.coffee.containers) != null ? (ref1 = ref.fileNodes) != null ? ref1[0].editor : void 0 : void 0;
-      this.aceEditor = this.editor.editor;
-      this.aceEditor.on("focus", (function(_this) {
-        return function() {
-          return _this.hint.fadeIn();
-        };
-      })(this));
-      return this.aceEditor.on("blur", (function(_this) {
-        return function() {
-          return _this.hint.fadeOut();
-        };
-      })(this));
-    };
-
     Definitions.prototype.loadCoffee = function(url, callback) {
       var coffee, coffeeIdx, gistId, i, idx, len, match, r, rArray, re;
       rArray = this.resources.resources;
@@ -1864,6 +1842,28 @@
           }) : void 0;
         };
       })(this));
+    };
+
+    Definitions.prototype.initEditor = function() {
+      var ref, ref1;
+      this.editor = (ref = this.coffee.containers) != null ? (ref1 = ref.fileNodes) != null ? ref1[0].editor : void 0 : void 0;
+      this.aceEditor = this.editor.editor;
+      this.aceEditor.on("focus", (function(_this) {
+        return function() {
+          return _this.hint.fadeIn();
+        };
+      })(this));
+      return this.aceEditor.on("blur", (function(_this) {
+        return function() {
+          return _this.hint.fadeOut();
+        };
+      })(this));
+    };
+
+    Definitions.prototype.setHeading = function() {
+      $("#defs-code-heading").html("Definitions <div id='defs-hint' class='code-hint'>Press shift-enter to run</div>");
+      this.hint = $("#defs-hint");
+      return this.hint.hide();
     };
 
     return Definitions;
