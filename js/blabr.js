@@ -4368,7 +4368,7 @@
     app = $blab.blabrApp;
     markdownEditor = app.markdownEditor;
     computationEditor = app.computationEditor;
-    defsEditor = app.definitions;
+    defsEditor = app.definitionsEditor;
     widgetEditor = app.widgetEditor;
     Widgets = $blab.Widgets;
     return new DemoRunner;
