@@ -1122,8 +1122,6 @@ class Definitions
   
   constructor: (@done) ->
     
-    #@setHeading()
-    
     @resources = $blab.resources
     
     @coffee = @resources.add url: @filename
@@ -1140,14 +1138,9 @@ class Definitions
     $blab.mainDefs = (defs) => @main(defs)
     
     @precode @filename
-    
-    # ZZZ Temporary - hack
-    #$blab.defs = $blab.use()
       
     $(document).on "preCompileCoffee", (evt, data) =>
-      resource = data.resource
-      url = resource.url
-      return unless url is @filename
+      return unless data.resource.url is @filename
       $blab.defs = {}
       $blab.definitions = {}
       @allLoaded = false
@@ -1157,6 +1150,7 @@ class Definitions
   
   main: (defs) ->
     # Main defs.coffee
+    # $blab.mainDefs(defs)
     
     if typeof defs is "string"
       @directDefs defs
@@ -1165,18 +1159,11 @@ class Definitions
     $blab.definitions[@filename] = defs
     defs.loaded = true
     $blab.defs = defs
-    #console.log "check(1)", @filename
     @checkLoaded defs
     defs
-    
-  directDefs: (id) ->
-    gist = @use id
-    @main
-      derived: ->
-        for name, property of gist
-          this[name] = property if not (name in ["loaded", "isImport"]) 
-    
+  
   use: (id=null, callback) ->
+    # $blab.use(id, callback)
     
     url = (if id then "#{id}/" else "") + @filename
     
@@ -1186,10 +1173,7 @@ class Definitions
     defs.isImport ?= true
     defs.loaded ?= false
     if defs.loaded
-      setTimeout (=>
-        #console.log "check(2)", url
-        @checkLoaded defs
-      ), 0
+      setTimeout (=> @checkLoaded defs), 0
     else
       @loadCoffee url, =>
         callback?(defs)
@@ -1202,8 +1186,6 @@ class Definitions
     blabDefs = $blab.definitions[url]
     blabDefs.loaded = true
     defs[name] = def for name, def of blabDefs
-    #console.log "^^^^^ get defs"
-    #console.log "check(3)", url
     @checkLoaded defs
   
   checkLoaded: (defs) ->
@@ -1214,7 +1196,6 @@ class Definitions
     checkAll = true
     for name, def of defs
       checkAll = false if def.isImport and not def.loaded
-    #console.log "checkAll", checkAll, $blab.definitions
     return false unless checkAll
     # Check all def files loaded
     for url, blabDefs of $blab.definitions
@@ -1225,53 +1206,24 @@ class Definitions
   allDone: ->
     @processDerived($blab.defs)
     @allLoaded = true
-    
     if @firstDone?
-      $.event.trigger "allBlabDefinitionsLoaded", {list: @list()}
+      @triggerAllLoaded()
     else
       @done =>
         @firstDone = true
-        $.event.trigger "allBlabDefinitionsLoaded", {list: @list()}
+        @triggerAllLoaded()
     
   processDerived: (d) ->
     for name, def of d
       @processDerived(def) if def.isImport  # Recursion
     d.derived?()
-    
-  list: ->
-    d = []
-    console.log "$blab.defs", $blab.defs
-    
-    for name, def of $blab.defs
-      d.push name unless name is "loaded" or name is "derived"
-    list = d.join ", "
-    "{#{list}} = $blab.defs"
   
   loadCoffee: (url, callback) ->
-    
-    # TODO: need methods in $blab.resources (remove resource)
-    rArray = @resources.resources
-    coffeeIdx = idx for r, idx in rArray when r.url is url
-    rArray.splice(coffeeIdx, 1) if coffeeIdx
-    
-    if url.indexOf("gist") is 0
-      re = /^gist:([a-z0-9_-]+)/
-      match = re.exec url
-      return unless match
-      gistId = match[1]
-      @gist gistId, (data) =>
-        source = data.defs
-        coffee = @resources.add {url: url, source: source}
-        console.log "%%%%%%%%%%% coffee", coffee
-        coffee.gistData = data  # Hack to let Ace access gist description/author
-        coffee.location ?= {}  # Hack for FF
-        coffee.location.inBlab = false  # Hack for gist save
-        @doLoad coffee, callback
-      return
-    
+    @removeResource(url)
+    return if Gist.import(url, @resources, (coffee) => @doLoad(coffee, callback))
     coffee = @resources.add {url}
-    @doLoad coffee, callback
-      
+    @doLoad(coffee, callback)
+  
   doLoad: (coffee, callback) ->
     url = coffee.url
     @precode url
@@ -1299,17 +1251,65 @@ class Definitions
       postamble: ""
     
     $blab.precompile(precompile)
+  
+  directDefs: (id) ->
+    # Simple import:
+    # defs "gist:id"
+    gist = @use id
+    @main
+      derived: ->
+        for name, property of gist
+          this[name] = property if not (name in ["loaded", "isImport"])
+  
+  triggerAllLoaded: ->
+    $.event.trigger "allBlabDefinitionsLoaded", {list: @list()}
     
-  gist: (gistId, callback) ->
+  list: ->
+    d = []
+    console.log "$blab.defs", $blab.defs
+    for name, def of $blab.defs
+      d.push name unless name is "loaded" or name is "derived"
+    list = d.join ", "
+    "{#{list}} = $blab.defs"
+  
+  removeResource: (url) ->
+    # TODO: move this method to $blab.resources.
+    rArray = @resources.resources
+    coffeeIdx = idx for r, idx in rArray when r.url is url
+    rArray.splice(coffeeIdx, 1) if coffeeIdx
+    
+
+class Gist
+  
+  # defs.coffee import from Gist.
+  
+  @id: (url) ->
+    return false unless url.indexOf("gist") is 0
+    re = /^gist:([a-z0-9_-]+)/
+    match = re.exec url
+    return false unless match
+    gistId = match[1]
+  
+  @import: (url, resources, callback) ->
+    gistId = @id(url)
+    return false unless gistId
+    @get gistId, (data) =>
+      source = data.defs
+      coffee = resources.add {url: url, source: source}
+      coffee.gistData = data  # Hack to let Ace access gist description/author
+      coffee.location ?= {}  # Hack for FF
+      coffee.location.inBlab = false  # Hack for gist save
+      callback coffee
+    return true
+  
+  @get: (gistId, callback) ->
     api = "https://api.github.com/gists"
     url = "#{api}/#{gistId}"
-    $.get(url, (data) =>
-      #console.log "Gist #{gistId} loaded (defs.coffee)", data
+    $.get url, (data) =>
       defs = data.files?["defs.coffee"]?.content ? null
       description = data.description
       owner = data.owner.login
       callback?({defs, description, owner})
-    )
 
 
 class DefinitionsEditor
@@ -2085,9 +2085,9 @@ class App
       @computationEditor.aceEditor?.focus()
       setTimeout (=>
         @computationEditor.aceEditor?.blur()
-        @definitions.aceEditor.focus()
+        @definitionsEditor.aceEditor.focus()
         setTimeout (=>
-          @definitions.aceEditor.blur()
+          @definitionsEditor.aceEditor.blur()
           @computationEditor.initFocusBlur()
           #@initEditorEventHandlers()
         ), 300

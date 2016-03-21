@@ -1,5 +1,5 @@
 (function() {
-  var App, Background, BlabEvents, Buttons, Computation, ComputationButtons, ComputationEditor, Definitions, DefinitionsEditor, EditPageButton, EmbedDialog, Errors, GoogleAnalytics, Layout, Loader, MarkdownEditor, PopupEditorManager, Settings, TextEditor, Widget, WidgetEditor, Widgets, codeSections,
+  var App, Background, BlabEvents, Buttons, Computation, ComputationButtons, ComputationEditor, Definitions, DefinitionsEditor, EditPageButton, EmbedDialog, Errors, Gist, GoogleAnalytics, Layout, Loader, MarkdownEditor, PopupEditorManager, Settings, TextEditor, Widget, WidgetEditor, Widgets, codeSections,
     slice = [].slice,
     bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -1581,10 +1581,7 @@
       this.precode(this.filename);
       $(document).on("preCompileCoffee", (function(_this) {
         return function(evt, data) {
-          var resource, url;
-          resource = data.resource;
-          url = resource.url;
-          if (url !== _this.filename) {
+          if (data.resource.url !== _this.filename) {
             return;
           }
           $blab.defs = {};
@@ -1609,26 +1606,6 @@
       $blab.defs = defs;
       this.checkLoaded(defs);
       return defs;
-    };
-
-    Definitions.prototype.directDefs = function(id) {
-      var gist;
-      gist = this.use(id);
-      return this.main({
-        derived: function() {
-          var name, property, results1;
-          results1 = [];
-          for (name in gist) {
-            property = gist[name];
-            if (!(name === "loaded" || name === "isImport")) {
-              results1.push(this[name] = property);
-            } else {
-              results1.push(void 0);
-            }
-          }
-          return results1;
-        }
-      });
     };
 
     Definitions.prototype.use = function(id, callback) {
@@ -1710,16 +1687,12 @@
       this.processDerived($blab.defs);
       this.allLoaded = true;
       if (this.firstDone != null) {
-        return $.event.trigger("allBlabDefinitionsLoaded", {
-          list: this.list()
-        });
+        return this.triggerAllLoaded();
       } else {
         return this.done((function(_this) {
           return function() {
             _this.firstDone = true;
-            return $.event.trigger("allBlabDefinitionsLoaded", {
-              list: _this.list()
-            });
+            return _this.triggerAllLoaded();
           };
         })(this));
       }
@@ -1736,57 +1709,14 @@
       return typeof d.derived === "function" ? d.derived() : void 0;
     };
 
-    Definitions.prototype.list = function() {
-      var d, def, list, name, ref;
-      d = [];
-      console.log("$blab.defs", $blab.defs);
-      ref = $blab.defs;
-      for (name in ref) {
-        def = ref[name];
-        if (!(name === "loaded" || name === "derived")) {
-          d.push(name);
-        }
-      }
-      list = d.join(", ");
-      return "{" + list + "} = $blab.defs";
-    };
-
     Definitions.prototype.loadCoffee = function(url, callback) {
-      var coffee, coffeeIdx, gistId, i, idx, len, match, r, rArray, re;
-      rArray = this.resources.resources;
-      for (idx = i = 0, len = rArray.length; i < len; idx = ++i) {
-        r = rArray[idx];
-        if (r.url === url) {
-          coffeeIdx = idx;
-        }
-      }
-      if (coffeeIdx) {
-        rArray.splice(coffeeIdx, 1);
-      }
-      if (url.indexOf("gist") === 0) {
-        re = /^gist:([a-z0-9_-]+)/;
-        match = re.exec(url);
-        if (!match) {
-          return;
-        }
-        gistId = match[1];
-        this.gist(gistId, (function(_this) {
-          return function(data) {
-            var coffee, source;
-            source = data.defs;
-            coffee = _this.resources.add({
-              url: url,
-              source: source
-            });
-            console.log("%%%%%%%%%%% coffee", coffee);
-            coffee.gistData = data;
-            if (coffee.location == null) {
-              coffee.location = {};
-            }
-            coffee.location.inBlab = false;
-            return _this.doLoad(coffee, callback);
-          };
-        })(this));
+      var coffee;
+      this.removeResource(url);
+      if (Gist["import"](url, this.resources, (function(_this) {
+        return function(coffee) {
+          return _this.doLoad(coffee, callback);
+        };
+      })(this))) {
         return;
       }
       coffee = this.resources.add({
@@ -1820,7 +1750,107 @@
       return $blab.precompile(precompile);
     };
 
-    Definitions.prototype.gist = function(gistId, callback) {
+    Definitions.prototype.directDefs = function(id) {
+      var gist;
+      gist = this.use(id);
+      return this.main({
+        derived: function() {
+          var name, property, results1;
+          results1 = [];
+          for (name in gist) {
+            property = gist[name];
+            if (!(name === "loaded" || name === "isImport")) {
+              results1.push(this[name] = property);
+            } else {
+              results1.push(void 0);
+            }
+          }
+          return results1;
+        }
+      });
+    };
+
+    Definitions.prototype.triggerAllLoaded = function() {
+      return $.event.trigger("allBlabDefinitionsLoaded", {
+        list: this.list()
+      });
+    };
+
+    Definitions.prototype.list = function() {
+      var d, def, list, name, ref;
+      d = [];
+      console.log("$blab.defs", $blab.defs);
+      ref = $blab.defs;
+      for (name in ref) {
+        def = ref[name];
+        if (!(name === "loaded" || name === "derived")) {
+          d.push(name);
+        }
+      }
+      list = d.join(", ");
+      return "{" + list + "} = $blab.defs";
+    };
+
+    Definitions.prototype.removeResource = function(url) {
+      var coffeeIdx, i, idx, len, r, rArray;
+      rArray = this.resources.resources;
+      for (idx = i = 0, len = rArray.length; i < len; idx = ++i) {
+        r = rArray[idx];
+        if (r.url === url) {
+          coffeeIdx = idx;
+        }
+      }
+      if (coffeeIdx) {
+        return rArray.splice(coffeeIdx, 1);
+      }
+    };
+
+    return Definitions;
+
+  })();
+
+  Gist = (function() {
+    function Gist() {}
+
+    Gist.id = function(url) {
+      var gistId, match, re;
+      if (url.indexOf("gist") !== 0) {
+        return false;
+      }
+      re = /^gist:([a-z0-9_-]+)/;
+      match = re.exec(url);
+      if (!match) {
+        return false;
+      }
+      return gistId = match[1];
+    };
+
+    Gist["import"] = function(url, resources, callback) {
+      var gistId;
+      gistId = this.id(url);
+      if (!gistId) {
+        return false;
+      }
+      this.get(gistId, (function(_this) {
+        return function(data) {
+          var coffee, source;
+          source = data.defs;
+          coffee = resources.add({
+            url: url,
+            source: source
+          });
+          coffee.gistData = data;
+          if (coffee.location == null) {
+            coffee.location = {};
+          }
+          coffee.location.inBlab = false;
+          return callback(coffee);
+        };
+      })(this));
+      return true;
+    };
+
+    Gist.get = function(gistId, callback) {
       var api, url;
       api = "https://api.github.com/gists";
       url = api + "/" + gistId;
@@ -1839,7 +1869,7 @@
       })(this));
     };
 
-    return Definitions;
+    return Gist;
 
   })();
 
@@ -3026,9 +3056,9 @@
             if ((ref1 = _this.computationEditor.aceEditor) != null) {
               ref1.blur();
             }
-            _this.definitions.aceEditor.focus();
+            _this.definitionsEditor.aceEditor.focus();
             return setTimeout((function() {
-              _this.definitions.aceEditor.blur();
+              _this.definitionsEditor.aceEditor.blur();
               return _this.computationEditor.initFocusBlur();
             }), 300);
           }), 300);
