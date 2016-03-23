@@ -1132,6 +1132,7 @@ class Definitions
     $blab.definitions = {}
     
     $blab.use = (id=null, callback) => @use id, callback
+    $blab.useRecursive = (urls, callback) => @useRecursive urls, callback
     
     @allLoaded = false
     $blab.defs = {}
@@ -1165,7 +1166,14 @@ class Definitions
   use: (id=null, callback) ->
     # $blab.use(id, callback)
     
-    url = (if id then "#{id}/" else "") + @filename
+    # Load from defs.coffee
+    loadDefsCoffee = typeof id is "string"
+    
+    if loadDefsCoffee
+      url = (if id then "#{id}/" else "") + @filename
+    else
+      # id: {url: "..."}  # For loading JS, CSS, etc.
+      url = id.url
     
     # Initialize unless already set by another import.
     $blab.definitions[url] ?= {}
@@ -1175,12 +1183,19 @@ class Definitions
     if defs.loaded
       setTimeout (=> @checkLoaded defs), 0
     else
-      @loadCoffee url, =>
+      doneLoading = =>
         callback?(defs)
         @getDefs url, defs
+      if loadDefsCoffee
+        @loadCoffee url, -> doneLoading()
+      else
+        resource = @resources.add id
+        @resources.load ((resource) -> resource.url is url), ->
+          resource.compile?()  # For coffee
+          doneLoading()
     
     defs  # Initially returns {}; fills properties when imported defs.coffee loaded.
-      
+  
   getDefs: (url, defs) ->
     # $blab.definitions[url] can be {}.
     blabDefs = $blab.definitions[url]
@@ -1233,9 +1248,13 @@ class Definitions
   
   precode: (url) ->
     
+    location = url.slice(0, -("/defs.coffee".length))  # removes defs.coffee.  TODO: use regex.
+    
     preamble = """
         blabId = "#{url}"
         use = (id, callback) -> $blab.use(id, callback)
+        load = (urls, callback) -> $blab.useRecursive(urls, callback)
+        location = "#{location}"
         defs = (d) ->
           if blabId is "defs.coffee"
             return $blab.mainDefs(d)
@@ -1277,7 +1296,21 @@ class Definitions
     rArray = @resources.resources
     coffeeIdx = idx for r, idx in rArray when r.url is url
     rArray.splice(coffeeIdx, 1) if coffeeIdx
+  
+  # Utility function to handle recursive use.
+  useRecursive: (urls, callback) ->
+    idx = 0
+    u = =>
+      unless idx<urls.length
+        callback?()
+        return
+      @use url: urls[idx], ->
+        idx++
+        u()  # recursion
+    u()
     
+    
+
 
 class Gist
   

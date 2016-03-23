@@ -1,0 +1,138 @@
+/* Element styles */
+
+@import url('//puzlet.org/ace/loader.css');
+
+body {
+	font-family: Verdana, 'DejaVu Sans', sans-serif;
+}
+
+h1 {
+  line-height: 120%;
+}
+
+/* Main container */
+
+#outer-container {
+  width: 980px;
+  padding: 0px 30px 10px 30px;
+  margin: 0 auto;
+}
+
+#container {
+  position: relative;
+	width: 960px;
+	margin: 0 auto;
+	margin-top: 40px; /* if NO background */
+	font-size: 12pt;
+	line-height: 150%;
+}
+
+/* Classes to add if want background */
+
+body { 
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: 0px 0px;
+}
+
+.outer-background {
+  margin-top: 30px;
+  padding-top: 10px;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* not used */
+.container-background {
+	margin-top: 20px;
+}
+
+.footer {
+	margin-bottom: 300px;
+}
+
+.left {
+  float: left;
+  width: 470px;
+}
+.right {
+   float: right;
+   width: 470px;
+}
+
+.box-1-1 {
+	width: 100%;
+}
+
+.box-2-1 {
+  float: left;
+  width: 470px;	
+}
+
+.box-2-2 {
+  float: right;
+  width: 470px;
+}
+
+.box-3-1 {
+	display: inline-block;
+	vertical-align: top; 
+  margin-left: 0px;
+  width: 307px;
+}
+
+.box-3-2 {
+	display: inline-block;
+	vertical-align: top;
+  margin-left: 20px;
+  width: 307px;
+}
+
+.box-3-3 {
+	display: inline-block;
+	vertical-align: top; 
+  margin-left: 20px;
+  width: 306px;
+}
+
+.box-4-1 {
+	display: inline-block;
+	vertical-align: top; 
+  margin-left: 0px;
+  width: 225px;
+}
+
+.box-4-2 {
+	display: inline-block;
+	vertical-align: top;
+  margin-left: 20px;
+  width: 225px;
+}
+
+.box-4-3 {
+	display: inline-block;
+	vertical-align: top; 
+  margin-left: 20px;
+  width: 225px;
+}
+
+.box-4-4 {
+	display: inline-block;
+	vertical-align: top;
+  margin-left: 20px;
+  width: 225px;
+}
+
+.clear {
+  clear: both;
+  margin-bottom: 5px;
+}
+
+button {
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.init-editor {
+  display: none;
+  /*max-height: 100px;*/
+}

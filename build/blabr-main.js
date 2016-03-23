@@ -1571,6 +1571,11 @@
           return _this.use(id, callback);
         };
       })(this);
+      $blab.useRecursive = (function(_this) {
+        return function(urls, callback) {
+          return _this.useRecursive(urls, callback);
+        };
+      })(this);
       this.allLoaded = false;
       $blab.defs = {};
       $blab.mainDefs = (function(_this) {
@@ -1609,11 +1614,16 @@
     };
 
     Definitions.prototype.use = function(id, callback) {
-      var base, defs, url;
+      var base, defs, doneLoading, loadDefsCoffee, resource, url;
       if (id == null) {
         id = null;
       }
-      url = (id ? id + "/" : "") + this.filename;
+      loadDefsCoffee = typeof id === "string";
+      if (loadDefsCoffee) {
+        url = (id ? id + "/" : "") + this.filename;
+      } else {
+        url = id.url;
+      }
       if ((base = $blab.definitions)[url] == null) {
         base[url] = {};
       }
@@ -1631,14 +1641,29 @@
           };
         })(this)), 0);
       } else {
-        this.loadCoffee(url, (function(_this) {
+        doneLoading = (function(_this) {
           return function() {
             if (typeof callback === "function") {
               callback(defs);
             }
             return _this.getDefs(url, defs);
           };
-        })(this));
+        })(this);
+        if (loadDefsCoffee) {
+          this.loadCoffee(url, function() {
+            return doneLoading();
+          });
+        } else {
+          resource = this.resources.add(id);
+          this.resources.load((function(resource) {
+            return resource.url === url;
+          }), function() {
+            if (typeof resource.compile === "function") {
+              resource.compile();
+            }
+            return doneLoading();
+          });
+        }
       }
       return defs;
     };
@@ -1740,8 +1765,9 @@
     };
 
     Definitions.prototype.precode = function(url) {
-      var preamble, precompile;
-      preamble = "blabId = \"" + url + "\"\nuse = (id, callback) -> $blab.use(id, callback)\ndefs = (d) ->\n  if blabId is \"defs.coffee\"\n    return $blab.mainDefs(d)\n  else\n    $blab.definitions[blabId] = d\n    return d\n\n\n";
+      var location, preamble, precompile;
+      location = url.slice(0, -"/defs.coffee".length);
+      preamble = "blabId = \"" + url + "\"\nuse = (id, callback) -> $blab.use(id, callback)\nload = (urls, callback) -> $blab.useRecursive(urls, callback)\nlocation = \"" + location + "\"\ndefs = (d) ->\n  if blabId is \"defs.coffee\"\n    return $blab.mainDefs(d)\n  else\n    $blab.definitions[blabId] = d\n    return d\n\n\n";
       precompile = {};
       precompile[url] = {
         preamble: preamble,
@@ -1803,6 +1829,28 @@
       if (coffeeIdx) {
         return rArray.splice(coffeeIdx, 1);
       }
+    };
+
+    Definitions.prototype.useRecursive = function(urls, callback) {
+      var idx, u;
+      idx = 0;
+      u = (function(_this) {
+        return function() {
+          if (!(idx < urls.length)) {
+            if (typeof callback === "function") {
+              callback();
+            }
+            return;
+          }
+          return _this.use({
+            url: urls[idx]
+          }, function() {
+            idx++;
+            return u();
+          });
+        };
+      })(this);
+      return u();
     };
 
     return Definitions;

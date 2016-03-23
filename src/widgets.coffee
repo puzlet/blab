@@ -2,6 +2,7 @@
 
 Widget = $blab.Widget
 
+# Replaced by widgets/input
 class Input extends Widget
   
   @handle: "input"
@@ -1047,6 +1048,7 @@ class AxesLabels
 
 
 
-$blab.baseWidgets = [Input, Menu, Slider, Table, Plot]
+$blab.baseWidgets = [Menu, Slider, Table, Plot]
+#$blab.baseWidgets = [Input, Menu, Slider, Table, Plot]
 #Widget.register [Input, Slider, Table, Plot]
 

@@ -1,4 +1,139 @@
 (function() {
+  var Input;
+
+  Input = (function() {
+    function Input(spec) {
+      var change, ref;
+      this.spec = spec;
+      ref = this.spec, this.container = ref.container, this.init = ref.init, this.prompt = ref.prompt, this.unit = ref.unit, this.align = ref.align, change = ref.change;
+      this.promptContainer = $("<div>", {
+        "class": "input-prompt-container"
+      });
+      this.container.append(this.promptContainer);
+      this.inputPrompt = $("<div>", {
+        "class": "input-prompt"
+      });
+      this.promptContainer.append(this.inputPrompt);
+      this.inputPrompt.append(this.prompt);
+      this.inputContainer = $("<div>", {
+        "class": "blab-input"
+      });
+      this.container.append(this.inputContainer);
+      this.textContainer = $("<div>", {
+        "class": "input-text-container"
+      });
+      this.container.append(this.textContainer);
+      this.textDiv = $("<div>", {
+        "class": "input-text"
+      });
+      this.textContainer.append(this.textDiv);
+      if (this.unit) {
+        this.textDiv.html(this.unit);
+      }
+      this.input = $("<input>", {
+        type: "number",
+        value: this.init,
+        change: (function(_this) {
+          return function() {
+            return typeof change === "function" ? change() : void 0;
+          };
+        })(this)
+      });
+      if (this.align) {
+        this.input.css({
+          textAlign: this.align
+        });
+      }
+      this.inputContainer.append(this.input);
+      this.input.mouseup(function(e) {
+        return e.stopPropagation();
+      });
+      this.inputContainer.mouseup(function(e) {
+        return e.stopPropagation();
+      });
+    }
+
+    Input.prototype.change = function(f) {
+      return this.input.change(f);
+    };
+
+    Input.prototype.val = function() {
+      return this.input.val();
+    };
+
+    return Input;
+
+  })();
+
+  if (window.$blab == null) {
+    window.$blab = {};
+  }
+
+  if ($blab.components == null) {
+    $blab.components = {};
+  }
+
+  $blab.components.Input = Input;
+
+}).call(this);
+
+(function() {
+  var Input, Widget,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  Widget = $blab.Widget;
+
+  Input = (function(superClass) {
+    extend(Input, superClass);
+
+    function Input() {
+      return Input.__super__.constructor.apply(this, arguments);
+    }
+
+    Input.handle = "input";
+
+    Input.source = true;
+
+    Input.initVal = 0;
+
+    Input.initSpec = function(id) {
+      return "init: " + this.initVal + "\nprompt: \"" + id + ":\"\nunit: \"\"\nalign: \"left\"\npos: 1, order: 1";
+    };
+
+    Input.prototype.create = function(spec) {
+      var ref;
+      this.spec = spec;
+      ref = this.spec, this.init = ref.init, this.prompt = ref.prompt, this.unit = ref.unit, this.align = ref.align;
+      this.outer = $("<div>", {
+        "class": "input-container"
+      });
+      this.input = new $blab.components.Input({
+        container: this.outer,
+        init: this.init,
+        prompt: this.prompt,
+        unit: this.unit,
+        align: this.align,
+        change: (function(_this) {
+          return function() {
+            _this.setVal(parseFloat(_this.input.val()));
+            return _this.computeAll();
+          };
+        })(this)
+      });
+      this.appendToCanvas(this.outer);
+      return this.setVal(this.init);
+    };
+
+    return Input;
+
+  })(Widget);
+
+  Widget.register([Input]);
+
+}).call(this);
+
+(function() {
   var AxesLabels, EditableCell, Input, Menu, Plot, Slider, Table, TableCellSelector, Widget,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty,
@@ -1489,6 +1624,6 @@
 
   })();
 
-  $blab.baseWidgets = [Input, Menu, Slider, Table, Plot];
+  $blab.baseWidgets = [Menu, Slider, Table, Plot];
 
 }).call(this);
