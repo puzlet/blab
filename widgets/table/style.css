@@ -1,0 +1,58 @@
+table.widget {
+	margin: 0 auto;
+  margin-bottom: 20px;
+  /*user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;*/
+}
+
+table.widget, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  font-size: 10pt;
+}
+
+th, td {
+  text-align: center;
+  line-height: 100%;
+}
+
+th {padding: 6px;}
+td {padding: 4px;}
+
+/*------Editable Table------*/
+
+.editable-table-cell {
+  height: 16px; /*14px;*/
+  line-height: 16px; /*14px;*/ /* May need to make line height same for regular cells */
+  vertical-align: top;
+  cursor: pointer;
+/*  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;*/
+}
+
+.editable-table-input-field {
+  width: 60px;
+  text-align: center;
+  height: 14px;
+  line-height: 14px;
+  vertical-align: top;
+  font-size: 10pt;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+}
+

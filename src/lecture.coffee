@@ -280,13 +280,17 @@ class $blab.Lecture2
     if action is "slide"
       #id = "k"  # ZZZ temp
       #id = origObj.attr "id"
-      domId = origObj.attr "id"
+      console.log "obj/origObj", obj, origObj
+      domId = obj.attr "id"
+#      domId = origObj.attr "id"
       origVal = Widgets.widgets[domId].getVal()
       action = (o) =>
         console.log "origVal", origVal
         #console.log "**** action id", id
-        f: => @slider origObj, spec.vals
-        b: => @slider origObj, [origVal]  # ZZZ should be original val?
+        f: => @slider obj, spec.vals
+#        f: => @slider origObj, spec.vals
+        b: => @slider obj, [origVal]  # ZZZ should be original val?
+#        b: => @slider origObj, [origVal]  # ZZZ should be original val?
           
     if action is "table"
       domId = obj.attr "id"
@@ -393,13 +397,16 @@ class $blab.Lecture2
     delay = 200
     idx = 0
     domId = obj.attr "id"
+    console.log "obj", obj
+    slider = obj.find ".puzlet-slider"
     #$.event.trigger "clickInputWidget"
     setSlider = (cb) =>
       console.log "setSlider"
       v = vals[idx]
       
       #console.log "****** id, domId", id, domId
-      obj.slider 'option', 'value', v
+      slider.slider 'option', 'value', v
+#      obj.slider 'option', 'value', v
 #      $("#"+domId).slider 'option', 'value', v
       Widgets.widgets[domId].setVal v
       Widgets.compute()

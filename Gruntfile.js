@@ -13,6 +13,14 @@ module.exports = function(grunt) {
           'js/widgets.js': [
               'widgets/input/component.coffee',
               'widgets/input/widget.coffee',
+              'widgets/menu/component.coffee',
+              'widgets/menu/widget.coffee',
+              'widgets/slider/component.coffee',
+              'widgets/slider/widget.coffee',
+              'widgets/plot/component.coffee',
+              'widgets/plot/widget.coffee',
+              'widgets/table/component.coffee',
+              'widgets/table/widget.coffee',
               'src/widgets.coffee'
           ],
           // 'js/widgets.js': ['src/widgets.coffee'],
@@ -22,11 +30,24 @@ module.exports = function(grunt) {
     },
     concat: {
       options: {
-        separator: ';'
+        separator: ''  // ';'
       },
       dist: {
         src: ['build/**/*.js'],
         dest: 'js/<%= pkg.name %>.js'
+      },
+      css: {
+        options: {
+          banner: '/* Auto-generated from widgets style.css files */\n\n'
+        },
+        src: [
+          'widgets/input/style.css',
+          'widgets/menu/style.css',
+          'widgets/slider/style.css',
+          'widgets/plot/style.css',
+          'widgets/table/style.css'
+        ],
+        dest: 'css/widgets.css'
       }
     },
     // uglify: {
@@ -39,7 +60,7 @@ module.exports = function(grunt) {
     //   }
     // },
     watch: {
-      files: ['src/*.coffee', 'widgets/*/*.coffee'],
+      files: ['src/*.coffee', 'widgets/*/*.coffee', 'widgets/*/*.css'],
       tasks: ['coffee', 'concat']
 //      tasks: ['coffee', 'concat', 'uglify']
     }

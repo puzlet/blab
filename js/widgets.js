@@ -134,126 +134,40 @@
 }).call(this);
 
 (function() {
-  var AxesLabels, EditableCell, Input, Menu, Plot, Slider, Table, TableCellSelector, Widget,
-    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty,
-    slice = [].slice,
-    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var Menu;
 
-  Widget = $blab.Widget;
-
-  Input = (function(superClass) {
-    extend(Input, superClass);
-
-    function Input() {
-      return Input.__super__.constructor.apply(this, arguments);
+  Menu = (function() {
+    function Menu(spec) {
+      this.spec = spec;
     }
 
-    Input.handle = "input";
+    Menu.prototype.change = function(f) {};
 
-    Input.initVal = 0;
+    Menu.prototype.val = function() {};
 
-    Input.initSpec = function(id) {
-      return "init: " + Input.initVal + "\nprompt: \"" + id + ":\"\nunit: \"\"\nalign: \"left\"\npos: 1, order: 1";
-    };
+    return Menu;
 
-    Input.compute = function() {
-      var id, ref, v;
-      id = arguments[0], v = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-      return (ref = this.getVal.apply(this, [id].concat(slice.call(v)))) != null ? ref : this.initVal;
-    };
+  })();
 
-    Input.prototype.create = function(spec) {
-      var clickEvent, ref, ref1;
-      this.spec = spec;
-      ref = this.spec, this.init = ref.init, this.prompt = ref.prompt, this.unit = ref.unit, this.align = ref.align;
-      this.inputContainer = $("#" + this.domId());
-      if (this.inputContainer.length) {
-        this.outer = this.inputContainer.parent();
-        if ((ref1 = this.outer) != null) {
-          ref1.remove();
-        }
-      }
-      clickEvent = (function(_this) {
-        return function() {
-          return _this.select();
-        };
-      })(this);
-      this.outer = $("<div>", {
-        "class": "input-container"
-      });
-      this.promptContainer = $("<div>", {
-        "class": "input-prompt-container"
-      });
-      this.outer.append(this.promptContainer);
-      this.inputPrompt = $("<div>", {
-        "class": "input-prompt"
-      });
-      this.promptContainer.append(this.inputPrompt);
-      this.inputPrompt.append(this.prompt);
-      this.inputContainer = $("<div>", {
-        "class": "blab-input",
-        id: this.domId(),
-        mouseup: (function(_this) {
-          return function(e) {
-            return e.stopPropagation();
-          };
-        })(this)
-      });
-      this.outer.append(this.inputContainer);
-      this.outer.mouseup(function() {
-        return clickEvent();
-      });
-      this.textContainer = $("<div>", {
-        "class": "input-text-container"
-      });
-      this.outer.append(this.textContainer);
-      this.textDiv = $("<div>", {
-        "class": "input-text"
-      });
-      this.textContainer.append(this.textDiv);
-      if (this.unit) {
-        this.textDiv.html(this.unit);
-      }
-      this.appendToCanvas(this.outer);
-      this.input = $("<input>", {
-        type: "number",
-        value: this.init,
-        mouseup: function(e) {
-          return e.stopPropagation();
-        },
-        change: (function(_this) {
-          return function() {
-            _this.setVal(parseFloat(_this.input.val()));
-            return _this.computeAll();
-          };
-        })(this)
-      });
-      if (this.align) {
-        this.input.css({
-          textAlign: this.align
-        });
-      }
-      this.inputContainer.append(this.input);
-      return this.setVal(this.init);
-    };
+  if (window.$blab == null) {
+    window.$blab = {};
+  }
 
-    Input.prototype.initialize = function() {
-      return this.setVal(this.init);
-    };
+  if ($blab.components == null) {
+    $blab.components = {};
+  }
 
-    Input.prototype.setVal = function(v) {
-      return this.value = v;
-    };
+  $blab.components.Menu = Menu;
 
-    Input.prototype.getVal = function() {
-      this.setUsed();
-      return this.value;
-    };
+}).call(this);
 
-    return Input;
+(function() {
+  var Menu, Widget,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty,
+    slice = [].slice;
 
-  })(Widget);
+  Widget = $blab.Widget;
 
   Menu = (function(superClass) {
     extend(Menu, superClass);
@@ -277,7 +191,7 @@
     };
 
     Menu.prototype.create = function(spec) {
-      var clickEvent, j, len, o, option, ref, ref1, ref2;
+      var clickEvent, i, len, o, option, ref, ref1, ref2;
       this.spec = spec;
       ref = this.spec, this.init = ref.init, this.prompt = ref.prompt, this.options = ref.options, this.align = ref.align;
       this.menuContainer = $("#" + this.domId());
@@ -342,8 +256,8 @@
         })(this)
       });
       ref2 = this.options;
-      for (j = 0, len = ref2.length; j < len; j++) {
-        option = ref2[j];
+      for (i = 0, len = ref2.length; i < len; i++) {
+        option = ref2[i];
         o = $("<option>", {
           text: option.text,
           value: option.value,
@@ -377,84 +291,36 @@
 
   })(Widget);
 
-  Slider = (function(superClass) {
-    extend(Slider, superClass);
+  Widget.register([Menu]);
 
-    function Slider() {
-      return Slider.__super__.constructor.apply(this, arguments);
-    }
+}).call(this);
 
-    Slider.handle = "slider";
+(function() {
+  var Slider;
 
-    Slider.initVal = 5;
-
-    Slider.initSpec = function(id) {
-      return "min: 0, max: 10, step: 0.1, init: " + Slider.initVal + "\nprompt: \"" + id + ":\"\nunit: \"\"\npos: 1, order: 1";
-    };
-
-    Slider.compute = function() {
-      var id, ref, v;
-      id = arguments[0], v = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-      return (ref = this.getVal.apply(this, [id].concat(slice.call(v)))) != null ? ref : this.initVal;
-    };
-
-    Slider.prototype.create = function(spec) {
-      var base, clickEvent, ref, ref1, ref2, sliding;
+  Slider = (function() {
+    function Slider(spec) {
+      var change, ref, ref1;
       this.spec = spec;
-      ref = this.spec, this.min = ref.min, this.max = ref.max, this.step = ref.step, this.init = ref.init, this.prompt = ref.prompt, this.text = ref.text, this.val = ref.val, this.unit = ref.unit;
-      this.sliderContainer = $("#" + this.domId());
-      if (this.sliderContainer.length) {
-        if (typeof (base = this.sliderContainer).slider === "function") {
-          base.slider("destroy");
-        }
-        this.outer = this.sliderContainer.parent();
-        if ((ref1 = this.outer) != null) {
-          ref1.remove();
-        }
-      }
-      sliding = false;
-      clickEvent = (function(_this) {
-        return function() {
-          if (!sliding) {
-            _this.select();
-          }
-          return sliding = false;
-        };
-      })(this);
-      this.outer = $("<div>", {
-        "class": "slider-container"
-      });
+      ref = this.spec, this.container = ref.container, this.min = ref.min, this.max = ref.max, this.step = ref.step, this.init = ref.init, this.prompt = ref.prompt, this.text = ref.text, this.val = ref.val, this.unit = ref.unit, change = ref.change;
+      this.sliding = false;
       this.sliderPromptContainer = $("<div>", {
         "class": "slider-prompt-container"
       });
-      this.outer.append(this.sliderPromptContainer);
+      this.container.append(this.sliderPromptContainer);
       this.sliderPrompt = $("<div>", {
         "class": "slider-prompt"
       });
       this.sliderPromptContainer.append(this.sliderPrompt);
       this.sliderPrompt.append(this.prompt);
       this.sliderContainer = $("<div>", {
-        "class": "puzlet-slider",
-        id: this.domId(),
-        mousedown: (function(_this) {
-          return function(e) {
-            return $.event.trigger("clickInputWidget");
-          };
-        })(this),
-        mouseup: (function(_this) {
-          return function(e) {};
-        })(this)
+        "class": "puzlet-slider"
       });
-      this.outer.append(this.sliderContainer);
-      this.outer.mouseup(function(evt) {
-        if (!$(evt.target).hasClass("ui-slider-handle")) {
-          return clickEvent();
-        }
-      });
+      this.container.append(this.sliderContainer);
       this.textContainer = $("<div>", {
         "class": "slider-text-container"
       });
-      this.outer.append(this.textContainer);
+      this.container.append(this.textContainer);
       this.textDiv = $("<div>", {
         "class": "slider-text-1"
       });
@@ -466,8 +332,10 @@
       if (this.unit) {
         this.textDiv2.html(this.unit);
       }
-      this.appendToCanvas(this.outer);
-      this.fast = (ref2 = this.spec.fast) != null ? ref2 : true;
+      this.fast = (ref1 = this.spec.fast) != null ? ref1 : true;
+      this.changeFcn = change ? (function() {
+        return change();
+      }) : (function() {});
       this.slider = this.sliderContainer.slider({
         range: "min",
         min: this.min,
@@ -477,44 +345,334 @@
         mouseup: function(e) {},
         slide: (function(_this) {
           return function(e, ui) {
-            sliding = true;
-            _this.setVal(ui.value);
+            _this.sliding = true;
+            _this.set(ui.value);
             if (_this.fast) {
-              return _this.computeAll();
+              return _this.changeFcn();
             }
           };
         })(this),
         change: (function(_this) {
           return function(e, ui) {
+            _this.set(ui.value);
             if (!_this.fast) {
-              _this.computeAll();
+              _this.changeFcn();
             }
             return setTimeout((function() {
-              return sliding = false;
+              return _this.sliding = false;
             }), 100);
           };
         })(this)
       });
-      return this.setVal(this.init);
+      this.slider.mouseup(function(e) {
+        return e.stopPropagation();
+      });
+      this.set(this.init);
+    }
+
+    Slider.prototype.destroy = function() {
+      var base;
+      if (typeof (base = this.sliderContainer).slider === "function") {
+        base.slider("destroy");
+      }
+      return this.container.empty();
+    };
+
+    Slider.prototype.change = function(f) {
+      return this.changeFcn = function() {
+        return typeof f === "function" ? f() : void 0;
+      };
+    };
+
+    Slider.prototype.mouseup = function(f) {
+      return this.slider.mouseup(f);
+    };
+
+    Slider.prototype.set = function(v) {
+      this.textDiv.html(this.val ? this.val(v) : this.text ? this.text(v) : v);
+      return this.value = v;
+    };
+
+    Slider.prototype.getVal = function() {
+      return this.value;
+    };
+
+    return Slider;
+
+  })();
+
+  if (window.$blab == null) {
+    window.$blab = {};
+  }
+
+  if ($blab.components == null) {
+    $blab.components = {};
+  }
+
+  $blab.components.Slider = Slider;
+
+}).call(this);
+
+(function() {
+  var Slider, Widget,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  Widget = $blab.Widget;
+
+  Slider = (function(superClass) {
+    extend(Slider, superClass);
+
+    function Slider() {
+      return Slider.__super__.constructor.apply(this, arguments);
+    }
+
+    Slider.handle = "slider";
+
+    Slider.source = true;
+
+    Slider.initVal = 5;
+
+    Slider.initSpec = function(id) {
+      return "min: 0, max: 10, step: 0.1, init: " + this.initVal + "\nprompt: \"" + id + ":\"\nunit: \"\"\npos: 1, order: 1";
+    };
+
+    Slider.prototype.create = function(spec) {
+      var ref;
+      this.spec = spec;
+      ref = this.spec, this.min = ref.min, this.max = ref.max, this.step = ref.step, this.init = ref.init, this.prompt = ref.prompt, this.text = ref.text, this.val = ref.val, this.unit = ref.unit, this.fast = ref.fast;
+      this.outer = $("<div>", {
+        "class": "slider-container"
+      });
+      this.slider = new $blab.components.Slider({
+        container: this.outer,
+        range: "min",
+        min: this.min,
+        max: this.max,
+        step: this.step,
+        init: this.init,
+        prompt: this.prompt,
+        val: this.val,
+        unit: this.unit,
+        fast: this.fast,
+        change: (function(_this) {
+          return function() {
+            return _this.computeAll();
+          };
+        })(this)
+      });
+      return this.appendToCanvas(this.outer);
     };
 
     Slider.prototype.initialize = function() {
       return this.setVal(this.init);
     };
 
+    Slider.prototype.destroy = function() {
+      return this.slider.destroy();
+    };
+
     Slider.prototype.setVal = function(v) {
-      this.textDiv.html(this.val ? this.val(v) : this.text ? this.text(v) : v);
-      return this.value = v;
+      return this.slider.set(v);
     };
 
     Slider.prototype.getVal = function() {
-      this.setUsed();
-      return this.value;
+      return this.slider.getVal();
     };
 
     return Slider;
 
   })(Widget);
+
+  Widget.register([Slider]);
+
+}).call(this);
+
+(function() {
+  var Plot;
+
+  Plot = (function() {
+    function Plot(spec) {
+      var ref, ref1, ref2;
+      this.spec = spec;
+      ref = this.spec, this.container = ref.container, this.title = ref.title, this.width = ref.width, this.height = ref.height, this.xlabel = ref.xlabel, this.ylabel = ref.ylabel, this.css = ref.css;
+      this.plot = $("<div>", {
+        "class": "puzlet-plot",
+        css: {
+          width: (ref1 = this.width) != null ? ref1 : 400,
+          height: (ref2 = this.height) != null ? ref2 : 200
+        }
+      });
+      if (this.title) {
+        this.displayTitle(this.title);
+      }
+      this.container.append(this.plot);
+      if (this.css) {
+        this.plot.css(this.css);
+      }
+    }
+
+    Plot.prototype.destroy = function() {};
+
+    Plot.prototype.displayTitle = function(title) {
+      this.caption = $("<div>", {
+        "class": "plot-title",
+        html: title
+      });
+      return this.container.append(this.caption);
+    };
+
+    Plot.prototype.setVal = function(v) {
+      var X, Y, base, d, i, k, l, lol, m, maxRows, o, params, ref, xRow, yRow;
+      this.value = v;
+      params = this.spec;
+      if ((base = params.series).shadowSize == null) {
+        base.shadowSize = 0;
+      }
+      if (params.series == null) {
+        params.series = {
+          color: "#55f"
+        };
+      }
+      this.setAxes(params);
+      lol = function(u) {
+        var z;
+        if (u[0].length != null) {
+          z = u;
+        } else {
+          z = [];
+          z.push(u);
+        }
+        return z;
+      };
+      X = lol(v[0]);
+      Y = lol(v[1]);
+      maxRows = Math.max(X.length, Y.length);
+      d = [];
+      for (k = i = 0, ref = maxRows; 0 <= ref ? i < ref : i > ref; k = 0 <= ref ? ++i : --i) {
+        xRow = Math.min(k, X.length - 1);
+        yRow = Math.min(k, Y.length - 1);
+        l = numeric.transpose([X[xRow], Y[yRow]]);
+        d.push(l);
+      }
+      this.flot = $.plot(this.plot, d, params);
+      o = this.flot.getPlotOffset();
+      m = (this.plot.parent().width() - this.plot.width() - o.left + o.right) / 2;
+      return this.plot.css({
+        marginLeft: m
+      });
+    };
+
+    Plot.prototype.setAxes = function(params) {
+      var ref, ref1, ref2, ref3, ref4, ref5;
+      if (params.xaxis == null) {
+        params.xaxis = {};
+      }
+      if (params.yaxis == null) {
+        params.yaxis = {};
+      }
+      if (params.xlabel) {
+        if ((ref = params.xaxis) != null) {
+          ref.axisLabel = params.xlabel;
+        }
+      }
+      if (params.ylabel) {
+        if ((ref1 = params.yaxis) != null) {
+          ref1.axisLabel = params.ylabel;
+        }
+      }
+      if ((ref2 = params.xaxis) != null) {
+        if (ref2.axisLabelUseCanvas == null) {
+          ref2.axisLabelUseCanvas = true;
+        }
+      }
+      if ((ref3 = params.yaxis) != null) {
+        if (ref3.axisLabelUseCanvas == null) {
+          ref3.axisLabelUseCanvas = true;
+        }
+      }
+      if ((ref4 = params.xaxis) != null) {
+        if (ref4.axisLabelPadding == null) {
+          ref4.axisLabelPadding = 10;
+        }
+      }
+      return (ref5 = params.yaxis) != null ? ref5.axisLabelPadding != null ? ref5.axisLabelPadding : ref5.axisLabelPadding = 10 : void 0;
+    };
+
+    return Plot;
+
+  })();
+
+  if (window.$blab == null) {
+    window.$blab = {};
+  }
+
+  if ($blab.components == null) {
+    $blab.components = {};
+  }
+
+  $blab.components.Plot = Plot;
+
+}).call(this);
+
+(function() {
+  var Plot, Widget,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  Widget = $blab.Widget;
+
+  Plot = (function(superClass) {
+    extend(Plot, superClass);
+
+    function Plot() {
+      return Plot.__super__.constructor.apply(this, arguments);
+    }
+
+    Plot.handle = "plot";
+
+    Plot.initSpec = function(id) {
+      return "title: \"" + id + "\"\nwidth: 300, height: 200\nxlabel: \"x\", ylabel: \"y\"\n# xaxis: {min: 0, max: 1}\n# yaxis: {min: 0, max: 1}\nseries: {lines: lineWidth: 1}\ncolors: [\"red\", \"blue\"]\ngrid: {backgroundColor: \"white\"}\npos: 1, order: 1";
+    };
+
+    Plot.prototype.create = function(spec) {
+      this.spec = spec;
+      this.outer = $("<div>", {
+        "class": "plot-container"
+      });
+      this.spec.container = this.outer;
+      this.plot = new $blab.components.Plot(this.spec);
+      this.appendToCanvas(this.outer);
+      return this.setVal([[0], [0]]);
+    };
+
+    Plot.prototype.initialize = function() {};
+
+    Plot.prototype.setVal = function(v) {
+      return this.plot.setVal(v);
+    };
+
+    return Plot;
+
+  })(Widget);
+
+  Widget.register([Plot]);
+
+}).call(this);
+
+(function() {
+
+
+}).call(this);
+
+(function() {
+  var EditableCell, Table, TableCellSelector, Widget,
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty,
+    slice = [].slice,
+    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  Widget = $blab.Widget;
 
   Table = (function(superClass) {
     extend(Table, superClass);
@@ -685,7 +843,7 @@
     };
 
     Table.prototype.setValRegular = function(v) {
-      var d, i, idx, j, len, q, ref, ref1, row, tr, val, x;
+      var d, i, idx, j, k, len, ref, ref1, row, tr, val, x;
       this.setColGroup(v.length);
       this.tbody.empty();
       row = [];
@@ -694,7 +852,7 @@
         x = ref[idx];
         tr = $("<tr>");
         this.tbody.append(tr);
-        for (i = q = 0, ref1 = v.length; 0 <= ref1 ? q < ref1 : q > ref1; i = 0 <= ref1 ? ++q : --q) {
+        for (i = k = 0, ref1 = v.length; 0 <= ref1 ? k < ref1 : k > ref1; i = 0 <= ref1 ? ++k : --k) {
           d = v[i][idx];
           val = typeof d === "number" ? this.format(d) : d;
           tr.append("<td class='table-cell'>" + val + "</td>");
@@ -706,7 +864,7 @@
     };
 
     Table.prototype.setValObject = function() {
-      var base, base1, cell, idx, j, len, len1, name, numCols, q, ref, ref1, ref2, ref3, td, tr, val, x;
+      var base, base1, cell, idx, j, k, len, len1, name, numCols, ref, ref1, ref2, ref3, td, tr, val, x;
       this.editableCells = {};
       this.functionCells = {};
       this.funcs = {};
@@ -764,7 +922,7 @@
       this.setColGroup(numCols);
       this.tbody.empty();
       ref2 = this.tableData[this.firstEditableColName];
-      for (idx = q = 0, len1 = ref2.length; q < len1; idx = ++q) {
+      for (idx = k = 0, len1 = ref2.length; k < len1; idx = ++k) {
         x = ref2[idx];
         tr = $("<tr>");
         this.tbody.append(tr);
@@ -1431,199 +1589,6 @@
 
   })();
 
-  Plot = (function(superClass) {
-    extend(Plot, superClass);
-
-    function Plot() {
-      return Plot.__super__.constructor.apply(this, arguments);
-    }
-
-    Plot.handle = "plot";
-
-    Plot.initSpec = function(id) {
-      return "title: \"" + id + "\"\nwidth: 300, height: 200\nxlabel: \"x\", ylabel: \"y\"\n# xaxis: {min: 0, max: 1}\n# yaxis: {min: 0, max: 1}\nseries: {lines: lineWidth: 1}\ncolors: [\"red\", \"blue\"]\ngrid: {backgroundColor: \"white\"}\npos: 1, order: 1";
-    };
-
-    Plot.compute = function() {
-      var id, v;
-      id = arguments[0], v = 2 <= arguments.length ? slice.call(arguments, 1) : [];
-      return this.setVal.apply(this, [id].concat(slice.call(v)));
-    };
-
-    Plot.prototype.create = function(spec) {
-      var ref, ref1, ref2;
-      this.spec = spec;
-      ref = this.spec, this.title = ref.title, this.width = ref.width, this.height = ref.height, this.xlabel = ref.xlabel, this.ylabel = ref.ylabel, this.css = ref.css;
-      this.outer = $("<div>", {
-        css: {
-          textAlign: "center"
-        },
-        mouseup: (function(_this) {
-          return function() {
-            return _this.select();
-          };
-        })(this)
-      });
-      this.plot = $("#" + this.domId());
-      if (this.plot.length) {
-        this.plot.remove();
-      }
-      this.plot = $("<div>", {
-        id: this.domId(),
-        "class": "puzlet-plot",
-        css: {
-          width: (ref1 = this.width) != null ? ref1 : 400,
-          height: (ref2 = this.height) != null ? ref2 : 200
-        },
-        mouseup: (function(_this) {
-          return function() {
-            return _this.select();
-          };
-        })(this)
-      });
-      if (this.title) {
-        this.caption = $("<div>", {
-          html: this.title,
-          css: {
-            fontSize: "10pt",
-            marginBottom: -8
-          }
-        });
-        this.outer.append(this.caption);
-      }
-      this.outer.append(this.plot);
-      if (this.css) {
-        this.plot.css(this.css);
-      }
-      this.appendToCanvas(this.outer);
-      return this.setVal([[0], [0]]);
-    };
-
-    Plot.prototype.initialize = function() {};
-
-    Plot.prototype.setVal = function(v) {
-      var X, Y, base, d, j, k, l, lol, m, maxRows, o, params, ref, xRow, yRow;
-      this.setUsed();
-      this.value = v;
-      params = this.spec;
-      if ((base = params.series).shadowSize == null) {
-        base.shadowSize = 0;
-      }
-      if (params.series == null) {
-        params.series = {
-          color: "#55f"
-        };
-      }
-      this.setAxes(params);
-      lol = function(u) {
-        var z;
-        if (u[0].length != null) {
-          z = u;
-        } else {
-          z = [];
-          z.push(u);
-        }
-        return z;
-      };
-      X = lol(v[0]);
-      Y = lol(v[1]);
-      maxRows = Math.max(X.length, Y.length);
-      d = [];
-      for (k = j = 0, ref = maxRows; 0 <= ref ? j < ref : j > ref; k = 0 <= ref ? ++j : --j) {
-        xRow = Math.min(k, X.length - 1);
-        yRow = Math.min(k, Y.length - 1);
-        l = numeric.transpose([X[xRow], Y[yRow]]);
-        d.push(l);
-      }
-      this.flot = $.plot(this.plot, d, params);
-      o = this.flot.getPlotOffset();
-      m = (this.plot.parent().width() - this.plot.width() - o.left + o.right) / 2;
-      return this.plot.css({
-        marginLeft: m
-      });
-    };
-
-    Plot.prototype.setAxes = function(params) {
-      var ref, ref1, ref2, ref3, ref4, ref5;
-      if (params.xaxis == null) {
-        params.xaxis = {};
-      }
-      if (params.yaxis == null) {
-        params.yaxis = {};
-      }
-      if (params.xlabel) {
-        if ((ref = params.xaxis) != null) {
-          ref.axisLabel = params.xlabel;
-        }
-      }
-      if (params.ylabel) {
-        if ((ref1 = params.yaxis) != null) {
-          ref1.axisLabel = params.ylabel;
-        }
-      }
-      if ((ref2 = params.xaxis) != null) {
-        if (ref2.axisLabelUseCanvas == null) {
-          ref2.axisLabelUseCanvas = true;
-        }
-      }
-      if ((ref3 = params.yaxis) != null) {
-        if (ref3.axisLabelUseCanvas == null) {
-          ref3.axisLabelUseCanvas = true;
-        }
-      }
-      if ((ref4 = params.xaxis) != null) {
-        if (ref4.axisLabelPadding == null) {
-          ref4.axisLabelPadding = 10;
-        }
-      }
-      return (ref5 = params.yaxis) != null ? ref5.axisLabelPadding != null ? ref5.axisLabelPadding : ref5.axisLabelPadding = 10 : void 0;
-    };
-
-    return Plot;
-
-  })(Widget);
-
-  AxesLabels = (function() {
-    function AxesLabels(container1, params1) {
-      this.container = container1;
-      this.params = params1;
-      if (this.params.xlabel) {
-        this.xaxisLabel = this.appendLabel(this.params.xlabel, "xaxisLabel");
-      }
-      if (this.params.ylabel) {
-        this.yaxisLabel = this.appendLabel(this.params.ylabel, "yaxisLabel");
-      }
-    }
-
-    AxesLabels.prototype.appendLabel = function(txt, className) {
-      var label;
-      label = $("<div>", {
-        text: txt
-      });
-      label.addClass("axisLabel");
-      label.addClass(className);
-      this.container.append(label);
-      return label;
-    };
-
-    AxesLabels.prototype.position = function() {
-      var ref, ref1;
-      if ((ref = this.xaxisLabel) != null) {
-        ref.css({
-          marginLeft: (-this.xaxisLabel.width() / 2 + 10) + "px",
-          marginBottom: "-20px"
-        });
-      }
-      return (ref1 = this.yaxisLabel) != null ? ref1.css({
-        marginLeft: "-27px",
-        marginTop: (this.yaxisLabel.width() / 2 - 10) + "px"
-      }) : void 0;
-    };
-
-    return AxesLabels;
-
-  })();
-
-  $blab.baseWidgets = [Menu, Slider, Table, Plot];
+  Widget.register([Table]);
 
 }).call(this);

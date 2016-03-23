@@ -454,7 +454,7 @@
       c = this.editor.container;
       pos = c.position();
       this.guide.css({
-        top: pos.top + c.height() + 40,
+        top: pos.top + c.height() + 70,
         left: pos.left + 300
       });
       return this.guide.html(html);
@@ -531,10 +531,11 @@
       $.event.trigger("clickInputWidget");
       setSlider = (function(_this) {
         return function(cb) {
-          var domId, v;
+          var domId, slider, v;
           v = vals[idx];
           domId = $blab.Widget.createDomId("slider-", id);
-          $("#" + domId).slider('option', 'value', v);
+          slider = $("#" + domId).find(".puzlet-slider");
+          slider.slider('option', 'value', v);
           Widgets.widgets[domId].setVal(v);
           Widgets.compute();
           idx++;

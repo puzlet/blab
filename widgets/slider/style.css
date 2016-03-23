@@ -1,0 +1,44 @@
+.slider-container {
+  margin-top: 5px;
+  margin-bottom: 15px;
+	/*cursor: default;*/
+	font-size: 10pt;
+	width: 100%;
+	/*background: #eee;*/
+	/*margin: 0 auto;*/
+}
+
+.slider-prompt-container {
+  display: inline-block;
+  width: 30%;
+	/*padding-right: 10px;*/
+  text-align: right;
+}
+
+.slider-prompt {
+	padding-right: 10px;
+}
+
+.slider-text-container {
+  display: inline-block;
+	/*padding-left: 10px;*/
+  cursor: default;
+}
+
+.slider-text-1 {
+	display: inline-block;
+	padding-left: 10px;
+}
+
+.slider-text-2 {
+	display: inline-block;
+	padding-left: 0.5em;
+	/*padding-left: 10px;*/
+}
+
+.puzlet-slider {
+  display: inline-block;
+  width: 40%;
+  /*margin-left: 10px;*/
+}
+

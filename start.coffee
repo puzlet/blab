@@ -1,4 +1,4 @@
 #!vanilla
 
 $blab.blabrApp = new $blab.AppClass
-$blab.Widget.register $blab.baseWidgets
+#$blab.Widget.register $blab.baseWidgets

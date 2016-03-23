@@ -286,7 +286,7 @@ class Computation extends Editor
     c = @editor.container
     pos = c.position()
     @guide.css
-      top: pos.top + c.height() + 40
+      top: pos.top + c.height() + 70 #+ 40
       left: pos.left + 300
     @guide.html html
 
@@ -339,7 +339,9 @@ class Sliders
     setSlider = (cb) =>
       v = vals[idx]
       domId = $blab.Widget.createDomId "slider-", id
-      $("#"+domId).slider 'option', 'value', v
+      slider = $("#"+domId).find ".puzlet-slider"
+      slider.slider 'option', 'value', v
+#      $("#"+domId).slider 'option', 'value', v
       Widgets.widgets[domId].setVal v
       Widgets.compute()
       idx++

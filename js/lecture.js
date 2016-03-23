@@ -292,17 +292,18 @@
         })(this);
       }
       if (action === "slide") {
-        domId = origObj.attr("id");
+        console.log("obj/origObj", obj, origObj);
+        domId = obj.attr("id");
         origVal = Widgets.widgets[domId].getVal();
         action = (function(_this) {
           return function(o) {
             console.log("origVal", origVal);
             return {
               f: function() {
-                return _this.slider(origObj, spec.vals);
+                return _this.slider(obj, spec.vals);
               },
               b: function() {
-                return _this.slider(origObj, [origVal]);
+                return _this.slider(obj, [origVal]);
               }
             };
           };
@@ -407,16 +408,18 @@
     };
 
     Lecture2.prototype.slider = function(obj, vals, cb) {
-      var delay, domId, idx, setSlider;
+      var delay, domId, idx, setSlider, slider;
       delay = 200;
       idx = 0;
       domId = obj.attr("id");
+      console.log("obj", obj);
+      slider = obj.find(".puzlet-slider");
       setSlider = (function(_this) {
         return function(cb) {
           var v;
           console.log("setSlider");
           v = vals[idx];
-          obj.slider('option', 'value', v);
+          slider.slider('option', 'value', v);
           Widgets.widgets[domId].setVal(v);
           Widgets.compute();
           idx++;

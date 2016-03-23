@@ -3325,7 +3325,7 @@
   })();
 
 }).call(this);
-;(function() {
+(function() {
   var Computation, Definitions, Demo, DemoButton, DemoControl, DemoRunner, Editor, Layout, MainDemoStart, Markdown, PlayButton, Script, Sliders, Tables, Text, Widgets, app, computationEditor, defsEditor, guide, guideClose, markdownEditor, widgetEditor,
     bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -3781,7 +3781,7 @@
       c = this.editor.container;
       pos = c.position();
       this.guide.css({
-        top: pos.top + c.height() + 40,
+        top: pos.top + c.height() + 70,
         left: pos.left + 300
       });
       return this.guide.html(html);
@@ -3858,10 +3858,11 @@
       $.event.trigger("clickInputWidget");
       setSlider = (function(_this) {
         return function(cb) {
-          var domId, v;
+          var domId, slider, v;
           v = vals[idx];
           domId = $blab.Widget.createDomId("slider-", id);
-          $("#" + domId).slider('option', 'value', v);
+          slider = $("#" + domId).find(".puzlet-slider");
+          slider.slider('option', 'value', v);
           Widgets.widgets[domId].setVal(v);
           Widgets.compute();
           idx++;
@@ -4423,7 +4424,7 @@
   };
 
 }).call(this);
-;(function() {
+(function() {
   var Credits, Guide, GuideControl, content;
 
   console.log("Blabr Guide");
@@ -4769,7 +4770,7 @@
   $blab.guideClass = Guide;
 
 }).call(this);
-;// The MIT License (MIT)
+// The MIT License (MIT)
 
 // Typed.js | Copyright (c) 2014 Matt Boldt | www.mattboldt.com
 
@@ -5203,7 +5204,7 @@
 
 
 }(window.jQuery);
-;(function() {
+(function() {
   var CloseButton;
 
   CloseButton = (function() {

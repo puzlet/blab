@@ -1,0 +1,46 @@
+.plot-container {
+  text-align: center;
+}
+
+.plot-title {
+  font-size: 10pt;
+  margin-bottom: -8px;
+}
+
+.puzlet-plot {
+	margin: 0 auto;
+	/*background: #eee;*/
+}
+
+.axisLabel {
+	position: absolute;
+	text-align: center;
+	font-size: 12px;
+}
+
+.xaxisLabel {
+	bottom: 2px;
+	left: 50%;
+	transform-origin: 0 0;
+	-o-transform-origin: 0 0;
+	-ms-transform-origin: 0 0;
+	-moz-transform-origin: 0 0;
+	-webkit-transform-origin: 0 0;
+}
+
+.yaxisLabel {
+	top: 50%;
+	left: 2px;
+	transform: rotate(-90deg);
+	-o-transform: rotate(-90deg);
+	-ms-transform: rotate(-90deg);
+	-moz-transform: rotate(-90deg);
+	-webkit-transform:  rotate(-90deg);
+	transform-origin: 0 0;
+	-o-transform-origin: 0 0;
+	-ms-transform-origin: 0 0;
+	-moz-transform-origin: 0 0;
+	-webkit-transform-origin: 0 0;
+}
+
+

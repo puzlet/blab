@@ -1,0 +1,39 @@
+.menu-container {
+  margin-top: 5px;
+  margin-bottom: 15px;
+	font-size: 10pt;
+	width: 100%;
+}
+
+.menu-prompt-container {
+  display: inline-block;
+  width: 30%;
+  text-align: right;
+}
+
+.menu-prompt {
+	padding-right: 10px;
+}
+
+.blab-menu {
+  display: inline-block;
+  width: 40%;
+}
+
+.blab-menu select {
+  width: 98%;
+}
+
+.menu-text-container {
+  display: inline-block;
+  text-align: left;
+	/*padding-left: 10px;*/
+  cursor: default;
+}
+
+.menu-text {
+	display: inline-block;
+	padding-left: 10px;
+}
+
+
