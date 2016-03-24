@@ -10,18 +10,19 @@ module.exports = function(grunt) {
           'build/guide.js': ['src/guide.coffee'],
           'build/utils.js': ['src/utils.coffee'],
           'build/demo-runner.js': ['src/demo-runner.coffee'],
-          'js/widgets.js': [
+          'js/components.js': [
               'widgets/input/component.coffee',
-              'widgets/input/widget.coffee',
               'widgets/menu/component.coffee',
-              'widgets/menu/widget.coffee',
               'widgets/slider/component.coffee',
-              'widgets/slider/widget.coffee',
               'widgets/plot/component.coffee',
+              'widgets/table/component.coffee'
+          ],
+          'build/widgets.js': [
+              'widgets/input/widget.coffee',
+              'widgets/menu/widget.coffee',
+              'widgets/slider/widget.coffee',
               'widgets/plot/widget.coffee',
-              'widgets/table/component.coffee',
-              'widgets/table/widget.coffee',
-              'src/widgets.coffee'
+              'widgets/table/widget.coffee'
           ],
           // 'js/widgets.js': ['src/widgets.coffee'],
           'js/lecture.js': ['src/lecture.coffee']
@@ -35,6 +36,16 @@ module.exports = function(grunt) {
       dist: {
         src: ['build/**/*.js'],
         dest: 'js/<%= pkg.name %>.js'
+      },
+      js: {
+        options: {
+          separator: '\n\n'
+        },
+        src: [
+          'js/components.js',
+          'build/widgets.js'
+        ],
+        dest: 'js/widgets.js'
       },
       css: {
         options: {
