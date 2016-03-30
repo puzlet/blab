@@ -5927,7 +5927,7 @@
           cell = ref1[idx];
           d = val[idx];
           v = typeof d === "number" ? this.format(d) : d;
-          cell.text(v);
+          cell.html(v);
         }
       }
     };

@@ -250,7 +250,7 @@ class Table extends Widget
       for cell, idx in @functionCells[name]
         d = val[idx]
         v = if typeof d is "number" then @format(d) else d
-        cell.text v
+        cell.html v
   
   
   cellAction: (name, idx, val, changed, dir, colDir) ->
