@@ -1614,7 +1614,7 @@
     };
 
     Definitions.prototype.use = function(id, callback) {
-      var base, defs, doneLoading, loadDefsCoffee, resource, url;
+      var base, defs, doneLoading, loadDefsCoffee, ref, resource, url;
       if (id == null) {
         id = null;
       }
@@ -1622,7 +1622,7 @@
       if (loadDefsCoffee) {
         url = (id ? id + "/" : "") + this.filename;
       } else {
-        url = id.url;
+        url = (ref = id.url) != null ? ref : this.extractUrl(id);
       }
       if ((base = $blab.definitions)[url] == null) {
         base[url] = {};
@@ -1666,6 +1666,16 @@
         }
       }
       return defs;
+    };
+
+    Definitions.prototype.extractUrl = function(spec) {
+      var fileExt, p, url, v;
+      for (p in spec) {
+        v = spec[p];
+        url = v;
+        fileExt = p;
+      }
+      return url;
     };
 
     Definitions.prototype.getDefs = function(url, defs) {

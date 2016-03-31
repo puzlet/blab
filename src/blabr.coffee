@@ -1173,7 +1173,7 @@ class Definitions
       url = (if id then "#{id}/" else "") + @filename
     else
       # id: {url: "..."}  # For loading JS, CSS, etc.
-      url = id.url
+      url = id.url ? @extractUrl(id)
     
     # Initialize unless already set by another import.
     $blab.definitions[url] ?= {}
@@ -1195,6 +1195,13 @@ class Definitions
           doneLoading()
     
     defs  # Initially returns {}; fills properties when imported defs.coffee loaded.
+  
+  extractUrl: (spec) ->
+    # Currently handles only one property.
+    for p, v of spec
+      url = v
+      fileExt = p
+    url
   
   getDefs: (url, defs) ->
     # $blab.definitions[url] can be {}.
