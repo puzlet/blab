@@ -27,6 +27,8 @@ class Plot
     
     #@container.append @outer
   
+  ui: -> (x, y) => @setVal([x, y])
+  
   destroy: ->
     #@caption.remove()
     #@plot.remove()  # ZZZ needed?  remove outer ok?

@@ -7,10 +7,13 @@
 class Slider
   
   constructor: (@spec) ->
-  
+    
     {@container, @min, @max, @step, @init, @prompt, @text, @val, @unit, change} = @spec
     # @text is to be deprecated (use @val instead)
-  
+    
+    # Make component object accessible via jQuery.
+    @container.data "blab-component", this
+    
     @sliding = false
     
     @sliderPromptContainer = $ "<div>", class: "slider-prompt-container"
@@ -62,6 +65,8 @@ class Slider
     
     @set @init
     
+  ui: -> => parseFloat(@getVal())
+    
   destroy: ->
     @sliderContainer.slider?("destroy")
     @container.empty()  # Unsafe?
@@ -69,6 +74,34 @@ class Slider
   change: (f) -> @changeFcn = -> f?()
   
   mouseup: (f) -> @slider.mouseup f
+  
+  animate: (spec) ->
+    @origVal = @value
+    {vals, delay, callback} = spec
+    delay ?= 200
+    idx = 0
+    set = =>
+      @move vals[idx]
+      idx++
+      if idx < vals.length
+        setTimeout (-> set()), delay  # Recursion
+      else
+        callback?()
+    set()
+  
+  restore: ->
+    # For restoring value after animation.
+    @move @origVal
+    
+  move: (v) ->
+    # Forces slider to move to value - used for animation.
+    @slider.slider 'option', 'value', v
+    @set v
+    @changeFcn()
+    
+  lectureAction: (spec) =>
+    f: => @animate(spec)
+    b: => @restore()
   
   set: (v) ->
     @textDiv.html(if @val then @val(v) else if @text then @text(v) else v)

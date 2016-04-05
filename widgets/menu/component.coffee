@@ -7,6 +7,9 @@
 class Menu
   
   constructor: (@spec) ->
+    
+    # Make component object accessible via jQuery.
+    @container.data "blab-component", this
   
   change: (f) ->
   
