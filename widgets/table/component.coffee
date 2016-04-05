@@ -69,33 +69,32 @@ class Table
   domId: -> @id
   
   lectureAction: (spec) =>
-    f: => @populate(spec) #@animate(spec)
-    b: => console.log "^^^^^^^b" #@restore()
+    f: => @populate(spec)
+    b: => console.log "No back step for table" #@restore()
     
   populate: (spec) ->
-#  populate: (col, vals, cb) ->
     {col, vals, delay, callback} = spec
     delay ?= 1000
     idx = 0
-    #domId = obj.attr "id"
     set = =>
       v = vals[idx]
-      #t = Widgets.widgets[domId]
-      console.log "***col/vals/idx", col, vals, idx
       cell = @editableCells[col][idx]  # 0 needs to be arg.
+      cellDiv =  cell.div
+      parent = cellDiv.parent()
+      bg = parent.css "background"
+      setBg = (col) -> parent.css background: col
       dir = if idx<vals.length-1 then 1 else 0
-      cell.div.text v
-      bg = cell.div.parent().css "background"
-      cell.div.parent().css background: "#ccc"
+      
+      cellDiv.text v
+      setBg "#ccc"
       setTimeout (->
-        cell.div.parent().css background: bg
+        setBg bg
         cell.done()
       ), 200
       idx++
       if idx < vals.length
         setTimeout (-> set()), delay
       else
-        console.log("cells", $('.editable-table-cell'))
         cells = $('.editable-table-cell')
         setTimeout (->
           $(cells[2]).blur()

@@ -78,17 +78,123 @@
 }).call(this);
 
 (function() {
-  var Menu;
+  var Menu,
+    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   Menu = (function() {
-    function Menu(spec) {
-      this.spec = spec;
+    function Menu(spec1) {
+      var change, i, len, o, option, ref, ref1;
+      this.spec = spec1;
+      this.lectureAction = bind(this.lectureAction, this);
+      ref = this.spec, this.container = ref.container, this.init = ref.init, this.prompt = ref.prompt, this.options = ref.options, this.align = ref.align, change = ref.change;
       this.container.data("blab-component", this);
+      this.promptContainer = $("<div>", {
+        "class": "menu-prompt-container"
+      });
+      this.container.append(this.promptContainer);
+      this.menuPrompt = $("<div>", {
+        "class": "menu-prompt"
+      });
+      this.promptContainer.append(this.menuPrompt);
+      this.menuPrompt.append(this.prompt);
+      this.menuContainer = $("<div>", {
+        "class": "blab-menu"
+      });
+      this.container.append(this.menuContainer);
+      this.textContainer = $("<div>", {
+        "class": "menu-text-container"
+      });
+      this.container.append(this.textContainer);
+      this.textDiv = $("<div>", {
+        "class": "menu-text"
+      });
+      this.textContainer.append(this.textDiv);
+      this.changeFcn = change ? (function() {
+        return change();
+      }) : (function() {});
+      this.menu = $("<select>", {
+        value: this.init,
+        change: (function(_this) {
+          return function() {
+            var v, val;
+            v = _this.menu.val();
+            val = v ? parseFloat(v) : null;
+            if (isNaN(val)) {
+              val = v;
+            }
+            _this.set(val);
+            return _this.changeFcn();
+          };
+        })(this)
+      });
+      ref1 = this.options;
+      for (i = 0, len = ref1.length; i < len; i++) {
+        option = ref1[i];
+        o = $("<option>", {
+          text: option.text,
+          value: option.value,
+          selected: option.value === this.init
+        });
+        this.menu.append(o);
+      }
+      if (this.align) {
+        this.menu.css({
+          textAlign: this.align
+        });
+      }
+      this.menuContainer.append(this.menu);
+      this.set(this.init);
     }
 
-    Menu.prototype.change = function(f) {};
+    Menu.prototype.ui = function() {
+      return (function(_this) {
+        return function() {
+          return _this.getVal();
+        };
+      })(this);
+    };
 
-    Menu.prototype.val = function() {};
+    Menu.prototype.lectureAction = function(spec) {
+      return {
+        f: (function(_this) {
+          return function() {
+            return _this.animate(spec);
+          };
+        })(this),
+        b: (function(_this) {
+          return function() {
+            return _this.restore();
+          };
+        })(this)
+      };
+    };
+
+    Menu.prototype.animate = function(spec) {
+      this.origVal = this.value;
+      return this.triggerChange(spec.val);
+    };
+
+    Menu.prototype.restore = function() {
+      return this.triggerChange(this.origVal);
+    };
+
+    Menu.prototype.triggerChange = function(val) {
+      return this.menu.val(val).trigger("change");
+    };
+
+    Menu.prototype.change = function(f) {
+      return this.changeFcn = function() {
+        return typeof f === "function" ? f() : void 0;
+      };
+    };
+
+    Menu.prototype.set = function(v) {
+      return this.value = v;
+    };
+
+    Menu.prototype.getVal = function() {
+      return this.value;
+    };
 
     return Menu;
 
@@ -513,7 +619,7 @@
         })(this),
         b: (function(_this) {
           return function() {
-            return console.log("^^^^^^^b");
+            return console.log("No back step for table");
           };
         })(this)
       };
@@ -528,20 +634,22 @@
       idx = 0;
       set = (function(_this) {
         return function() {
-          var bg, cell, cells, dir, v;
+          var bg, cell, cellDiv, cells, dir, parent, setBg, v;
           v = vals[idx];
-          console.log("***col/vals/idx", col, vals, idx);
           cell = _this.editableCells[col][idx];
-          dir = idx < vals.length - 1 ? 1 : 0;
-          cell.div.text(v);
-          bg = cell.div.parent().css("background");
-          cell.div.parent().css({
-            background: "#ccc"
-          });
-          setTimeout((function() {
-            cell.div.parent().css({
-              background: bg
+          cellDiv = cell.div;
+          parent = cellDiv.parent();
+          bg = parent.css("background");
+          setBg = function(col) {
+            return parent.css({
+              background: col
             });
+          };
+          dir = idx < vals.length - 1 ? 1 : 0;
+          cellDiv.text(v);
+          setBg("#ccc");
+          setTimeout((function() {
+            setBg(bg);
             return cell.done();
           }), 200);
           idx++;
@@ -550,7 +658,6 @@
               return set();
             }), delay);
           } else {
-            console.log("cells", $('.editable-table-cell'));
             cells = $('.editable-table-cell');
             setTimeout((function() {
               $(cells[2]).blur();

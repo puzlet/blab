@@ -1,15 +1,18 @@
 # ZZZ To implement
 
-container = $ "#input"
-
 menu = new $blab.components.Menu
-  container: container
+  container: $("#menu")
   prompt: "Input"
-  unit: "Hz"
-  init: 2
+  init: 0
+  options: [
+    {text: "None", value: 0}
+    {text: "Small", value: 5}
+    {text: "Large", value: 20}
+  ]
+  align: "left"
 
-display = -> $("#result").html("Input value = " + input.val())
+display = -> $("#result").html("Input value = " + menu.getVal())
 
 display()
-input.change -> display()
+menu.change -> display()
   
