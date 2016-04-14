@@ -1,6 +1,10 @@
 table.widget {
 	margin: 0 auto;
   margin-bottom: 20px;
+  border: 1px solid black;
+  border-collapse: collapse;
+  font-size: 10pt;
+  line-height: 100%;
   /*user-select: none;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -9,19 +13,17 @@ table.widget {
   -ms-user-select: none;*/
 }
 
-table.widget, th, td {
+table.widget th {
   border: 1px solid black;
-  border-collapse: collapse;
-  font-size: 10pt;
-}
-
-th, td {
   text-align: center;
-  line-height: 100%;
+  padding: 6px;
 }
 
-th {padding: 6px;}
-td {padding: 4px;}
+table.widget td {
+  border: 1px solid black;
+  text-align: center;
+  padding: 4px;
+}
 
 /*------Editable Table------*/
 
