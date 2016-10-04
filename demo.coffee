@@ -41,7 +41,7 @@ $blab.demoScript = (spec) ->
   compute "table \"Quadratic\", x, y", "Display the data in a table.<br>Auto-generated table parameters are shown below.", 4000, 2000
   
   widget
-    find: "[]", replace: "[\"$x$\", \"$kx^2$\"]", slow: true
+    find: "[]", replace: "[\"$x$\", \"$kx^2$\"", slow: true
     guide: "Add column headings to table.<br>Supports LaTeX/MathJax."
     dwell: 3000
     
